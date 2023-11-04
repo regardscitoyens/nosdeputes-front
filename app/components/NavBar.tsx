@@ -21,15 +21,15 @@ export function NavBar({ navigation }: NavBarProps): JSX.Element {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 items-center justify-center">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium uppercase ${
+                  className={`flex items-center justify-center h-5 text-sm font-medium uppercase transition px-4 py-4 duration-300 ease-in-out transform rounded-2xl ${
                     pathname === item.href
-                      ? "border-indigo-500 text-gray-900"
-                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                      ? "bg-black text-white"
+                      : "text-gray-500 hover:bg-gray-200 hover:text-gray-700"
                   }`}
                 >
                   {item.name}
