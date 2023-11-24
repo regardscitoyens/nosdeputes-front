@@ -11,6 +11,7 @@ const theme = createTheme({
   palette: {
     mode: "light",
   },
+  spacing: 8,
   typography: {
     fontFamily: raleway.style.fontFamily,
     fontWeightBold: 700,
