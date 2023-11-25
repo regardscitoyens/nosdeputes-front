@@ -34,3 +34,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 The app can be deployed on Clever Cloud using the dockerfile.
 
 See app_d9fa72da-7370-4f35-b595-91867e21655e https://app-d9fa72da-7370-4f35-b595-91867e21655e.cleverapps.io/.
+
+## Dedicated database.
+
+The project expect a postGreSQL database.
+
+It can be found on Scaleway:
+
+```bash
+psql -h 51.159.207.103 --port 1695 -d rdb -U default_user
+```
