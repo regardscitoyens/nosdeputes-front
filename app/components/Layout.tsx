@@ -3,6 +3,7 @@ import { NavBar, NavigationItem } from "./NavBar";
 const navigation: NavigationItem[] = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
+  { name: "Dossiers", href: "/dossiers" }, // old url is "/dossiers/date"
   // ... more items
 ];
 
