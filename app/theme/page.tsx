@@ -1,6 +1,9 @@
+"use client";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import StatusChip from "@/components/StatusChip";
+import LabelChip from "@/components/LabelChip";
+import EnergyIcon from "@/icons/EnergyIcon";
 
 export default function Page() {
   return (
@@ -90,7 +93,7 @@ export default function Page() {
         <StatusChip status="review" label="1e lecture AN" />
         <StatusChip status="validated" label="Promulgué" />
       </Stack>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
         <StatusChip size="small" status="validated" label="Adopté" />
         <StatusChip size="small" status="review" label="1e lecture SE" />
         <StatusChip size="small" status="refused" label="Abrogé" />
@@ -98,6 +101,15 @@ export default function Page() {
         <StatusChip size="small" status="dropped" label="Non-soutenu" />
         <StatusChip size="small" status="review" label="1e lecture AN" />
         <StatusChip size="small" status="validated" label="Promulgué" />
+      </Stack>
+
+      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+        <LabelChip label="Label" icon={<EnergyIcon />} />
+        <LabelChip label="Label" onDelete={() => {}} />
+      </Stack>
+      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+        <LabelChip size="small" label="Label" />
+        <LabelChip size="small" label="Label" onDelete={() => {}} />
       </Stack>
     </div>
   );
