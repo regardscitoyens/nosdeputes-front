@@ -39,6 +39,7 @@ const StyledStatusChip = styled(StatusChip, {
     ...(size === "small" && {
       height: 26,
       borderRadius: 26 / 2,
+      color: theme.palette.grey[900],
     }),
     [`& .${chipClasses.label}`]: {
       paddingLeft: theme.spacing(1),
