@@ -86,12 +86,12 @@ export default function Dossier() {
               pb: 2,
               px: 2,
               display: "flex",
-              flexDirection: "column-reverse",
+              flexDirection: {
+                xs: "column-reverse",
+                md: "row",
+              },
               gap: 5,
               flexWrap: "wrap-reverse",
-              [theme.breakpoints.up("md")]: {
-                flexDirection: "row",
-              },
             }}
           >
             <Stack spacing={3} flex={2}>

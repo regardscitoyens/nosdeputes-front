@@ -9,9 +9,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import ChevronRightIcon from "@/icons/ChevronRightIcon";
 import EnergyIcon from "@/icons/EnergyIcon";
-import HomeIcon from "@/icons/HomeIcon";
 import LabelChip from "@/components/LabelChip";
 import StatusChip from "@/components/StatusChip";
 
@@ -71,10 +69,8 @@ const HeroSection = () => {
         <Paper
           elevation={0}
           sx={{
-            paddingTop: 4,
-            paddingBottom: 4,
-            paddingLeft: 3,
-            paddingRight: 3,
+            py: 4,
+            px: 3,
             width: "680px",
             borderRadius: 1,
             backgroundColor: "transparent",
