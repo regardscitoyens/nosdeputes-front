@@ -5,12 +5,10 @@ import CardContent from "@mui/material/CardContent";
 import DeputyPreview from "../DeputyPreview";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import useTheme from "@mui/material/styles/useTheme";
 
 const AdditionalInfoCard = () => {
-  const theme = useTheme();
   return (
-    <Card elevation={0} sx={{ backgroundColor: theme.palette.grey[50] }}>
+    <Card elevation={0} sx={{ backgroundColor: "grey.50" }}>
       <CardContent sx={{ padding: 2 }}>
         <Typography variant="body1" fontWeight="bold" pb={2}>
           Informations complémentaires
