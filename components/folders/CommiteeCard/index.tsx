@@ -1,29 +1,46 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import DeputyPreview from "../DeputyPreview";
+import Stack from "@mui/material/Stack";
+
+import CardLayout from "@/components/folders/CardLayout";
+import DeputyPreview from "@/components/folders/DeputyPreview";
+import InfoIcon from "@/icons/InfoIcon";
 
 const CommiteeCard = () => {
   return (
-    <Card elevation={0} sx={{ backgroundColor: "grey.50" }}>
-      <CardContent sx={{ padding: 2 }}>
-        <Typography variant="body1" fontWeight="bold" pb={2}>
-          Comission
-        </Typography>
-        <Typography variant="body2" fontWeight="light" pb={1}>
-          Commission de travail parlementaire
-        </Typography>
-        <Typography variant="body2" fontWeight="bold" pb={2}>
-          Commission du développement durable
-        </Typography>
-        <Typography variant="body2" fontWeight="light" pb={1}>
-          Rapporteur
-        </Typography>
-
-        <DeputyPreview />
-      </CardContent>
-    </Card>
+    <CardLayout title={"Commissions"}>
+      <Stack direction="column" spacing={2}>
+        <div>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography variant="body2" fontWeight="light">
+              Comission saisie au fond
+            </Typography>
+            <InfoIcon sx={{ fontSize: "14px" }} />
+          </Stack>
+          <Typography variant="body2" fontWeight="bold" pb={2}>
+            Commission des affaires économiques
+          </Typography>
+        </div>
+        <div>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography variant="body2" fontWeight="light">
+              Comission saisie pour avis
+            </Typography>
+            <InfoIcon sx={{ fontSize: "14px" }} />
+          </Stack>
+          <Typography variant="body2" fontWeight="bold" pb={2}>
+            Commission du développement durable et de l&apos;aménagement du
+            territoire
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body2" fontWeight="light" pb={1}>
+            Rapporteur
+          </Typography>
+          <DeputyPreview />
+        </div>
+      </Stack>
+    </CardLayout>
   );
 };
 
