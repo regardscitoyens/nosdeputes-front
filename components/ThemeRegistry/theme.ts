@@ -22,6 +22,10 @@ const theme = createTheme({
       light: "#FEE6D9",
       main: "#EF4444",
     },
+    secondary: {
+      main: "#E9ECEF",
+      contrastText: "#495057",
+    },
     grey: {
       900: "#171B1E",
       800: "#343A40",
@@ -52,8 +56,19 @@ const theme = createTheme({
     allVariants: {
       color: "#171B1E",
     },
+    button: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: "none",
+    },
   },
-  components: {},
+  components: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+    },
+  },
 });
 
 export default theme;
