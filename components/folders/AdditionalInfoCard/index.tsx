@@ -1,52 +1,59 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import DeputyPreview from "../DeputyPreview";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
+import InfoIcon from "@/icons/InfoIcon";
+import CardLayout from "@/components/folders/CardLayout";
+
 const AdditionalInfoCard = () => {
   return (
-    <Card elevation={0} sx={{ backgroundColor: "grey.50" }}>
-      <CardContent sx={{ padding: 2 }}>
-        <Typography variant="body1" fontWeight="bold" pb={2}>
-          Informations complémentaires
-        </Typography>
-        <Typography variant="body2" fontWeight="light" pb={1}>
-          Amendements
-        </Typography>
-        <Typography variant="body2" fontWeight="bold" pb={2}>
-          411
-        </Typography>
-        <Stack direction="column" spacing={2}>
-          <Stack direction="column" spacing={1}>
+    <CardLayout title={"Informations complémentaires"}>
+      <Stack direction="column" spacing={2}>
+        <div>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography variant="body2" fontWeight="light">
+              Amendements
+            </Typography>
+            <InfoIcon sx={{ fontSize: "14px" }} />
+          </Stack>
+          <Typography variant="body2" fontWeight="bold">
+            411
+          </Typography>
+        </div>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={0.5} alignItems="center">
             <Typography variant="body2" fontWeight="light">
               Co-signataires
             </Typography>
-            <DeputyPreview />
-            <DeputyPreview />
-            <DeputyPreview />
-            <DeputyPreview />
-            <Button fullWidth variant="contained">
-              Tous les signataires (7)
-            </Button>
+            <InfoIcon sx={{ fontSize: "14px" }} />
           </Stack>
-          <Stack direction="column" spacing={1}>
-            <Typography variant="body2" fontWeight="light">
-              Orateurs
-            </Typography>
-            <DeputyPreview />
-            <DeputyPreview />
-            <DeputyPreview />
-            <DeputyPreview />
-            <Button fullWidth variant="contained">
-              Tous les orateurs (34)
-            </Button>
-          </Stack>
+          <DeputyPreview />
+          <DeputyPreview />
+          <DeputyPreview />
+          <DeputyPreview />
+          <Button fullWidth variant="contained" color="secondary">
+            Tous les signataires (7)
+          </Button>
         </Stack>
-      </CardContent>
-    </Card>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Typography variant="body2" fontWeight="light">
+              Co-signataires
+            </Typography>
+            <InfoIcon sx={{ fontSize: "14px" }} />
+          </Stack>
+          <DeputyPreview />
+          <DeputyPreview />
+          <DeputyPreview />
+          <DeputyPreview />
+          <Button fullWidth variant="contained" color="secondary">
+            Tous les orateurs (7)
+          </Button>
+        </Stack>
+      </Stack>
+    </CardLayout>
   );
 };
 
