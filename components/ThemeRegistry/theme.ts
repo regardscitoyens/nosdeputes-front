@@ -57,10 +57,6 @@ const theme = createTheme({
     allVariants: {
       color: "#171B1E",
     },
-    button: {
-      fontSize: 12,
-      fontWeight: 700,
-    },
   },
   components: {
     MuiButton: {
@@ -68,8 +64,11 @@ const theme = createTheme({
         disableElevation: true,
       },
       styleOverrides: {
-        root: ({ ownerState }) =>
-          ownerState.color === "secondary" ? { textTransform: "none" } : {},
+        root: ({ ownerState }) => ({
+          fontSize: 12,
+          fontWeight: 700,
+          textTransform: ownerState.color === "secondary" ? "none" : "inherit",
+        }),
       },
     },
   },
