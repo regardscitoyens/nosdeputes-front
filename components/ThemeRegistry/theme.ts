@@ -1,5 +1,6 @@
 import { Raleway } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
+import { buttonClasses } from "@mui/material/Button";
 
 const raleway = Raleway({
   weight: ["400", "600", "700"],
@@ -59,13 +60,16 @@ const theme = createTheme({
     button: {
       fontSize: 12,
       fontWeight: 700,
-      textTransform: "none",
     },
   },
   components: {
     MuiButton: {
       defaultProps: {
         disableElevation: true,
+      },
+      styleOverrides: {
+        root: ({ ownerState }) =>
+          ownerState.color === "secondary" ? { textTransform: "none" } : {},
       },
     },
   },
