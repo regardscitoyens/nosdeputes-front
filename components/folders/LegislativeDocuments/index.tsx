@@ -1,22 +1,27 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+
+import CardLayout from "@/components/folders/CardLayout";
+import LinkIcon from "@/icons/LinkIcon";
+import Link from "next/link";
 
 const LegislativeDocuments = () => {
   return (
-    <Card elevation={0} sx={{ backgroundColor: "grey.50" }}>
-      <CardContent sx={{ padding: 2 }}>
-        <Typography variant="body1" fontWeight="bold" pb={2}>
-          Document législatifs
-        </Typography>
+    <CardLayout title={"Documents législatifs"}>
+      <Stack direction="column" spacing={2}>
         {Array.from(Array(10).keys()).map((link) => (
-          <Typography key={link} variant="body1" fontWeight="bold">
-            Lien vers {link}
-          </Typography>
+          <Stack key={link} direction="row" spacing={1} alignItems="center">
+            <LinkIcon sx={{ fontSize: "14px" }} />
+            <Link href="">
+              <Typography variant="body2" fontWeight="bold">
+                Lien vers {link}
+              </Typography>
+            </Link>
+          </Stack>
         ))}
-      </CardContent>
-    </Card>
+      </Stack>
+    </CardLayout>
   );
 };
 

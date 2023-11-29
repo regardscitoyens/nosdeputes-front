@@ -27,9 +27,6 @@ const DeputyPreview = () => {
           <Typography variant="caption" fontWeight="light">
             REN
           </Typography>
-          <Typography variant="caption" fontWeight="light">
-            Info complémentaire
-          </Typography>
         </Stack>
       </Stack>
     </Box>
