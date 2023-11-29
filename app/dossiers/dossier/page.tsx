@@ -6,7 +6,7 @@ import { Layout } from "@/app/components/Layout";
 import AdditionalInfoCard from "@/components/folders/AdditionalInfoCard";
 import CommiteeCard from "@/components/folders/CommiteeCard";
 import Hero from "@/components/folders/HeroSection";
-import LegislativeDocuments from "@/components/folders/LegislativeDocuments";
+import LegislativeDocumentsCard from "@/components/folders/LegislativeDocumentsCard";
 import TextStructureCard from "@/components/folders/TextStructureCard";
 import TimelineCard from "@/components/folders/TimelineCard";
 import SpeakingTimeCard from "@/components/folders/SpeakingTimeCard";
@@ -97,7 +97,7 @@ export default function Dossier() {
             <Stack spacing={3} flex={2}>
               <CommiteeCard />
               <AdditionalInfoCard />
-              <LegislativeDocuments />
+              <LegislativeDocumentsCard />
             </Stack>
             <Stack spacing={3} flex={5}>
               <SpeakingTimeCard />

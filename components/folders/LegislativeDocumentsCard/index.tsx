@@ -6,9 +6,9 @@ import CardLayout from "@/components/folders/CardLayout";
 import LinkIcon from "@/icons/LinkIcon";
 import Link from "next/link";
 
-const LegislativeDocuments = () => {
+const LegislativeDocumentsCard = () => {
   return (
-    <CardLayout title={"Documents législatifs"}>
+    <CardLayout title={"Documents législatifs"} variant="secondary">
       <Stack direction="column" spacing={2}>
         {Array.from(Array(10).keys()).map((link) => (
           <Stack key={link} direction="row" spacing={1} alignItems="center">
@@ -25,4 +25,4 @@ const LegislativeDocuments = () => {
   );
 };
 
-export default LegislativeDocuments;
+export default LegislativeDocumentsCard;
