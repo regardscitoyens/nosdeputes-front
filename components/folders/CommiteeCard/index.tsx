@@ -8,7 +8,7 @@ import InfoIcon from "@/icons/InfoIcon";
 
 const CommiteeCard = () => {
   return (
-    <CardLayout title={"Commissions"}>
+    <CardLayout title={"Commissions"} variant="secondary">
       <Stack direction="column" spacing={2}>
         <div>
           <Stack direction="row" spacing={0.5} alignItems="center">
