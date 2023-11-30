@@ -7,6 +7,7 @@ import { NavBar, NavigationItem } from "@/components/NavBar";
 const inter = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.nosdeputes.fr"),
   robots: "index, follow",
   title: "NosDéputés.fr : Observatoire citoyen de l'activité parlementaire",
   description: "Observatoire citoyen de l'activité parlementaire",
