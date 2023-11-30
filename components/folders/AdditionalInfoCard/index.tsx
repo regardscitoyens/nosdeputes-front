@@ -9,7 +9,7 @@ import CardLayout from "@/components/folders/CardLayout";
 
 const AdditionalInfoCard = () => {
   return (
-    <CardLayout title={"Informations complémentaires"}>
+    <CardLayout title={"Informations complémentaires"} variant="secondary">
       <Stack direction="column" spacing={2}>
         <div>
           <Stack direction="row" spacing={0.5} alignItems="center">
