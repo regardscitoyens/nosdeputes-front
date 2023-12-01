@@ -5,8 +5,6 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material";
 
 import Hero from "@/components/folders/HeroSection";
 import PreviewTab from "@/components/folders/PreviewTab";
