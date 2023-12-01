@@ -1,6 +1,5 @@
 "use client";
 
-// app/components/NavBar.client.tsx
 import { usePathname } from "next/navigation"; // This is hypothetical, replace with the appropriate import
 import Link from "next/link";
 

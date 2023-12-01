@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { Layout } from "@/app/components/Layout";
 import AdditionalInfoCard from "@/components/folders/AdditionalInfoCard";
 import CommiteeCard from "@/components/folders/CommiteeCard";
 import Hero from "@/components/folders/HeroSection";
@@ -17,14 +16,11 @@ import Stack from "@mui/material/Stack";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-import { useTheme } from "@mui/material";
-
 export default function Dossier() {
-  const theme = useTheme();
   const tabNumber = 0;
 
   return (
-    <Layout>
+    <React.Fragment>
       <Hero />
       <Box
         mb={2}
@@ -107,6 +103,6 @@ export default function Dossier() {
           </Container>
         )}
       </div>
-    </Layout>
+    </React.Fragment>
   );
 }
