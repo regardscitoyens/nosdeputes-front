@@ -89,6 +89,31 @@ const theme = createTheme({
         },
       },
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          "&:before": {
+            display: "none",
+          },
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          backgroundColor: "#F8F9FA",
+          borderRadius: ownerState.expanded ? "4px 4px 0px 0px" : "4px",
+        }),
+      },
+    },
+    MuiCollapse: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F8F9FA",
+          borderRadius: " 0px 0px 4px 4px",
+        },
+      },
+    },
   },
 });
 
