@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import StatusChip from "@/components/StatusChip";
 import LabelChip from "@/components/LabelChip";
 import EnergyIcon from "@/icons/EnergyIcon";
+import { PartisKeys, partis } from "@/components/const";
 
 export default function Page() {
   return (
@@ -134,6 +135,21 @@ export default function Page() {
       <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
         <LabelChip size="small" label="Label" />
         <LabelChip size="small" label="Label" onDelete={() => {}} />
+      </Stack>
+      <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ mb: 1 }}>
+        {Object.keys(partis).map((key) => {
+          const { fullName, color, group } = partis[key as PartisKeys];
+          return (
+            <div key={key} style={{ marginTop: 20, width: "max-content" }}>
+              <div
+                style={{ height: 10, width: "100%", backgroundColor: color }}
+              />
+              <p>
+                {fullName} ({key}){group ? ` - ${group}` : ""}
+              </p>
+            </div>
+          );
+        })}
       </Stack>
     </div>
   );
