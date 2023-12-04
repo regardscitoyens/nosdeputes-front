@@ -1,6 +1,5 @@
 import { Raleway } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
-import { buttonClasses } from "@mui/material/Button";
 
 const raleway = Raleway({
   weight: ["400", "600", "700"],
@@ -69,6 +68,50 @@ const theme = createTheme({
           fontWeight: 700,
           textTransform: ownerState.color === "secondary" ? "none" : "inherit",
         }),
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          height: 2,
+          backgroundColor: "#171B1E",
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          fontWeight: 600,
+          color: "#171B1E",
+          "&.Mui-selected": {
+            color: "#171B1E",
+          },
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          "&:before": {
+            display: "none",
+          },
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          backgroundColor: "#F8F9FA",
+          borderRadius: ownerState.expanded ? "4px 4px 0px 0px" : "4px",
+        }),
+      },
+    },
+    MuiCollapse: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F8F9FA",
+          borderRadius: " 0px 0px 4px 4px",
+        },
       },
     },
   },
