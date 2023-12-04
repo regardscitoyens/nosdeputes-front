@@ -3,14 +3,9 @@ import React from "react";
 import Image from "next/image";
 
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import EnergyIcon from "@/icons/EnergyIcon";
-import LabelChip from "@/components/LabelChip";
 import SearchBar from "./SearchBar";
+import FloatingIcons from "./FloatingIcons";
 
 const HeroSection = () => {
   return (
@@ -28,17 +23,23 @@ const HeroSection = () => {
       </Typography>
       <Box
         sx={{
-          minHeight: "272px", // picture height + header box padding
+          minHeight: "630px", // picture height
+          maxWidth: "1088px",
+          width: "100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           py: 5,
+          backgroundImage: "url(/background.jpg)",
+          backgroundPosition: "center",
+          position: "relative",
         }}
       >
+        <FloatingIcons />
         <Typography
           variant="h1"
           fontWeight="bold"
-          sx={{ mb: 2, maxWidth: 700 }}
+          sx={{ mb: 3, maxWidth: 700, lineHeight: "37px" }}
         >
           Tout comprendre au travail de vos représentants à l&apos;Assemblée
           Nationale
@@ -46,7 +47,7 @@ const HeroSection = () => {
         <Typography
           variant="caption"
           fontWeight="light"
-          sx={{ maxWidth: 500 }}
+          sx={{ maxWidth: 500, mb: 6 }}
           component="p"
         >
           NosDéputés met en valeur l&apos;activité parlementaire des députés de
