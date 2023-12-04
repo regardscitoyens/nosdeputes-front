@@ -4,29 +4,49 @@ import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/material/styles";
 
 import CardLayout from "@/components/folders/CardLayout";
+import { PartisKeys, partis } from "@/components/const";
 
-const SpeakingTimeCard = () => {
+// TODO: remove when we get access to real data
+const DEFAULT_SPEEAKING_TIME: SpeakingTimeCardProps["speakingTime"] = [
+  { parti: "LFI", time: 150 },
+  { parti: "GDR", time: 50 },
+  { parti: "SOC", time: 150 },
+  { parti: "ECO", time: 50 },
+  { parti: "LIOT", time: 150 },
+  { parti: "REN", time: 50 },
+  { parti: "MODEM", time: 250 },
+  { parti: "HOR", time: 50 },
+  { parti: "LR", time: 150 },
+  { parti: "RN", time: 50 },
+  { parti: "NI", time: 150 },
+];
+
+type SpeakingTimeCardProps = {
+  speakingTime: { parti: PartisKeys; time: number }[];
+};
+
+const SpeakingTimeCard = (props: SpeakingTimeCardProps) => {
+  const { speakingTime = DEFAULT_SPEEAKING_TIME } = props;
   const theme = useTheme();
+
+  const totalTime = speakingTime.reduce((acc, val) => {
+    return val.time + acc;
+  }, 0);
 
   return (
     <CardLayout title={"Temps de parole par groupe"} variant="primary">
       <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
-        <div
-          style={{
-            height: "8px",
-            backgroundColor: theme.palette.primary.main,
-            borderRadius: 4,
-            flex: 2,
-          }}
-        />
-        <div
-          style={{
-            height: "8px",
-            backgroundColor: theme.palette.primary.main,
-            borderRadius: 4,
-            flex: 1,
-          }}
-        />
+        {speakingTime.map(({ parti, time }) => (
+          <div
+            key={parti}
+            style={{
+              height: 8,
+              backgroundColor: partis[parti].color,
+              borderRadius: 4,
+              flex: time / totalTime,
+            }}
+          />
+        ))}
       </Stack>
       <Stack
         direction="row"
@@ -34,36 +54,16 @@ const SpeakingTimeCard = () => {
         flexWrap="wrap"
         justifyContent="center"
       >
-        <Typography fontWeight="bold" variant="caption">
-          LFI - NUPES : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          GDR - NUPES : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          SOC - NUPES : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          ECO - NUPES : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          LIOT : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          REN : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          MODEM : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          HOR : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          LR : 11%
-        </Typography>
-        <Typography fontWeight="bold" variant="caption">
-          RN : 11%
-        </Typography>
+        {speakingTime.map(({ parti, time }) => {
+          const { fullName, color, group } = partis[parti];
+          return (
+            <Typography key={parti} fontWeight="bold" variant="caption">
+              {parti}
+              {group ? ` - ${group}` : ""} :{" "}
+              {((100 * time) / totalTime).toFixed(1).replace(".0", "")}%
+            </Typography>
+          );
+        })}
       </Stack>
     </CardLayout>
   );
