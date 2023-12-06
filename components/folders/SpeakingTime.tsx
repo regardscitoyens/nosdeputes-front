@@ -1,9 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
 
-import CardLayout from "@/components/folders/CardLayout";
 import { PartisKeys, partis } from "@/components/const";
 
 // TODO: remove when we get access to real data
@@ -22,19 +20,18 @@ const DEFAULT_SPEEAKING_TIME: SpeakingTimeCardProps["speakingTime"] = [
 ];
 
 type SpeakingTimeCardProps = {
-  speakingTime: { parti: PartisKeys; time: number }[];
+  speakingTime?: { parti: PartisKeys; time: number }[];
 };
 
-const SpeakingTimeCard = (props: SpeakingTimeCardProps) => {
+export const SpeakingTime = (props: SpeakingTimeCardProps) => {
   const { speakingTime = DEFAULT_SPEEAKING_TIME } = props;
-  const theme = useTheme();
 
   const totalTime = speakingTime.reduce((acc, val) => {
     return val.time + acc;
   }, 0);
 
   return (
-    <CardLayout title={"Temps de parole par groupe"} variant="primary">
+    <React.Fragment>
       <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
         {speakingTime.map(({ parti, time }) => (
           <div
@@ -65,8 +62,6 @@ const SpeakingTimeCard = (props: SpeakingTimeCardProps) => {
           );
         })}
       </Stack>
-    </CardLayout>
+    </React.Fragment>
   );
 };
-
-export default SpeakingTimeCard;

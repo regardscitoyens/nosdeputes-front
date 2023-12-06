@@ -27,7 +27,7 @@ const breadcrumbs = [
   </Link>,
 ];
 
-const HeroSection = () => {
+export const HeroSection = () => {
   const theme = useTheme();
   return (
     <>
@@ -158,5 +158,3 @@ const HeroSection = () => {
     </>
   );
 };
-
-export default HeroSection;

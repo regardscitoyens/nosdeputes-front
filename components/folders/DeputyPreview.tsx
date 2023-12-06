@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-const DeputyPreview = () => {
+export const DeputyPreview = () => {
   return (
     <Box
       p={1}
@@ -32,5 +32,3 @@ const DeputyPreview = () => {
     </Box>
   );
 };
-
-export default DeputyPreview;

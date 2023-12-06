@@ -1,6 +1,6 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 
-export default function MinusIcon(props: SvgIconProps) {
+export const MinusIcon = (props: SvgIconProps) => {
   return (
     <SvgIcon {...props}>
       <svg
@@ -14,4 +14,4 @@ export default function MinusIcon(props: SvgIconProps) {
       </svg>
     </SvgIcon>
   );
-}
+};
