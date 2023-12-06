@@ -75,6 +75,16 @@ const theme = createTheme({
         }),
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "4px",
+          ":hover": {
+            backgroundColor: "#F8F9FA",
+          },
+        },
+      },
+    },
     MuiTabs: {
       styleOverrides: {
         indicator: {
@@ -96,17 +106,25 @@ const theme = createTheme({
     },
     MuiAccordion: {
       styleOverrides: {
-        root: {
+        root: ({ ownerState }) => ({
+          borderRadius: "4px",
+          "& .MuiAccordionSummary-root": {
+            backgroundColor:
+              ownerState.color === "secondary" ? "#F8F9FA" : "#FFFFFF",
+          },
+          "& .MuiCollapse-root": {
+            backgroundColor:
+              ownerState.color === "secondary" ? "#F8F9FA" : "#FFFFFF",
+          },
           "&:before": {
             display: "none",
           },
-        },
+        }),
       },
     },
     MuiAccordionSummary: {
       styleOverrides: {
         root: ({ ownerState }) => ({
-          backgroundColor: "#F8F9FA",
           borderRadius: ownerState.expanded ? "4px 4px 0px 0px" : "4px",
         }),
       },
@@ -114,8 +132,20 @@ const theme = createTheme({
     MuiCollapse: {
       styleOverrides: {
         root: {
-          backgroundColor: "#F8F9FA",
           borderRadius: " 0px 0px 4px 4px",
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F8F9FA",
+          "& .MuiInputBase-input": {
+            padding: "4px 32px 4px 8px",
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
         },
       },
     },
