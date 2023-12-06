@@ -4,16 +4,16 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
-import DeputyPreview from "../DeputyPreview";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
+import { DeputyPreview } from "./DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
-import MinusIcon from "@/icons/MinusIcon";
+import { MinusIcon } from "@/icons/MinusIcon";
 
-const AdditionalInfoCard = () => {
+export const AdditionalInfoCard = () => {
   return (
-    <Accordion elevation={0} disableGutters defaultExpanded>
+    <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
         expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
         aria-controls="additional-info-content"
@@ -69,5 +69,3 @@ const AdditionalInfoCard = () => {
     </Accordion>
   );
 };
-
-export default AdditionalInfoCard;

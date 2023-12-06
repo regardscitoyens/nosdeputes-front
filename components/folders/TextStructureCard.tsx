@@ -5,20 +5,19 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import CardLayout from "@/components/folders/CardLayout";
+import { CardLayout } from "@/components/folders/CardLayout";
 import Image from "next/image";
 
-const TextStructureCard = () => {
+export const TextStructureCard = () => {
   return (
     <CardLayout
-      variant="primary"
       title={
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="subtitle1" fontWeight="regular">
+          <Typography variant="body1" fontWeight="regular">
             Structure du texte déposé
           </Typography>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -62,5 +61,3 @@ const TextStructureCard = () => {
     </CardLayout>
   );
 };
-
-export default TextStructureCard;

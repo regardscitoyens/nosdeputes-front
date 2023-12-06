@@ -11,12 +11,12 @@ import TimelineDot from "@mui/lab/TimelineDot";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import CardLayout from "@/components/folders/CardLayout";
+import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
 
-const TimelineCard = () => {
+export const TimelineCard = () => {
   return (
-    <CardLayout title={"Chronologie du dossier"} variant="primary">
+    <CardLayout title={"Chronologie du dossier"}>
       <Timeline
         sx={{
           [`& .${timelineOppositeContentClasses.root}`]: {
@@ -103,5 +103,3 @@ const TimelineCard = () => {
     </CardLayout>
   );
 };
-
-export default TimelineCard;

@@ -6,13 +6,13 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import DeputyPreview from "@/components/folders/DeputyPreview";
+import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
-import MinusIcon from "@/icons/MinusIcon";
+import { MinusIcon } from "@/icons/MinusIcon";
 
-const CommiteeCard = () => {
+export const CommiteeCard = () => {
   return (
-    <Accordion elevation={0} disableGutters defaultExpanded>
+    <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
         expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
         aria-controls="commission-content"
@@ -56,5 +56,3 @@ const CommiteeCard = () => {
     </Accordion>
   );
 };
-
-export default CommiteeCard;
