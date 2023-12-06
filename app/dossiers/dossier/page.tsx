@@ -6,8 +6,9 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
-import Hero from "@/components/folders/HeroSection";
-import PreviewTab from "@/components/folders/PreviewTab";
+import { HeroSection } from "@/components/folders/HeroSection";
+import { PreviewTab } from "@/components/folders/PreviewTab";
+import { DebateTab } from "@/components/folders/DebateTab";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -19,15 +20,14 @@ export default function Dossier() {
   const [tabNumber, setTabNumber] = React.useState(0);
 
   return (
-    <React.Fragment>
-      <Hero />
+    <>
+      <HeroSection />
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           borderBottom: 1,
           borderColor: "divider",
-          mb: 3,
         }}
       >
         <Tabs
@@ -43,9 +43,9 @@ export default function Dossier() {
       </Box>
 
       {tabNumber === 0 && <PreviewTab />}
-      {tabNumber === 1 && <p>Débats</p>}
+      {tabNumber === 1 && <DebateTab />}
       {tabNumber === 2 && <p>Amendements</p>}
       {tabNumber === 3 && <p>Votes</p>}
-    </React.Fragment>
+    </>
   );
 }
