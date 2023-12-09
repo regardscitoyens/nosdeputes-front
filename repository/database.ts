@@ -13,7 +13,22 @@ export async function listTables() {
     }
 }
 
-export async function getDossiers(limit = 10) {
+interface DossierRow {
+    uid: string;
+    xsiType: string;
+    legislature: string;
+    senatChemin: string;
+    titre: string;
+    titreChemin: string;
+    theme: string | null;
+    codeProcedure: string;
+    libelleProcedure: string;
+    causeFusionDossier: string | null;
+    dossierAbsorbantRefUid: string | null;
+    organeRefUid: string | null;
+}
+
+export async function getDossiers(limit = 10): Promise<DossierRow[]> {
     try {
         const rows = await db.select('*').from('Dossier').limit(limit);
         return rows;
