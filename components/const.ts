@@ -67,3 +67,18 @@ export const partis: Record<PartisKeys, PartisInfo> = {
     fullName: "Députés Non Inscrit",
   },
 };
+
+export type ThemeKeys =
+  | "Environement"
+  | "Transport"
+  | "Défense"
+  | "Agriculture"
+  | "Economie";
+
+export const THEMES: ThemeKeys[] = [
+  "Environement",
+  "Transport",
+  "Défense",
+  "Agriculture",
+  "Economie",
+];
