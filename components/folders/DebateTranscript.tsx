@@ -10,7 +10,6 @@ import { SpeakingTime } from "@/components/folders/SpeakingTime";
 import { DebateTimeline } from "@/components/folders/DebateTimeline";
 
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
-import { MinusIcon } from "@/icons/MinusIcon";
 import { useTheme } from "@mui/material";
 
 export const DebateTranscript = () => {
@@ -41,7 +40,6 @@ export const DebateTranscript = () => {
         variant="outlined"
       >
         <AccordionSummary
-          expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
           aria-controls="additional-info-content"
           id="additional-info-header"
         >

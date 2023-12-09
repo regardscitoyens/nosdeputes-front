@@ -8,7 +8,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
-import { MinusIcon } from "@/icons/MinusIcon";
 
 import { useTheme } from "@mui/material";
 
@@ -18,7 +17,6 @@ export const DebateSummary = () => {
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
-        expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
         aria-controls="additional-info-content"
         id="additional-info-header"
       >
