@@ -10,12 +10,6 @@ import { HeroSection } from "@/components/folders/HeroSection";
 import { PreviewTab } from "@/components/folders/PreviewTab";
 import { DebateTab } from "@/components/folders/DebateTab";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
 export default function Dossier() {
   const [tabNumber, setTabNumber] = React.useState(0);
 

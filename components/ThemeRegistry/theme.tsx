@@ -118,14 +118,8 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           borderRadius: "4px",
-          "& .MuiAccordionSummary-root": {
-            backgroundColor:
-              ownerState.color === "secondary" ? "#F8F9FA" : "#FFFFFF",
-          },
-          "& .MuiCollapse-root": {
-            backgroundColor:
-              ownerState.color === "secondary" ? "#F8F9FA" : "#FFFFFF",
-          },
+          backgroundColor:
+            ownerState.color === "secondary" ? "#F8F9FA" : "#FFFFFF",
           "&:before": {
             display: "none",
           },
