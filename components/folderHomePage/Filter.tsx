@@ -1,30 +1,25 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import { THEMES } from "../const";
+import { THEMES, ThemeKeys } from "../const";
+import { useFilterState } from "./useFilter";
 
-export type DossierFilterState = {
+type FilterProps = {
   theme: string;
 };
 
-type FilterProps = {
-  filterState: DossierFilterState;
-  setFilterState: React.Dispatch<React.SetStateAction<DossierFilterState>>;
-};
-
 export const Filter = (props: FilterProps) => {
-  const { filterState, setFilterState } = props;
+  const { theme } = props;
+
+  const { handleThemes } = useFilterState();
 
   return (
     <TextField
       select
       size="small"
       label="Thème"
-      value={filterState.theme}
+      value={theme}
       onChange={(event) => {
-        setFilterState((prev) => ({
-          ...prev,
-          theme: event.target.value,
-        }));
+        handleThemes(event.target.value);
       }}
       variant="outlined"
     >

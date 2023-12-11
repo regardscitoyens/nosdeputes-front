@@ -6,13 +6,13 @@ import Stack from "@mui/material/Stack";
 
 import { FilterContainer } from "@/components/FilterContainer";
 
-import { DossierFilterState, Filter } from "@/components/folderHomePage/Filter";
+import { Filter } from "@/components/folderHomePage/Filter";
 import DossierList from "@/components/folderHomePage/DossierList";
 
-export default function Dossiers() {
-  const [filterState, setFilterState] = React.useState<DossierFilterState>({
-    theme: "",
-  });
+export default function Dossiers(props: {
+  searchParams: { theme?: string; search?: string };
+}) {
+  const { searchParams } = props;
 
   return (
     <Container
@@ -28,14 +28,11 @@ export default function Dossiers() {
     >
       <Stack spacing={3} useFlexGap flex={2}>
         <FilterContainer>
-          <Filter filterState={filterState} setFilterState={setFilterState} />
+          <Filter theme={searchParams.theme ?? ""} />
         </FilterContainer>
       </Stack>
       <Stack spacing={3} flex={5} sx={{ minWidth: 0 }}>
-        <DossierList
-          filterState={filterState}
-          setFilterState={setFilterState}
-        />
+        <DossierList theme={searchParams.theme ?? ""} search="" />
       </Stack>
     </Container>
   );

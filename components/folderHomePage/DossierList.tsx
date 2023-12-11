@@ -2,7 +2,6 @@ import * as React from "react";
 import { Divider, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { DossierFilterState } from "./Filter";
 import { ThemeKeys } from "../const";
 import LabelChip from "../LabelChip";
 
@@ -18,141 +17,146 @@ const dossiers: DossierType[] = [
   {
     date: "2024-11-01",
     id: 0,
-    title: `Souhaits de bienvenue à une députée nouvellement élue`,
-    theme: "Transport",
+    title: "Souhaits de bienvenue à une députée nouvellement élue",
+    theme: "Environement",
   },
   {
     date: "2024-11-01",
     id: 1,
-    title: `Écoles nationales d'architecture`,
+    title: "Écoles nationales d'architecture",
     theme: "Transport",
   },
   {
     date: "2024-11-01",
     id: 2,
-    title: `Orientation et programmation du ministère de la justice 2023-2027 `,
-    theme: "Transport",
+    title: "Orientation et programmation du ministère de la justice 2023-2027 ",
+    theme: "Défense",
   },
   {
     date: "2024-11-01",
     id: 3,
-    title: `Interdiction de l'écriture dite inclusive`,
-    theme: "Transport",
+    title: "Interdiction de l'écriture dite inclusive",
+    theme: "Agriculture",
   },
   {
     date: "2024-11-01",
     id: 4,
-    title: `Crise de l'hôpital public`,
-    theme: "Transport",
+    title: "Crise de l'hôpital public",
+    theme: "Economie",
   },
   {
     date: "2024-11-01",
     id: 5,
-    title: `Avenant au protocole d'accord france-luxembourg `,
-    theme: "Transport",
+    title: "Avenant au protocole d'accord france-luxembourg ",
+    theme: "Environement",
   },
   {
     date: "2024-11-01",
     id: 6,
-    title: `Débat sur la dette`,
+    title: "Débat sur la dette",
     theme: "Transport",
   },
   {
     date: "2024-11-01",
     id: 7,
-    title: `Convocation du parlement en session extraordinaire`,
-    theme: "Transport",
+    title: "Convocation du parlement en session extraordinaire",
+    theme: "Défense",
   },
   {
     date: "2024-11-01",
     id: 8,
-    title: `Modernisation et responsabilité du corps judiciaire `,
-    theme: "Transport",
+    title: "Modernisation et responsabilité du corps judiciaire ",
+    theme: "Agriculture",
   },
   {
     date: "2024-11-01",
     id: 9,
-    title: `Questions orales sans débat (1082 interventions, 3 commentaires)`,
-    theme: "Transport",
+    title: "Questions orales sans débat (1082 interventions, 3 commentaires)",
+    theme: "Economie",
   },
   {
     date: "2024-11-01",
     id: 10,
-    title: `Orientation et programmation du ministère de la justice 2023-2027 - modernisation et responsabilité du corps judiciaire`,
-    theme: "Transport",
+    title:
+      "Orientation et programmation du ministère de la justice 2023-2027 - modernisation et responsabilité du corps judiciaire",
+    theme: "Environement",
   },
   {
     date: "2024-11-01",
     id: 11,
-    title: `Hommage à léon gautier`,
+    title: "Hommage à léon gautier",
     theme: "Transport",
   },
   {
     date: "2024-11-01",
     id: 12,
-    title: `Lutte contre les arnaques et les dérives des influenceurs sur les réseaux sociaux`,
-    theme: "Transport",
+    title:
+      "Lutte contre les arnaques et les dérives des influenceurs sur les réseaux sociaux",
+    theme: "Défense",
   },
-
   {
     date: "2024-10-01",
     id: 13,
-    title: `Accompagnement des élus locaux dans la lutte contre l'artificialisation des sols`,
-    theme: "Transport",
+    title:
+      "Accompagnement des élus locaux dans la lutte contre l'artificialisation des sols",
+    theme: "Agriculture",
   },
   {
     date: "2024-10-01",
     id: 14,
-    title: `Hommage au professeur tué à arras `,
-    theme: "Transport",
+    title: "Hommage au professeur tué à arras ",
+    theme: "Economie",
   },
   {
     date: "2024-10-01",
     id: 15,
-    title: `Explosion dans le 5e arrondissement`,
-    theme: "Transport",
+    title: "Explosion dans le 5e arrondissement",
+    theme: "Environement",
   },
   {
     date: "2024-10-01",
     id: 16,
-    title: `Discussion d'une proposition de loi`,
+    title: "Discussion d'une proposition de loi",
     theme: "Transport",
   },
   {
     date: "2024-10-01",
     id: 17,
-    title: `Lutte contre l'inflation concernant les produits de grande consommation `,
-    theme: "Transport",
+    title:
+      "Lutte contre l'inflation concernant les produits de grande consommation ",
+    theme: "Défense",
   },
   {
     date: "2024-10-01",
     id: 18,
-    title: `Soutien à israel face au terrorisme`,
-    theme: "Transport",
+    title: "Soutien à israel face au terrorisme",
+    theme: "Agriculture",
   },
   {
     date: "2024-10-01",
     id: 19,
-    title: `Solution à deux États et condamnation de l'institutionnalisation par l'État d'israel d'un régime d'apartheid`,
-    theme: "Transport",
+    title:
+      "Solution à deux États et condamnation de l'institutionnalisation par l'État d'israel d'un régime d'apartheid",
+    theme: "Economie",
   },
   {
     date: "2024-10-01",
     id: 20,
-    title: `Sécuriser et réguler l'espace numérique `,
-    theme: "Transport",
+    title: "Sécuriser et réguler l'espace numérique ",
+    theme: "Environement",
   },
   {
     date: "2024-10-01",
     id: 21,
-    title: `Ouverture de la session ordinaire`,
+    title: "Ouverture de la session ordinaire",
     theme: "Transport",
   },
   {
     date: "2024-10-01",
     id: 22,
-    title: `Inscrire le groupe militaire privé wagner sur la liste des organisations terroristes`,
-    theme: "Transport",
+    title:
+      "Inscrire le groupe militaire privé wagner sur la liste des organisations terroristes",
+    theme: "Défense",
   },
 ];
 
@@ -175,15 +179,26 @@ const dossierMensuels = dossiers
   }, [] as MonthDossier[]);
 
 type DossierListProps = {
-  filterState: DossierFilterState;
-  setFilterState: React.Dispatch<React.SetStateAction<DossierFilterState>>;
+  theme: string;
+  search: string;
 };
 
 export default function DossierList(props: DossierListProps) {
+  const { theme, search } = props;
+
+  const dossierMensuelsFiltered = dossierMensuels
+    .map((month) => {
+      return {
+        ...month,
+        dossiers: month.dossiers.filter((dossier) => dossier.theme === theme),
+      };
+    })
+    .filter((month) => month.dossiers.length > 0);
+
   return (
     <div>
       <Stack component="ol">
-        {dossierMensuels.map(({ date, dossiers }) => (
+        {dossierMensuelsFiltered.map(({ date, dossiers }) => (
           <React.Fragment key={date}>
             <Typography
               component="li"
