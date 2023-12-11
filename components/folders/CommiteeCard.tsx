@@ -8,13 +8,11 @@ import Stack from "@mui/material/Stack";
 
 import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
-import { MinusIcon } from "@/icons/MinusIcon";
 
 export const CommiteeCard = () => {
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
-        expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
         aria-controls="commission-content"
         id="commission-header"
       >

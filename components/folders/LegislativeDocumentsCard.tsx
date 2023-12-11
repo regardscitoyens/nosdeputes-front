@@ -5,10 +5,8 @@ import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Paper from "@mui/material/Paper";
 
 import LinkIcon from "@/icons/LinkIcon";
-import { MinusIcon } from "@/icons/MinusIcon";
 
 import Link from "next/link";
 
@@ -16,7 +14,6 @@ export const LegislativeDocumentsCard = () => {
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
-        expandIcon={<MinusIcon sx={{ fontSize: "10px" }} />}
         aria-controls="additional-info-content"
         id="additional-info-header"
       >

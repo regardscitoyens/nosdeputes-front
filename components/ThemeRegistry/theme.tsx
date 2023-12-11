@@ -1,5 +1,15 @@
 import { Raleway } from "next/font/google";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import { createTheme } from "@mui/material/styles";
+import { MinusIcon } from "@/icons/MinusIcon";
+import { PlusIcon } from "@/icons/PlusIcon";
+
+const AccordionIcon = (props: SvgIconProps) => (
+  <>
+    <MinusIcon {...props} className="minus-icon" />
+    <PlusIcon {...props} className="plus-icon" />
+  </>
+);
 
 const raleway = Raleway({
   weight: ["400", "600", "700"],
@@ -120,7 +130,13 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           borderRadius: ownerState.expanded ? "4px 4px 0px 0px" : "4px",
+          ...(ownerState.expanded
+            ? { ["& .plus-icon"]: { display: "none" } }
+            : { ["& .minus-icon"]: { display: "none" } }),
         }),
+      },
+      defaultProps: {
+        expandIcon: <AccordionIcon sx={{ fontSize: 10 }} />,
       },
     },
     MuiCollapse: {
