@@ -16,7 +16,7 @@ import StatusChip from "@/components/StatusChip";
 
 export const TimelineCard = () => {
   return (
-    <CardLayout title={"Chronologie du dossier"}>
+    <CardLayout title="Chronologie du dossier">
       <Timeline
         sx={{
           [`& .${timelineOppositeContentClasses.root}`]: {
