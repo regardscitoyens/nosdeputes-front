@@ -70,7 +70,10 @@ export async function getTable(
   limit = 10
 ): Promise<DossierRow[]> {
   try {
-    const rows = await db.select("*").from(table).limit(limit);
+    const rows = await db
+      .select("*")
+      .from(table || "Dossier")
+      .limit(limit);
     return rows;
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
