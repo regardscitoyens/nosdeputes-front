@@ -15,7 +15,7 @@ export async function listTables() {
   }
 }
 
-interface DossierRow {
+export interface DossierRow {
   uid: string;
   xsiType: string;
   legislature: string;
@@ -31,7 +31,7 @@ interface DossierRow {
 }
 
 export async function getDossiers(
-  legislature = 16,
+  { legislature = 16 },
   limit = 10
 ): Promise<DossierRow[]> {
   try {
