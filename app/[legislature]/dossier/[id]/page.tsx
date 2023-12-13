@@ -10,6 +10,9 @@ export default async function Page({
   params: { legislature: string; id: string };
 }) {
   const dossier = await getDossier(params.legislature, params.id);
-  console.log({ params, dossier });
-  return <PreviewTab />;
+
+  if (dossier === undefined) {
+    return <p>Dossier Not Found</p>;
+  }
+  return <PreviewTab dossier={dossier} />;
 }

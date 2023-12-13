@@ -14,7 +14,10 @@ import Stack from "@mui/material/Stack";
 import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
 
-export const TimelineCard = () => {
+export const TimelineCard = ({ acts }) => {
+  // console.log(acts.map((act) => act.dateActe));
+  console.log(acts);
+
   return (
     <CardLayout title="Chronologie du dossier">
       <Timeline
@@ -24,6 +27,54 @@ export const TimelineCard = () => {
           },
         }}
       >
+        {acts.map((act) => {
+          const title = act.nomCanonique || act.codeActe;
+
+          return (
+            <TimelineItem key={act.uid}>
+              <TimelineOppositeContent>
+                <Typography variant="body2" fontWeight="light">
+                  {act.dateActe
+                    ? act.dateActe.toLocaleDateString("fr-FR", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "?"}
+                </Typography>
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineDot />
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent>
+                <Stack direction="column" spacing={1}>
+                  <Typography variant="body1" fontWeight="bold">
+                    {title}
+                  </Typography>
+
+                  {act.texteAdopteRefUid && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography variant="caption" fontWeight="light">
+                        text: {act.texteAdopteRefUid}
+                      </Typography>
+                      <StatusChip
+                        status="validated"
+                        label="Adopté"
+                        size="small"
+                      />
+                    </Stack>
+                  )}
+                  {act.texteAssocieRefUid && (
+                    <Typography variant="caption" fontWeight="light">
+                      Text associé: {act.texteAssocieRefUid}
+                    </Typography>
+                  )}
+                </Stack>
+              </TimelineContent>
+            </TimelineItem>
+          );
+        })}
         <TimelineItem>
           <TimelineOppositeContent>
             <Typography variant="body2" fontWeight="light">
