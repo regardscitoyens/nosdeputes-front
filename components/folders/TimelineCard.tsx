@@ -43,33 +43,33 @@ export const TimelineCard = ({
             return a.dateActe < b.dateActe ? -1 : 1;
           })
           .map((act) => {
-          const title = act.nomCanonique || act.codeActe;
+            const title = act.nomCanonique || act.codeActe;
 
-          return (
-            <TimelineItem key={act.uid}>
-              <TimelineOppositeContent>
-                <Typography variant="body2" fontWeight="light">
-                  {act.dateActe
-                    ? act.dateActe.toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
-                    : "?"}
-                </Typography>
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <Stack direction="column" spacing={1}>
-                  <Typography variant="body1" fontWeight="bold">
-                    {title}
+            return (
+              <TimelineItem key={act.uid}>
+                <TimelineOppositeContent>
+                  <Typography variant="body2" fontWeight="light">
+                    {act.dateActe
+                      ? act.dateActe.toLocaleDateString("fr-FR", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "?"}
                   </Typography>
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Stack direction="column" spacing={1}>
+                    <Typography variant="body1" fontWeight="bold">
+                      {title}
+                    </Typography>
 
-                  {act.texteAdopteRefUid && (
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    {act.texteAdopteRefUid && (
+                      <Stack direction="row" spacing={1} alignItems="center">
                         <Typography
                           variant="caption"
                           fontWeight="light"
@@ -83,15 +83,15 @@ export const TimelineCard = ({
                           )}
                         >
                           {documents[act.texteAdopteRefUid]?.titrePrincipal}
-                      </Typography>
-                      <StatusChip
-                        status="validated"
-                        label="Adopté"
-                        size="small"
-                      />
-                    </Stack>
-                  )}
-                  {act.texteAssocieRefUid && (
+                        </Typography>
+                        <StatusChip
+                          status="validated"
+                          label="Adopté"
+                          size="small"
+                        />
+                      </Stack>
+                    )}
+                    {act.texteAssocieRefUid && (
                       <Typography
                         variant="caption"
                         fontWeight="light"
@@ -103,13 +103,13 @@ export const TimelineCard = ({
                         href={getDocumentURL(documents[act.texteAssocieRefUid])}
                       >
                         {documents[act.texteAssocieRefUid]?.titrePrincipal}
-                    </Typography>
-                  )}
-                </Stack>
-              </TimelineContent>
-            </TimelineItem>
-          );
-        })}
+                      </Typography>
+                    )}
+                  </Stack>
+                </TimelineContent>
+              </TimelineItem>
+            );
+          })}
         {/* Next lines are items from the figma.
         I keep them to be able to copy past them when needed.
         But commented to be sure I don't mix real data and the figma. */}

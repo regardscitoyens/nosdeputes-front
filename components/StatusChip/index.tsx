@@ -2,8 +2,9 @@
 import { styled, Theme } from "@mui/system";
 import Chip, { chipClasses, ChipProps } from "@mui/material/Chip";
 
+export type Status = "validated" | "review" | "refused" | "dropped";
 interface StatusChipProps extends ChipProps {
-  status: "validated" | "review" | "refused" | "dropped";
+  status: Status;
 }
 
 function getColor(status: StatusChipProps["status"], theme: Theme) {

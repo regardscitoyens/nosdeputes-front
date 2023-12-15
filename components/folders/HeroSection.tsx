@@ -14,6 +14,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import EnergyIcon from "@/icons/EnergyIcon";
 import LabelChip from "@/components/LabelChip";
 import StatusChip from "@/components/StatusChip";
+import { getCurrentStatus, statusInfo } from "@/repository/dataTransform";
 
 const breadcrumbs = [
   <Link key="1" href="/">
@@ -29,8 +30,10 @@ const breadcrumbs = [
   </Link>,
 ];
 
-export const HeroSection = () => {
+export const HeroSection = ({ dossier, acts }) => {
   const theme = useTheme();
+
+  const status = getCurrentStatus(acts);
   return (
     <>
       <Breadcrumbs
@@ -94,6 +97,7 @@ export const HeroSection = () => {
               direction="column"
               spacing={2}
               sx={{
+                textAlign: "center",
                 alignItems: "flex-start",
                 [theme.breakpoints.up("md")]: {
                   alignItems: "center",
@@ -110,7 +114,7 @@ export const HeroSection = () => {
                   },
                 }}
               >
-                Type de dossier
+                {dossier.libelleProcedure}
                 {/* TODO: info tick */}
               </Typography>
               <Typography
@@ -125,7 +129,7 @@ export const HeroSection = () => {
                   },
                 }}
               >
-                Titre du texte de loi/dossier
+                {dossier.titre}
               </Typography>
             </Stack>
             <Stack
@@ -142,17 +146,16 @@ export const HeroSection = () => {
                 },
               }}
             >
-              <StatusChip size="small" status="validated" label="Adopté" />
-              <StatusChip size="small" status="review" label="1e lecture SE" />
-              <StatusChip size="small" status="refused" label="Abrogé" />
+              {status && <StatusChip size="small" {...statusInfo[status]} />}
+              {/* <StatusChip size="small" status="refused" label="Abrogé" />
               <StatusChip size="small" status="refused" label="Rejeté" />
               <StatusChip size="small" status="dropped" label="Non-soutenu" />
               <StatusChip size="small" status="review" label="1e lecture AN" />
-              <StatusChip size="small" status="validated" label="Promulgué" />
+              <StatusChip size="small" status="validated" label="Promulgué" /> */}
               <LabelChip size="small" label="Label" icon={<EnergyIcon />} />
-              <LabelChip size="small" label="Label" />
+              {/* <LabelChip size="small" label="Label" />
               <LabelChip size="small" label="Label" onDelete={() => {}} />
-              <LabelChip size="small" label="Label" onDelete={() => {}} />
+              <LabelChip size="small" label="Label" onDelete={() => {}} /> */}
             </Stack>
           </Stack>
         </Paper>
