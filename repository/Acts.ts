@@ -1,4 +1,4 @@
-type SN1_DEPOT = {
+export type SN1_DEPOT = {
   codeActe: "SN1-DEPOT";
   uid: string;
   nomCanonique: string;
@@ -10,7 +10,7 @@ type SN1_DEPOT = {
   dossierRefUid: string;
   organeProvenanceRefUid: null | string;
 };
-type AN1 = {
+export type AN1 = {
   codeActe: "AN1";
   uid: string;
   nomCanonique: string;
@@ -19,7 +19,7 @@ type AN1 = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM = {
+export type SN1_COM = {
   codeActe: "SN1-COM";
   uid: string;
   nomCanonique: string;
@@ -28,7 +28,7 @@ type SN1_COM = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_DEBATS = {
+export type SN1_DEBATS = {
   codeActe: "SN1-DEBATS";
   uid: string;
   nomCanonique: string;
@@ -37,7 +37,7 @@ type SN1_DEBATS = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_DEPOT = {
+export type AN1_DEPOT = {
   codeActe: "AN1-DEPOT";
   uid: string;
   nomCanonique: string;
@@ -49,7 +49,7 @@ type AN1_DEPOT = {
   texteAssocieRefUid: string;
   dossierRefUid: string;
 };
-type AN1_COM = {
+export type AN1_COM = {
   codeActe: "AN1-COM";
   uid: string;
   nomCanonique: string;
@@ -58,7 +58,7 @@ type AN1_COM = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_FOND = {
+export type SN1_COM_FOND = {
   codeActe: "SN1-COM-FOND";
   uid: string;
   nomCanonique: string;
@@ -67,7 +67,7 @@ type SN1_COM_FOND = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_DEBATS_DEC = {
+export type SN1_DEBATS_DEC = {
   codeActe: "SN1-DEBATS-DEC";
   uid: string;
   nomCanonique: string;
@@ -80,7 +80,7 @@ type SN1_DEBATS_DEC = {
   dossierRefUid: string;
   reunionRefUid: null | string;
 };
-type AN1_COM_FOND = {
+export type AN1_COM_FOND = {
   codeActe: "AN1-COM-FOND";
   uid: string;
   nomCanonique: string;
@@ -89,7 +89,7 @@ type AN1_COM_FOND = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_FOND_SAISIE = {
+export type SN1_COM_FOND_SAISIE = {
   codeActe: "SN1-COM-FOND-SAISIE";
   uid: string;
   nomCanonique: string;
@@ -99,7 +99,7 @@ type SN1_COM_FOND_SAISIE = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_FOND_NOMIN = {
+export type SN1_COM_FOND_NOMIN = {
   codeActe: "SN1-COM-FOND-NOMIN";
   uid: string;
   nomCanonique: string;
@@ -108,7 +108,7 @@ type SN1_COM_FOND_NOMIN = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_FOND_RAPPORT = {
+export type SN1_COM_FOND_RAPPORT = {
   codeActe: "SN1-COM-FOND-RAPPORT";
   uid: string;
   nomCanonique: string;
@@ -120,7 +120,7 @@ type SN1_COM_FOND_RAPPORT = {
   dossierRefUid: string;
   texteAdopteRefUid: null | string;
 };
-type AN1_COM_FOND_SAISIE = {
+export type AN1_COM_FOND_SAISIE = {
   codeActe: "AN1-COM-FOND-SAISIE";
   uid: string;
   nomCanonique: string;
@@ -130,7 +130,7 @@ type AN1_COM_FOND_SAISIE = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1 = {
+export type SN1 = {
   codeActe: "SN1";
   uid: string;
   nomCanonique: string;
@@ -139,7 +139,7 @@ type SN1 = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN2 = {
+export type AN2 = {
   codeActe: "AN2";
   uid: string;
   nomCanonique: string;
@@ -148,7 +148,7 @@ type AN2 = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_DEBATS = {
+export type AN1_DEBATS = {
   codeActe: "AN1-DEBATS";
   uid: string;
   nomCanonique: string;
@@ -157,7 +157,7 @@ type AN1_DEBATS = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN2_DEPOT = {
+export type AN2_DEPOT = {
   codeActe: "AN2-DEPOT";
   uid: string;
   nomCanonique: string;
@@ -169,7 +169,7 @@ type AN2_DEPOT = {
   texteAssocieRefUid: string;
   dossierRefUid: string;
 };
-type AN2_COM = {
+export type AN2_COM = {
   codeActe: "AN2-COM";
   uid: string;
   nomCanonique: string;
@@ -178,7 +178,7 @@ type AN2_COM = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_DEBATS_SEANCE = {
+export type AN1_DEBATS_SEANCE = {
   codeActe: "AN1-DEBATS-SEANCE";
   uid: string;
   nomCanonique: string;
@@ -190,7 +190,7 @@ type AN1_DEBATS_SEANCE = {
   reunionRefUid: string;
   dossierRefUid: string;
 };
-type AN1_DEBATS_MOTION = {
+export type AN1_DEBATS_MOTION = {
   codeActe: "AN1-DEBATS-MOTION";
   uid: string;
   nomCanonique: string;
@@ -203,7 +203,7 @@ type AN1_DEBATS_MOTION = {
   dossierRefUid: string;
   auteurMotionRefUid: null | string;
 };
-type AN1_DEBATS_MOTION_VOTE = {
+export type AN1_DEBATS_MOTION_VOTE = {
   codeActe: "AN1-DEBATS-MOTION-VOTE";
   uid: string;
   nomCanonique: string;
@@ -216,7 +216,7 @@ type AN1_DEBATS_MOTION_VOTE = {
   reunionRefUid: null | string;
   dossierRefUid: string;
 };
-type SN1_DEBATS_SEANCE = {
+export type SN1_DEBATS_SEANCE = {
   codeActe: "SN1-DEBATS-SEANCE";
   uid: string;
   nomCanonique: string;
@@ -228,7 +228,7 @@ type SN1_DEBATS_SEANCE = {
   reunionRefUid: string;
   dossierRefUid: string;
 };
-type AN2_COM_FOND = {
+export type AN2_COM_FOND = {
   codeActe: "AN2-COM-FOND";
   uid: string;
   nomCanonique: string;
@@ -237,7 +237,7 @@ type AN2_COM_FOND = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_COM_FOND_NOMIN = {
+export type AN1_COM_FOND_NOMIN = {
   codeActe: "AN1-COM-FOND-NOMIN";
   uid: string;
   nomCanonique: string;
@@ -247,7 +247,7 @@ type AN1_COM_FOND_NOMIN = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_COM_FOND_REUNION = {
+export type AN1_COM_FOND_REUNION = {
   codeActe: "AN1-COM-FOND-REUNION";
   uid: string;
   nomCanonique: string;
@@ -259,7 +259,7 @@ type AN1_COM_FOND_REUNION = {
   reunionRefUid: string;
   dossierRefUid: string;
 };
-type AN1_COM_FOND_RAPPORT = {
+export type AN1_COM_FOND_RAPPORT = {
   codeActe: "AN1-COM-FOND-RAPPORT";
   uid: string;
   nomCanonique: string;
@@ -271,7 +271,7 @@ type AN1_COM_FOND_RAPPORT = {
   dossierRefUid: string;
   texteAdopteRefUid: null | string;
 };
-type AN2_COM_FOND_SAISIE = {
+export type AN2_COM_FOND_SAISIE = {
   codeActe: "AN2-COM-FOND-SAISIE";
   uid: string;
   nomCanonique: string;
@@ -281,7 +281,7 @@ type AN2_COM_FOND_SAISIE = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type AN1_DEBATS_DEC = {
+export type AN1_DEBATS_DEC = {
   codeActe: "AN1-DEBATS-DEC";
   uid: string;
   nomCanonique: string;
@@ -294,7 +294,7 @@ type AN1_DEBATS_DEC = {
   reunionRefUid: string;
   dossierRefUid: string;
 };
-type ANLUNI = {
+export type ANLUNI = {
   codeActe: "ANLUNI";
   uid: string;
   nomCanonique: string;
@@ -302,7 +302,7 @@ type ANLUNI = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_AVIS = {
+export type SN1_COM_AVIS = {
   codeActe: "SN1-COM-AVIS";
   uid: string;
   nomCanonique: string;
@@ -311,7 +311,7 @@ type SN1_COM_AVIS = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_AVIS_SAISIE = {
+export type SN1_COM_AVIS_SAISIE = {
   codeActe: "SN1-COM-AVIS-SAISIE";
   uid: string;
   nomCanonique: string;
@@ -321,7 +321,7 @@ type SN1_COM_AVIS_SAISIE = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_AVIS_NOMIN = {
+export type SN1_COM_AVIS_NOMIN = {
   codeActe: "SN1-COM-AVIS-NOMIN";
   uid: string;
   nomCanonique: string;
@@ -330,7 +330,7 @@ type SN1_COM_AVIS_NOMIN = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_COM_AVIS_RAPPORT = {
+export type SN1_COM_AVIS_RAPPORT = {
   codeActe: "SN1-COM-AVIS-RAPPORT";
   uid: string;
   nomCanonique: string;
@@ -341,7 +341,7 @@ type SN1_COM_AVIS_RAPPORT = {
   texteAssocieRefUid: string;
   dossierRefUid: string;
 };
-type ANLUNI_DEPOT = {
+export type ANLUNI_DEPOT = {
   codeActe: "ANLUNI-DEPOT";
   uid: string;
   nomCanonique: string;
@@ -352,7 +352,7 @@ type ANLUNI_DEPOT = {
   texteAssocieRefUid: string;
   dossierRefUid: string;
 };
-type CMP = {
+export type CMP = {
   codeActe: "CMP";
   uid: string;
   nomCanonique: string;
@@ -361,7 +361,7 @@ type CMP = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type SN1_PROCACC = {
+export type SN1_PROCACC = {
   codeActe: "SN1-PROCACC";
   uid: string;
   nomCanonique: string;
@@ -371,7 +371,7 @@ type SN1_PROCACC = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type CMP_DEPOT = {
+export type CMP_DEPOT = {
   codeActe: "CMP-DEPOT";
   uid: string;
   nomCanonique: string;
@@ -383,7 +383,7 @@ type CMP_DEPOT = {
   texteAssocieRefUid: string;
   dossierRefUid: string;
 };
-type CMP_SAISIE = {
+export type CMP_SAISIE = {
   codeActe: "CMP-SAISIE";
   uid: string;
   nomCanonique: string;
@@ -393,7 +393,7 @@ type CMP_SAISIE = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type CMP_COM = {
+export type CMP_COM = {
   codeActe: "CMP-COM";
   uid: string;
   nomCanonique: string;
@@ -402,7 +402,7 @@ type CMP_COM = {
   organeRefUid: string;
   dossierRefUid: string;
 };
-type ANLUNI_COM = {
+export type ANLUNI_COM = {
   codeActe: "ANLUNI-COM";
   uid: string;
   nomCanonique: string;
@@ -454,7 +454,7 @@ export type ActeLegislatif =
   | CMP_COM
   | ANLUNI_COM;
 
-type ActWithDate =
+export type ActWithDate =
   | AN1_DEPOT
   | SN1_DEPOT
   | AN2_DEPOT

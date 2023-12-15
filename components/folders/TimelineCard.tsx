@@ -24,7 +24,6 @@ export const TimelineCard = ({
   acts: ActLegislatif[];
   documents: Record<string, Document>;
 }) => {
-  console.log(acts);
 
   return (
     <CardLayout title="Chronologie du dossier">

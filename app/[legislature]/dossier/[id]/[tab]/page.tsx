@@ -20,7 +20,6 @@ export default async function Page({
   };
 }) {
   const dossier = await getDossier(params.legislature, params.id);
-  console.log({ params, dossier });
 
   switch (params.tab) {
     case "debat":

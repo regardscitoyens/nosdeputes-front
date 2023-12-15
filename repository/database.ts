@@ -1,6 +1,6 @@
 import knex from "knex";
 import config from "./knexfile";
-import { ActeLegislatif } from "./Acts";
+import { AN1_COM_FOND, ActeLegislatif, AN1_COM_FOND_NOMIN } from "./Acts";
 
 const db = knex(config.development);
 
@@ -118,6 +118,50 @@ export type Document = {
   documentParentRefUid: null;
 };
 
+export type Organe = {
+  uid: string;
+  codeType: string;
+  libelle: string;
+  libelleEdition: string;
+  libelleAbrege: string;
+  libelleAbrev: string;
+  organeParentRefUid: null | string;
+  regime: null | string;
+  legislature: null | string;
+  secretaire01: null | string;
+  secretaire02: null | string;
+  regimeJuridique: null | string;
+  siteInternet: null | string;
+  nombreReunionsAnnuelles: null | string;
+  positionPolitique: null | string;
+  preseance: null | string;
+  couleurAssociee: null | string;
+  dateDebut: null | Date;
+  dateAgrement: null | Date;
+  dateFin: null | Date;
+  xsiType: string;
+};
+
+export type Acteur = {
+  uid: string;
+  prenom: string;
+  nom: string;
+  civ: string;
+  dateNais: Date;
+  dateDeces: null;
+  villeNais: string;
+  depNais: string;
+  paysNais: string;
+  profession: string;
+  catSocPro: string;
+  famSocPro: string;
+  slug: string;
+  uriHatvp: null | string;
+  deputeActif: boolean;
+  deputeGroupeParlementaireUid: null | string;
+  mandatPrincipalUid: null | string;
+};
+
 export async function getDossiers(
   { legislature = 16 },
   limit = 10
@@ -141,8 +185,25 @@ export async function getDossier(
 ): Promise<
   | {
       dossier: DossierRow;
+      /**
+       * uid de la commission saisie sur le fond.
+       * Données à ércupérer dans organes.
+       */
+      commissionFondId?: string;
+      /**
+       * uid de la commission saisie pour avis.
+       * Données à ércupérer dans organes.
+       */
+      commissionAvisId?: string;
+      /**
+       * liste des uid des rapporteurs de la commission saisie sur le fond.
+       * Données à ércupérer dans acteurs.
+       */
+      rapporteursFondIds?: string[];
       acts: ActeLegislatif[];
       documents: Record<string, Document>;
+      organes: Record<string, Organe>;
+      acteurs: Record<string, Acteur>;
     }
   | undefined
 > {
@@ -164,7 +225,7 @@ export async function getDossier(
       .where("dossierRefUid", "=", dossier.uid);
 
     const documentsIds = new Set<string>();
-    // const organesIds = new Set<string>();
+    const organesIds = new Set<string>();
     // const reunionIds = new Set<string>();
     // const auteurIds = new Set<string>();
     // const odjIds = new Set<string>();
@@ -173,7 +234,7 @@ export async function getDossier(
         texteAssocieRefUid,
         texteAdopteRefUid,
         // organeProvenanceRefUid,
-        // organeRefUid,
+        organeRefUid,
         // reunionRefUid,
         // auteurMotionRefUid,
         // odjRefUid,
@@ -181,11 +242,39 @@ export async function getDossier(
       if (texteAssocieRefUid) documentsIds.add(texteAssocieRefUid);
       if (texteAdopteRefUid) documentsIds.add(texteAdopteRefUid);
       // if (organeProvenanceRefUid) organesIds.add(organeProvenanceRefUid);
-      // if (organeRefUid) organesIds.add(organeRefUid);
+      if (organeRefUid) organesIds.add(organeRefUid);
       // if (reunionRefUid) reunionIds.add(reunionRefUid);
       // if (auteurMotionRefUid) auteurIds.add(auteurMotionRefUid);
       // if (odjRefUid) odjIds.add(odjRefUid);
     });
+
+    const commissionFondId = acts.filter(
+      (act): act is AN1_COM_FOND => act.codeActe === "AN1-COM-FOND"
+    )[0]?.organeRefUid;
+    const commissionAvisId = acts.filter(
+      (act): act is any => act.codeActe === "AN1-COM-AVIS" // Type is not defined because I did not get any of those event in the 1000 rows fetched
+    )[0]?.organeRefUid;
+
+    // A utiliser pour trouver les rapporteurs dans la table Rapporteur (a par)
+    const nominationRapporteursCommissionFondId = acts.filter(
+      (act): act is AN1_COM_FOND_NOMIN => act.codeActe === "AN1-COM-FOND-NOMIN"
+    )[0]?.uid;
+
+    const nominationRapporteursCommissionFond: any[] =
+      nominationRapporteursCommissionFondId
+        ? await db
+            .select("*")
+            .from("Rapporteur")
+            .where(
+              "acteLegislatifRefUid",
+              "=",
+              nominationRapporteursCommissionFondId
+            )
+        : [];
+
+    const rapporteursFondIds = nominationRapporteursCommissionFond.map(
+      (r) => r.acteurRefUid
+    );
 
     const documentsData = await db
       .select("*")
@@ -197,7 +286,36 @@ export async function getDossier(
       documents[doc.uid] = doc;
     });
 
-    return { dossier, acts, documents };
+    const organesData = await db
+      .select("*")
+      .from("Organe")
+      .whereIn("uid", Array.from(organesIds));
+
+    const organes: Record<string, Organe> = {};
+    organesData.forEach((doc) => {
+      organes[doc.uid] = doc;
+    });
+
+    const acteursData = await db
+      .select("*")
+      .from("Document")
+      .whereIn("uid", Array.from(rapporteursFondIds));
+
+    const acteurs: Record<string, Acteur> = {};
+    acteursData.forEach((doc) => {
+      acteurs[doc.uid] = doc;
+    });
+
+    return {
+      dossier,
+      commissionFondId,
+      commissionAvisId,
+      rapporteursFondIds,
+      acts,
+      documents,
+      organes,
+      acteurs,
+    };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;
