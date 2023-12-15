@@ -1,5 +1,6 @@
 import knex from "knex";
 import config from "./knexfile";
+import { ActeLegislatif } from "./Acts";
 
 const db = knex(config.development);
 
@@ -80,6 +81,43 @@ export interface ActLegislatif {
   dossierRefUid: string;
 }
 
+export type Document = {
+  titrePrincipal: string;
+  titrePrincipalCourt: string;
+  uid: string;
+  classeCode: string;
+  classeLibelle: string;
+  texteDeLoi: boolean;
+  depotCode: string;
+  depotLibelle: string;
+  especeCode: string;
+  especeLibelle: string;
+  sousTypeCode: string;
+  sousTypeLibelle: string;
+  sousTypeLibelleEdition: string;
+  statutAdoption: null | string;
+  niveauCorrection: null | string;
+  typeCorrection: null | string;
+  dateCreation: Date;
+  dateDepot: Date;
+  datePublication: Date;
+  datePublicationWeb: Date;
+  denominationStructurelle: string;
+  amendable: null | string;
+  dian: null | string;
+  isbn: null | string;
+  nbPage: null | string;
+  prix: null | string;
+  legislature: string;
+  adoptionConforme: boolean;
+  formule: string;
+  numNotice: string;
+  provenance: string;
+  xsiType: string;
+  auteurUid: string;
+  documentParentRefUid: null;
+};
+
 export async function getDossiers(
   { legislature = 16 },
   limit = 10
@@ -100,7 +138,14 @@ export async function getDossiers(
 export async function getDossier(
   legislature: string,
   id: string
-): Promise<{ dossier: DossierRow; acts: ActLegislatif[] } | undefined> {
+): Promise<
+  | {
+      dossier: DossierRow;
+      acts: ActeLegislatif[];
+      documents: Record<string, Document>;
+    }
+  | undefined
+> {
   try {
     const dossiers = await db
       .select("*")
@@ -118,7 +163,41 @@ export async function getDossier(
       .from("ActeLegislatif")
       .where("dossierRefUid", "=", dossier.uid);
 
-    return { dossier, acts };
+    const documentsIds = new Set<string>();
+    // const organesIds = new Set<string>();
+    // const reunionIds = new Set<string>();
+    // const auteurIds = new Set<string>();
+    // const odjIds = new Set<string>();
+    acts.forEach((act) => {
+      const {
+        texteAssocieRefUid,
+        texteAdopteRefUid,
+        // organeProvenanceRefUid,
+        // organeRefUid,
+        // reunionRefUid,
+        // auteurMotionRefUid,
+        // odjRefUid,
+      } = act;
+      if (texteAssocieRefUid) documentsIds.add(texteAssocieRefUid);
+      if (texteAdopteRefUid) documentsIds.add(texteAdopteRefUid);
+      // if (organeProvenanceRefUid) organesIds.add(organeProvenanceRefUid);
+      // if (organeRefUid) organesIds.add(organeRefUid);
+      // if (reunionRefUid) reunionIds.add(reunionRefUid);
+      // if (auteurMotionRefUid) auteurIds.add(auteurMotionRefUid);
+      // if (odjRefUid) odjIds.add(odjRefUid);
+    });
+
+    const documentsData = await db
+      .select("*")
+      .from("Document")
+      .whereIn("uid", Array.from(documentsIds));
+
+    const documents: Record<string, Document> = {};
+    documentsData.forEach((doc) => {
+      documents[doc.uid] = doc;
+    });
+
+    return { dossier, acts, documents };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;
