@@ -11,26 +11,18 @@ import Image from "next/image";
 export const TextStructureCard = () => {
   return (
     <CardLayout
-      title={
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="body1" fontWeight="regular">
-            Structure du texte déposé
+      title="Structure du texte déposé"
+      action={
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Image
+            src="/icon-assemblee-nationale.jpg"
+            alt="Icône de l'Assemblée Nationale française"
+            width={12}
+            height={12}
+          />
+          <Typography variant="caption" fontWeight="bold">
+            Sur le site assemble-nationale.fr
           </Typography>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Image
-              src="/icon-assemblee-nationale.jpg"
-              alt="Icône de l'Assemblée Nationale française"
-              width={12}
-              height={12}
-            />
-            <Typography variant="caption" fontWeight="bold">
-              Sur le site assemble-nationale.fr
-            </Typography>
-          </Stack>
         </Stack>
       }
     >

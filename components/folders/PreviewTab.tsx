@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import { AdditionalInfoCard } from "@/components/folders/AdditionalInfoCard";
@@ -11,7 +13,8 @@ import { SpeakingTime } from "@/components/folders/SpeakingTime";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 
-export const PreviewTab = () => {
+export const PreviewTab = (props) => {
+  console.log(props);
   return (
     <Container
       sx={{
@@ -33,7 +36,7 @@ export const PreviewTab = () => {
         <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
         </CardLayout>
-        <TimelineCard />
+        <TimelineCard acts={props.dossier.acts} />
         <TextStructureCard />
       </Stack>
     </Container>

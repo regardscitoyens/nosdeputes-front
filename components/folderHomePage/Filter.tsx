@@ -1,6 +1,8 @@
+"use client";
+
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import { THEMES, ThemeKeys } from "../const";
+import { THEMES } from "../const";
 import { useFilterState } from "./useFilter";
 
 type FilterProps = {

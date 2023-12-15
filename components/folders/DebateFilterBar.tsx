@@ -43,7 +43,6 @@ export const DebateFilterBar = () => {
             value={placeholderValue}
             onChange={(e) => setPlaceholderValue(e.target.value)}
             displayEmpty
-            disableUnderline
             sx={{ flex: 1 }}
           >
             <MenuItem value={1}>

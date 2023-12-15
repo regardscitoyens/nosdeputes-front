@@ -1,16 +1,15 @@
+"use client";
+
 import React from "react";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material";
 
 import { DebateFilterBar } from "./DebateFilterBar";
 import { DebateSummary } from "./DebateSummary";
 import { DebateTranscript } from "./DebateTranscript";
 
 export const DebateTab = () => {
-  const theme = useTheme();
-
   return (
     <>
       <DebateFilterBar />
