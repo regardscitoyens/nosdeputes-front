@@ -36,7 +36,10 @@ export const PreviewTab = (props) => {
         <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
         </CardLayout>
-        <TimelineCard acts={props.dossier.acts} />
+        <TimelineCard
+          acts={props.dossier.acts}
+          documents={props.dossier.documents}
+        />
         <TextStructureCard />
       </Stack>
     </Container>

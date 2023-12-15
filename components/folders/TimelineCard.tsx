@@ -13,9 +13,17 @@ import Stack from "@mui/material/Stack";
 
 import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
+import { ActLegislatif, Document } from "@/repository/database";
+import { Link } from "@mui/material";
+import { getDocumentURL } from "@/repository/dataTransform";
 
-export const TimelineCard = ({ acts }) => {
-  // console.log(acts.map((act) => act.dateActe));
+export const TimelineCard = ({
+  acts,
+  documents,
+}: {
+  acts: ActLegislatif[];
+  documents: Record<string, Document>;
+}) => {
   console.log(acts);
 
   return (
@@ -27,7 +35,14 @@ export const TimelineCard = ({ acts }) => {
           },
         }}
       >
-        {acts.map((act) => {
+        {acts
+          .sort((a, b) => {
+            if (!a.dateActe || !b.dateActe) {
+              return 0;
+            }
+            return a.dateActe < b.dateActe ? -1 : 1;
+          })
+          .map((act) => {
           const title = act.nomCanonique || act.codeActe;
 
           return (
@@ -55,8 +70,19 @@ export const TimelineCard = ({ acts }) => {
 
                   {act.texteAdopteRefUid && (
                     <Stack direction="row" spacing={1} alignItems="center">
-                      <Typography variant="caption" fontWeight="light">
-                        text: {act.texteAdopteRefUid}
+                        <Typography
+                          variant="caption"
+                          fontWeight="light"
+                          component={
+                            getDocumentURL(documents[act.texteAdopteRefUid])
+                              ? Link
+                              : "p"
+                          }
+                          href={getDocumentURL(
+                            documents[act.texteAdopteRefUid]
+                          )}
+                        >
+                          {documents[act.texteAdopteRefUid]?.titrePrincipal}
                       </Typography>
                       <StatusChip
                         status="validated"
@@ -66,8 +92,17 @@ export const TimelineCard = ({ acts }) => {
                     </Stack>
                   )}
                   {act.texteAssocieRefUid && (
-                    <Typography variant="caption" fontWeight="light">
-                      Text associé: {act.texteAssocieRefUid}
+                      <Typography
+                        variant="caption"
+                        fontWeight="light"
+                        component={
+                          getDocumentURL(documents[act.texteAssocieRefUid])
+                            ? Link
+                            : "p"
+                        }
+                        href={getDocumentURL(documents[act.texteAssocieRefUid])}
+                      >
+                        {documents[act.texteAssocieRefUid]?.titrePrincipal}
                     </Typography>
                   )}
                 </Stack>
@@ -75,7 +110,10 @@ export const TimelineCard = ({ acts }) => {
             </TimelineItem>
           );
         })}
-        <TimelineItem>
+        {/* Next lines are items from the figma.
+        I keep them to be able to copy past them when needed.
+        But commented to be sure I don't mix real data and the figma. */}
+        {/* <TimelineItem>
           <TimelineOppositeContent>
             <Typography variant="body2" fontWeight="light">
               21 Oct 2022
@@ -149,7 +187,7 @@ export const TimelineCard = ({ acts }) => {
               </Stack>
             </Stack>
           </TimelineContent>
-        </TimelineItem>
+        </TimelineItem> */}
       </Timeline>
     </CardLayout>
   );
