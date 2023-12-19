@@ -8,47 +8,66 @@ import Stack from "@mui/material/Stack";
 
 import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
+import { Acteur, Organe } from "@/repository/database";
 
-export const CommiteeCard = () => {
+export const CommiteeCard = ({
+  commissionFond,
+  commissionAvis,
+  rapporteursFond,
+}: {
+  commissionFond?: Organe;
+  commissionAvis?: Organe;
+  rapporteursFond?: Acteur[];
+}) => {
+  if (!commissionAvis && !commissionFond) {
+    return null;
+  }
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
         aria-controls="commission-content"
         id="commission-header"
       >
-        <Typography>Commissions 1</Typography>
+        <Typography>Commissions</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
-          <div>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography variant="body2" fontWeight="light">
-                Commission saisie au fond
+          {commissionFond && (
+            <div>
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <Typography variant="body2" fontWeight="light">
+                  Commission saisie au fond
+                </Typography>
+                <InfoIcon sx={{ fontSize: "14px" }} />
+              </Stack>
+              <Typography variant="body2" fontWeight="bold" pb={2}>
+                {commissionFond.libelleAbrege || commissionFond.libelle}
               </Typography>
-              <InfoIcon sx={{ fontSize: "14px" }} />
-            </Stack>
-            <Typography variant="body2" fontWeight="bold" pb={2}>
-              Commission des affaires économiques
-            </Typography>
-          </div>
-          <div>
-            <Stack direction="row" spacing={0.5} alignItems="center">
-              <Typography variant="body2" fontWeight="light">
-                Comission saisie pour avis
+            </div>
+          )}
+          {commissionAvis && (
+            <div>
+              <Stack direction="row" spacing={0.5} alignItems="center">
+                <Typography variant="body2" fontWeight="light">
+                  Comission saisie pour avis
+                </Typography>
+                <InfoIcon sx={{ fontSize: "14px" }} />
+              </Stack>
+              <Typography variant="body2" fontWeight="bold" pb={2}>
+                {commissionAvis.libelleAbrege || commissionAvis.libelle}
               </Typography>
-              <InfoIcon sx={{ fontSize: "14px" }} />
-            </Stack>
-            <Typography variant="body2" fontWeight="bold" pb={2}>
-              Commission du développement durable et de l&apos;aménagement du
-              territoire
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body2" fontWeight="light" pb={1}>
-              Rapporteur
-            </Typography>
-            <DeputyPreview />
-          </div>
+            </div>
+          )}
+          {rapporteursFond && rapporteursFond.length > 0 && (
+            <div>
+              <Typography variant="body2" fontWeight="light" pb={1}>
+                Rapporteur
+              </Typography>
+              {rapporteursFond.map((acteur) => (
+                <DeputyPreview acteur={acteur} key={acteur.uid} />
+              ))}
+            </div>
+          )}
         </Stack>
       </AccordionDetails>
     </Accordion>

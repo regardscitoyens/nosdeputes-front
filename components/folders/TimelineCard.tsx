@@ -13,11 +13,17 @@ import Stack from "@mui/material/Stack";
 
 import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
+import { ActeLegislatif, Document } from "@/repository/types";
+import { Link } from "@mui/material";
+import { getDocumentURL } from "@/domain/dataTransform";
 
-export const TimelineCard = ({ acts }) => {
-  // console.log(acts.map((act) => act.dateActe));
-  console.log(acts);
-
+export const TimelineCard = ({
+  acts,
+  documents,
+}: {
+  acts: ActeLegislatif[];
+  documents: Record<string, Document>;
+}) => {
   return (
     <CardLayout title="Chronologie du dossier">
       <Timeline
@@ -27,55 +33,85 @@ export const TimelineCard = ({ acts }) => {
           },
         }}
       >
-        {acts.map((act) => {
-          const title = act.nomCanonique || act.codeActe;
+        {acts
+          .sort((a, b) => {
+            if (!a.dateActe || !b.dateActe) {
+              return 0;
+            }
+            return a.dateActe < b.dateActe ? -1 : 1;
+          })
+          .map((act) => {
+            const title = act.nomCanonique || act.codeActe;
 
-          return (
-            <TimelineItem key={act.uid}>
-              <TimelineOppositeContent>
-                <Typography variant="body2" fontWeight="light">
-                  {act.dateActe
-                    ? act.dateActe.toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
-                    : "?"}
-                </Typography>
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <Stack direction="column" spacing={1}>
-                  <Typography variant="body1" fontWeight="bold">
-                    {title}
+            return (
+              <TimelineItem key={act.uid}>
+                <TimelineOppositeContent>
+                  <Typography variant="body2" fontWeight="light">
+                    {act.dateActe
+                      ? act.dateActe.toLocaleDateString("fr-FR", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "?"}
                   </Typography>
-
-                  {act.texteAdopteRefUid && (
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Typography variant="caption" fontWeight="light">
-                        text: {act.texteAdopteRefUid}
-                      </Typography>
-                      <StatusChip
-                        status="validated"
-                        label="Adopté"
-                        size="small"
-                      />
-                    </Stack>
-                  )}
-                  {act.texteAssocieRefUid && (
-                    <Typography variant="caption" fontWeight="light">
-                      Text associé: {act.texteAssocieRefUid}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Stack direction="column" spacing={1}>
+                    <Typography variant="body1" fontWeight="bold">
+                      {title}
                     </Typography>
-                  )}
-                </Stack>
-              </TimelineContent>
-            </TimelineItem>
-          );
-        })}
-        <TimelineItem>
+
+                    {act.texteAdopteRefUid && (
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography
+                          variant="caption"
+                          fontWeight="light"
+                          component={
+                            getDocumentURL(documents[act.texteAdopteRefUid])
+                              ? Link
+                              : "p"
+                          }
+                          href={getDocumentURL(
+                            documents[act.texteAdopteRefUid]
+                          )}
+                        >
+                          {documents[act.texteAdopteRefUid]?.titrePrincipal}
+                        </Typography>
+                        <StatusChip
+                          status="validated"
+                          label="Adopté"
+                          size="small"
+                        />
+                      </Stack>
+                    )}
+                    {act.texteAssocieRefUid && (
+                      <Typography
+                        variant="caption"
+                        fontWeight="light"
+                        component={
+                          getDocumentURL(documents[act.texteAssocieRefUid])
+                            ? Link
+                            : "p"
+                        }
+                        href={getDocumentURL(documents[act.texteAssocieRefUid])}
+                      >
+                        {documents[act.texteAssocieRefUid]?.titrePrincipal}
+                      </Typography>
+                    )}
+                  </Stack>
+                </TimelineContent>
+              </TimelineItem>
+            );
+          })}
+        {/* Next lines are items from the figma.
+        I keep them to be able to copy past them when needed.
+        But commented to be sure I don't mix real data and the figma. */}
+        {/* <TimelineItem>
           <TimelineOppositeContent>
             <Typography variant="body2" fontWeight="light">
               21 Oct 2022
@@ -149,7 +185,7 @@ export const TimelineCard = ({ acts }) => {
               </Stack>
             </Stack>
           </TimelineContent>
-        </TimelineItem>
+        </TimelineItem> */}
       </Timeline>
     </CardLayout>
   );

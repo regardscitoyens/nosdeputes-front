@@ -12,9 +12,9 @@ import { SpeakingTime } from "@/components/folders/SpeakingTime";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import { Acteur } from "@/repository/database";
 
-export const PreviewTab = (props) => {
-  console.log(props);
+export const PreviewTab = ({ dossier }) => {
   return (
     <Container
       sx={{
@@ -28,7 +28,19 @@ export const PreviewTab = (props) => {
       }}
     >
       <Stack spacing={3} useFlexGap flex={2}>
-        <CommiteeCard />
+        <CommiteeCard
+          commissionFond={
+            dossier.commissionFondId &&
+            dossier.organes[dossier.commissionFondId]
+          }
+          commissionAvis={
+            dossier.commissionAvisId &&
+            dossier.organes[dossier.commissionAvisId]
+          }
+          rapporteursFond={dossier.rapporteursFondIds
+            ?.map((id: string) => dossier.acteurs[id])
+            .filter((acteur: undefined | Acteur) => !!acteur)}
+        />
         <AdditionalInfoCard />
         <LegislativeDocumentsCard />
       </Stack>
@@ -36,7 +48,7 @@ export const PreviewTab = (props) => {
         <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
         </CardLayout>
-        <TimelineCard acts={props.dossier.acts} />
+        <TimelineCard acts={dossier.acts} documents={dossier.documents} />
         <TextStructureCard />
       </Stack>
     </Container>
