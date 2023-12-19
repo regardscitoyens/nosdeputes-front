@@ -5,6 +5,20 @@ FROM node:18-slim
 # Set the working directory
 WORKDIR /usr/src/app
 
+# Declare build-time arguments for database configuration
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_DATABASE
+ARG DB_USER
+ARG DB_PASSWORD
+
+# Set the environment variables from build arguments
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_DATABASE=${DB_DATABASE}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
