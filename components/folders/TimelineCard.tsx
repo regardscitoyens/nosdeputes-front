@@ -13,18 +13,17 @@ import Stack from "@mui/material/Stack";
 
 import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
-import { ActLegislatif, Document } from "@/repository/database";
+import { ActeLegislatif, Document } from "@/repository/types";
 import { Link } from "@mui/material";
-import { getDocumentURL } from "@/repository/dataTransform";
+import { getDocumentURL } from "@/domain/dataTransform";
 
 export const TimelineCard = ({
   acts,
   documents,
 }: {
-  acts: ActLegislatif[];
+  acts: ActeLegislatif[];
   documents: Record<string, Document>;
 }) => {
-
   return (
     <CardLayout title="Chronologie du dossier">
       <Timeline

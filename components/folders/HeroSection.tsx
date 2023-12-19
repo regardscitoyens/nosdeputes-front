@@ -14,7 +14,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import EnergyIcon from "@/icons/EnergyIcon";
 import LabelChip from "@/components/LabelChip";
 import StatusChip from "@/components/StatusChip";
-import { getCurrentStatus, statusInfo } from "@/repository/dataTransform";
+import { getCurrentStatus, statusInfo } from "@/domain/dataTransform";
 
 const breadcrumbs = [
   <Link key="1" href="/">
