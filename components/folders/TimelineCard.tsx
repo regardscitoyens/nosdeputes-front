@@ -16,6 +16,7 @@ import StatusChip from "@/components/StatusChip";
 import { ActeLegislatif, Document } from "@/repository/types";
 import { Link } from "@mui/material";
 import { getDocumentURL } from "@/domain/dataTransform";
+import { groupActs } from "@/repository/Acts";
 
 export const TimelineCard = ({
   acts,
@@ -24,6 +25,8 @@ export const TimelineCard = ({
   acts: ActeLegislatif[];
   documents: Record<string, Document>;
 }) => {
+  const { actsStructure, actsLookup } = groupActs(acts);
+
   return (
     <CardLayout title="Chronologie du dossier">
       <Timeline
@@ -33,7 +36,126 @@ export const TimelineCard = ({
           },
         }}
       >
-        {acts
+        {Object.values(actsStructure)
+          .sort((a, b) =>
+            (a.date?.getTime() ?? 0) > (b.date?.getTime() ?? 0) ? 1 : -1
+          )
+          .flatMap(({ ids, date: groupDate, children: lvl1Group }) => {
+            return ids?.flatMap((id) => {
+              const actLvl0 = actsLookup[id];
+              const title = actLvl0.nomCanonique || actLvl0.codeActe;
+              const date = actLvl0.dateActe ?? groupDate;
+              return [
+                <TimelineItem key={actLvl0.uid}>
+                  <TimelineOppositeContent>
+                    <Typography variant="body2" fontWeight="light">
+                      {date
+                        ? date.toLocaleDateString("fr-FR", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "?"}
+                    </Typography>
+                  </TimelineOppositeContent>
+                  <TimelineSeparator sx={{ minWidth: 50 }}>
+                    <TimelineDot>
+                      <span>{actLvl0.codeActe}</span>
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <Typography variant="body1" fontWeight="bold">
+                      {title}
+                    </Typography>
+                  </TimelineContent>
+                </TimelineItem>,
+
+                ...Object.values(lvl1Group ?? {})
+                  .sort((a, b) => (a.date > b.date ? 1 : -1))
+                  .flatMap(
+                    ({
+                      ids: lvl1Ids,
+                      date: lvl1GroupDate,
+                      children: lvl2Group,
+                    }) => {
+                      return lvl1Ids?.flatMap((id) => {
+                        const actLvl1 = actsLookup[id];
+                        const title =
+                          `${actLvl1.nomCanonique} (${actLvl1.codeActe})` ||
+                          actLvl1.codeActe;
+                        const date = actLvl1.dateActe ?? lvl1GroupDate;
+                        return [
+                          <TimelineItem key={actLvl1.uid}>
+                            <TimelineOppositeContent />
+                            <TimelineSeparator sx={{ minWidth: 50 }}>
+                              <TimelineDot />
+                              <TimelineConnector />
+                            </TimelineSeparator>
+                            <TimelineContent>
+                              <Typography variant="body1">{title}</Typography>
+                              <Typography
+                                variant="caption"
+                                component="p"
+                                fontWeight="light"
+                              >
+                                {date
+                                  ? date.toLocaleDateString("fr-FR", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })
+                                  : "?"}
+                              </Typography>
+                              {Object.values(lvl2Group ?? {})
+                                .sort((a, b) => (a.date > b.date ? 1 : -1))
+                                .flatMap(
+                                  ({
+                                    ids: lvl2Ids,
+                                    date: lvl2GroupDate,
+                                    children: lvl3Group,
+                                  }) => {
+                                    return lvl2Ids?.flatMap((id) => {
+                                      const actLvl2 = actsLookup[id];
+                                      const date = actLvl2.dateActe;
+                                      const title = `${actLvl2.nomCanonique}${
+                                        date
+                                          ? ` du ${date.toLocaleDateString(
+                                              "fr-FR",
+                                              {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                              }
+                                            )}`
+                                          : ""
+                                      }`;
+
+                                      return (
+                                        <Typography
+                                          variant="caption"
+                                          component="p"
+                                          fontWeight="light"
+                                          key={actLvl2.uid}
+                                          sx={{ my: 1.5 }}
+                                        >
+                                          {title}
+                                        </Typography>
+                                      );
+                                    });
+                                  }
+                                )}
+                            </TimelineContent>
+                          </TimelineItem>,
+                        ];
+                      });
+                    }
+                  ),
+              ];
+            });
+          })}
+
+        {/* {acts
           .sort((a, b) => {
             if (!a.dateActe || !b.dateActe) {
               return 0;
@@ -107,7 +229,7 @@ export const TimelineCard = ({
                 </TimelineContent>
               </TimelineItem>
             );
-          })}
+          })} */}
         {/* Next lines are items from the figma.
         I keep them to be able to copy past them when needed.
         But commented to be sure I don't mix real data and the figma. */}
