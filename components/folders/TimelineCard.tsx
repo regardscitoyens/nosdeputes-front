@@ -17,6 +17,90 @@ import { ActeLegislatif, Document } from "@/repository/types";
 import { Link } from "@mui/material";
 import { getDocumentURL } from "@/domain/dataTransform";
 import { groupActs } from "@/repository/Acts";
+import { compareDate } from "../utils";
+import Image from "next/image";
+
+function getLogoPathFromCode(code: string) {
+  if (code.startsWith("AN")) {
+    return { src: "/LogoAN.svg", alt: "Assemblée Nationale" };
+  }
+  if (code.startsWith("SN")) {
+    return { src: "/LogoSN.svg", alt: "Sénat" };
+  }
+  if (code.startsWith("CC")) {
+    return { src: "/LogoCC.svg", alt: "Conseil Consitiutionel" };
+  }
+  return { src: "/LogoAN.svg", alt: "Assemblée Nationale" };
+}
+const TimelineItemLvl0 = ({
+  act,
+  groupDate,
+  children,
+}: React.PropsWithChildren<{ act: ActeLegislatif; groupDate?: Date }>) => {
+  const title = act.nomCanonique || act.codeActe;
+  const date = act.dateActe ?? groupDate;
+  const logo = getLogoPathFromCode(act.codeActe);
+  return (
+    <React.Fragment>
+      <TimelineItem key={act.uid}>
+        <TimelineOppositeContent>
+          <Typography variant="body2" fontWeight="light">
+            {date
+              ? date.toLocaleDateString("fr-FR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "?"}
+          </Typography>
+        </TimelineOppositeContent>
+        <TimelineSeparator sx={{ minWidth: 50 }}>
+          <TimelineDot variant="outlined" sx={{ overflow: "hidden" }}>
+            <Image {...logo} width={50} height={50} />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent>
+          <Typography variant="body1" fontWeight="bold">
+            {title}
+          </Typography>
+        </TimelineContent>
+      </TimelineItem>
+      {children}
+    </React.Fragment>
+  );
+};
+
+const TimelineItemLvl1 = ({
+  act,
+  groupDate,
+  children,
+}: React.PropsWithChildren<{ act: ActeLegislatif; groupDate?: Date }>) => {
+  const title = `${act.nomCanonique} (${act.codeActe})` || act.codeActe;
+  const date = act.dateActe ?? groupDate;
+  return (
+    <TimelineItem key={act.uid}>
+      <TimelineOppositeContent />
+      <TimelineSeparator sx={{ minWidth: 50 }}>
+        <TimelineDot />
+        <TimelineConnector />
+      </TimelineSeparator>
+      <TimelineContent>
+        <Typography variant="body1">{title}</Typography>
+        <Typography variant="caption" component="p" fontWeight="light">
+          {date
+            ? date.toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "?"}
+        </Typography>
+        {children}{" "}
+      </TimelineContent>
+    </TimelineItem>
+  );
+};
 
 export const TimelineCard = ({
   acts,
@@ -40,120 +124,78 @@ export const TimelineCard = ({
           .sort((a, b) =>
             (a.date?.getTime() ?? 0) > (b.date?.getTime() ?? 0) ? 1 : -1
           )
-          .flatMap(({ ids, date: groupDate, children: lvl1Group }) => {
-            return ids?.flatMap((id) => {
-              const actLvl0 = actsLookup[id];
-              const title = actLvl0.nomCanonique || actLvl0.codeActe;
-              const date = actLvl0.dateActe ?? groupDate;
-              return [
-                <TimelineItem key={actLvl0.uid}>
-                  <TimelineOppositeContent>
-                    <Typography variant="body2" fontWeight="light">
-                      {date
-                        ? date.toLocaleDateString("fr-FR", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "?"}
-                    </Typography>
-                  </TimelineOppositeContent>
-                  <TimelineSeparator sx={{ minWidth: 50 }}>
-                    <TimelineDot>
-                      <span>{actLvl0.codeActe}</span>
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography variant="body1" fontWeight="bold">
-                      {title}
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>,
-
-                ...Object.values(lvl1Group ?? {})
-                  .sort((a, b) => (a.date > b.date ? 1 : -1))
-                  .flatMap(
-                    ({
-                      ids: lvl1Ids,
-                      date: lvl1GroupDate,
-                      children: lvl2Group,
-                    }) => {
-                      return lvl1Ids?.flatMap((id) => {
-                        const actLvl1 = actsLookup[id];
-                        const title =
-                          `${actLvl1.nomCanonique} (${actLvl1.codeActe})` ||
-                          actLvl1.codeActe;
-                        const date = actLvl1.dateActe ?? lvl1GroupDate;
-                        return [
-                          <TimelineItem key={actLvl1.uid}>
-                            <TimelineOppositeContent />
-                            <TimelineSeparator sx={{ minWidth: 50 }}>
-                              <TimelineDot />
-                              <TimelineConnector />
-                            </TimelineSeparator>
-                            <TimelineContent>
-                              <Typography variant="body1">{title}</Typography>
-                              <Typography
-                                variant="caption"
-                                component="p"
-                                fontWeight="light"
+          .flatMap(
+            ({ ids: lvl0Ids, date: lvl0GroupDate, children: lvl1Group }) => {
+              return lvl0Ids?.flatMap((id) => {
+                return (
+                  <TimelineItemLvl0
+                    key={id}
+                    act={actsLookup[id]}
+                    groupDate={lvl0GroupDate}
+                  >
+                    {Object.values(lvl1Group ?? {})
+                      .sort((a, b) => compareDate(a.date, b.date))
+                      .flatMap(
+                        ({
+                          ids: lvl1Ids,
+                          date: lvl1GroupDate,
+                          children: lvl2Group,
+                        }) => {
+                          return lvl1Ids?.flatMap((id) => {
+                            return (
+                              <TimelineItemLvl1
+                                key={id}
+                                act={actsLookup[id]}
+                                groupDate={lvl1GroupDate}
                               >
-                                {date
-                                  ? date.toLocaleDateString("fr-FR", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    })
-                                  : "?"}
-                              </Typography>
-                              {Object.values(lvl2Group ?? {})
-                                .sort((a, b) => (a.date > b.date ? 1 : -1))
-                                .flatMap(
-                                  ({
-                                    ids: lvl2Ids,
-                                    date: lvl2GroupDate,
-                                    children: lvl3Group,
-                                  }) => {
-                                    return lvl2Ids?.flatMap((id) => {
-                                      const actLvl2 = actsLookup[id];
-                                      const date = actLvl2.dateActe;
-                                      const title = `${actLvl2.nomCanonique}${
-                                        date
-                                          ? ` du ${date.toLocaleDateString(
-                                              "fr-FR",
-                                              {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "numeric",
-                                              }
-                                            )}`
-                                          : ""
-                                      }`;
+                                {Object.values(lvl2Group ?? {})
+                                  .sort((a, b) => compareDate(a.date, b.date))
+                                  .flatMap(
+                                    ({
+                                      ids: lvl2Ids,
+                                      date: lvl2GroupDate,
+                                      children: lvl3Group,
+                                    }) => {
+                                      return lvl2Ids?.flatMap((id) => {
+                                        const actLvl2 = actsLookup[id];
+                                        const date = actLvl2.dateActe;
+                                        const title = `${actLvl2.nomCanonique}${
+                                          date
+                                            ? ` du ${date.toLocaleDateString(
+                                                "fr-FR",
+                                                {
+                                                  year: "numeric",
+                                                  month: "short",
+                                                  day: "numeric",
+                                                }
+                                              )}`
+                                            : ""
+                                        }`;
 
-                                      return (
-                                        <Typography
-                                          variant="caption"
-                                          component="p"
-                                          fontWeight="light"
-                                          key={actLvl2.uid}
-                                          sx={{ my: 1.5 }}
-                                        >
-                                          {title}
-                                        </Typography>
-                                      );
-                                    });
-                                  }
-                                )}
-                            </TimelineContent>
-                          </TimelineItem>,
-                        ];
-                      });
-                    }
-                  ),
-              ];
-            });
-          })}
+                                        return (
+                                          <Typography
+                                            variant="caption"
+                                            component="p"
+                                            fontWeight="light"
+                                            key={actLvl2.uid}
+                                            sx={{ my: 1.5 }}
+                                          >
+                                            {title}
+                                          </Typography>
+                                        );
+                                      });
+                                    }
+                                  )}
+                              </TimelineItemLvl1>
+                            );
+                          });
+                        }
+                      )}
+                  </TimelineItemLvl0>
+                );
+              });
+            }
+          )}
 
         {/* {acts
           .sort((a, b) => {

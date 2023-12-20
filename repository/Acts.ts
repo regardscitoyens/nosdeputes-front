@@ -1,4 +1,4 @@
-// import { ActeLegislatif } from "./types";
+import { ActeLegislatif } from "./types";
 
 export type SN1_DEPOT = {
   codeActe: "SN1-DEPOT";
@@ -1080,7 +1080,7 @@ function addDatesHelper(
     date?: Date;
     children?: ActsStructure;
   },
-  lookup: Record<string, ActLegislatif>
+  lookup: Record<string, ActeLegislatif>
 ) {
   const rep = {};
 
@@ -1122,15 +1122,15 @@ function addDates(
   });
 }
 
-export function groupActs(acts: ActLegislatif[]) {
+export function groupActs(acts: ActeLegislatif[]) {
   const actsStructure: ActsStructure = {};
-  const actsLookup: Record<string, ActLegislatif> = {};
+  const actsLookup: Record<string, ActeLegislatif> = {};
 
   acts.forEach((act) => {
     const { codeActe, uid } = act;
     let parentPointer: ActsStructure = actsStructure;
 
-    CONTEXT[codeActe].parents.forEach((code) => {
+    CONTEXT[codeActe as keyof typeof CONTEXT].parents.forEach((code) => {
       if (parentPointer[code] === undefined) {
         parentPointer[code] = { children: {} } as ActsStructure;
       }
@@ -1154,3 +1154,5 @@ export function groupActs(acts: ActLegislatif[]) {
     actsLookup,
   };
 }
+
+// export function 
