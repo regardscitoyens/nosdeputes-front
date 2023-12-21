@@ -3,12 +3,12 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { Acteur } from "@/repository/database";
+import { Acteur } from "@/repository/types";
 
 export const DeputyPreview = ({
   acteur = { prenom: "David", nom: "Fauster" },
 }: {
-  acteur: Acteur;
+  acteur?: Acteur;
 }) => {
   return (
     <Box

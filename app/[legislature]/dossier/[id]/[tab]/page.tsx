@@ -32,6 +32,6 @@ export default async function Page({
       return <p>Votes</p>;
 
     default:
-      return <PreviewTab />;
+      return <PreviewTab dossier={dossier} />;
   }
 }

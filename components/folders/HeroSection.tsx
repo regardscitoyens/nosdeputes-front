@@ -15,6 +15,7 @@ import EnergyIcon from "@/icons/EnergyIcon";
 import LabelChip from "@/components/LabelChip";
 import StatusChip from "@/components/StatusChip";
 import { getCurrentStatus, statusInfo } from "@/domain/dataTransform";
+import { DossierData } from "@/repository/database";
 
 const breadcrumbs = [
   <Link key="1" href="/">
@@ -30,7 +31,9 @@ const breadcrumbs = [
   </Link>,
 ];
 
-export const HeroSection = ({ dossier, acts }) => {
+type HeroSectionProps = Partial<Pick<DossierData, "dossier" | "acts">>;
+
+export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
   const theme = useTheme();
 
   const status = getCurrentStatus(acts);
