@@ -14,7 +14,7 @@ import Stack from "@mui/material/Stack";
 import { CardLayout } from "@/components/folders/CardLayout";
 import StatusChip from "@/components/StatusChip";
 import { ActeLegislatif, Document } from "@/repository/types";
-import { Link } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import { getDocumentURL } from "@/domain/dataTransform";
 import { groupActs } from "@/repository/Acts";
 import { compareDate } from "../utils";
@@ -22,16 +22,17 @@ import Image from "next/image";
 
 function getLogoPathFromCode(code: string) {
   if (code.startsWith("AN")) {
-    return { src: "/LogoAN.svg", alt: "Assemblée Nationale" };
+    return { src: "/LogoAN.svg", alt: "Assemblée Nationale", size: 30 };
   }
   if (code.startsWith("SN")) {
-    return { src: "/LogoSN.svg", alt: "Sénat" };
+    return { src: "/LogoSN.svg", alt: "Sénat", size: 44 };
   }
   if (code.startsWith("CC")) {
-    return { src: "/LogoCC.svg", alt: "Conseil Consitiutionel" };
+    return { src: "/LogoCC.svg", alt: "Conseil Consitiutionel", size: 44 };
   }
-  return { src: "/LogoAN.svg", alt: "Assemblée Nationale" };
+  return undefined;
 }
+
 const TimelineItemLvl0 = ({
   act,
   groupDate,
@@ -55,9 +56,35 @@ const TimelineItemLvl0 = ({
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator sx={{ minWidth: 50 }}>
-          <TimelineDot variant="outlined" sx={{ overflow: "hidden" }}>
-            <Image {...logo} width={50} height={50} />
-          </TimelineDot>
+          <Box
+            sx={{
+              width: 44,
+              height: 44,
+              my: 1,
+              mx: "auto",
+              borderColor: "grey.400",
+              borderWidth: 2,
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "hidden",
+            }}
+          >
+            {logo && (
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.size}
+                height={logo.size}
+                style={{
+                  width: logo.size,
+                  height: logo.size,
+                }}
+              />
+            )}
+          </Box>
+
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
@@ -82,16 +109,33 @@ const TimelineItemLvl1 = ({
     <TimelineItem key={act.uid}>
       <TimelineOppositeContent />
       <TimelineSeparator sx={{ minWidth: 50 }}>
-        <TimelineDot />
+        <Box
+          sx={{
+            bgcolor: "black",
+            width: 8,
+            height: 8,
+            my: 0.5,
+            mx: "auto",
+            borderRadius: "50%",
+          }}
+        />
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
         <Typography variant="body1">{title}</Typography>
-        <Typography variant="caption" component="p" fontWeight="light">
+        <Typography
+          variant="caption"
+          component="p"
+          fontWeight="light"
+          sx={{
+            textTransform: "capitalize",
+            color: "grey.600",
+          }}
+        >
           {date
             ? date.toLocaleDateString("fr-FR", {
                 year: "numeric",
-                month: "short",
+                month: "long",
                 day: "numeric",
               })
             : "?"}
