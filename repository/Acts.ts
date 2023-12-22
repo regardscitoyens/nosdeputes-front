@@ -1065,7 +1065,7 @@ const CONTEXT = {
   },
 } as const;
 
-type ActsStructure = Record<
+export type ActsStructure = Record<
   string,
   {
     ids?: string[];
@@ -1154,5 +1154,3 @@ export function groupActs(acts: ActeLegislatif[]) {
     actsLookup,
   };
 }
-
-// export function 
