@@ -38,7 +38,10 @@ const TimelineItemLvl0 = ({
   act,
   groupDate,
   children,
-}: React.PropsWithChildren<{ act: ActeLegislatif; groupDate?: Date }>) => {
+}: React.PropsWithChildren<{
+  act: ActeLegislatif;
+  groupDate?: Date;
+}>) => {
   const title = act.nomCanonique || act.codeActe;
   const date = act.dateActe ?? groupDate;
   const logo = getLogoPathFromCode(act.codeActe);
@@ -46,22 +49,26 @@ const TimelineItemLvl0 = ({
     <React.Fragment>
       <TimelineItem>
         <TimelineOppositeContent>
-          <Typography
-            variant="body2"
-            fontWeight="light"
-            sx={{ lineHeight: "50px" }}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              height: 50,
+            }}
           >
-            {date
-              ? date.toLocaleDateString("fr-FR", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })
-              : "?"}
-          </Typography>
+            <Typography variant="body2" fontWeight="light">
+              {date
+                ? date.toLocaleDateString("fr-FR", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })
+                : "?"}
+            </Typography>
+          </Box>
         </TimelineOppositeContent>
         <TimelineSeparator sx={{ minWidth: 50 }}>
-          <TimelineConnector />
           <Box
             sx={{
               width: 44,
@@ -94,13 +101,18 @@ const TimelineItemLvl0 = ({
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
-          <Typography
-            variant="body1"
-            fontWeight="bold"
-            sx={{ lineHeight: "50px" }}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              height: 50,
+            }}
           >
-            {title}
-          </Typography>
+            <Typography variant="body1" fontWeight="bold">
+              {title}
+            </Typography>
+          </Box>
         </TimelineContent>
       </TimelineItem>
       {children}
@@ -119,6 +131,7 @@ const TimelineItemLvl1 = ({
     <TimelineItem key={act.uid}>
       <TimelineOppositeContent />
       <TimelineSeparator sx={{ minWidth: 50 }}>
+        <TimelineConnector sx={{ height: 10, flexGrow: 0 }} />
         <Box
           sx={{
             bgcolor: "black",
