@@ -9,17 +9,29 @@ import Stack from "@mui/material/Stack";
 import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
 import { Acteur, Organe } from "@/repository/types";
+import { DossierData } from "@/repository/database";
 
 export const CommiteeCard = ({
-  commissionFond,
-  commissionAvis,
-  rapporteursFond,
-}: {
-  commissionFond?: Organe;
-  commissionAvis?: Organe;
-  rapporteursFond?: Acteur[];
-}) => {
-  if (!commissionAvis && !commissionFond) {
+  commissionFondId,
+  commissionAvisId,
+  organes,
+  rapporteursFondIds,
+  acteurs,
+}: Pick<
+  DossierData,
+  | "commissionFondId"
+  | "commissionAvisId"
+  | "organes"
+  | "rapporteursFondIds"
+  | "acteurs"
+>) => {
+  const commissionFond = commissionFondId && organes[commissionFondId];
+  const commissionAvis = commissionAvisId && organes[commissionAvisId];
+  const rapporteursFond = rapporteursFondIds
+    ?.map((id: string) => acteurs[id])
+    .filter((acteur: undefined | Acteur) => !!acteur);
+
+  if (!commissionFond && !rapporteursFond) {
     return null;
   }
   return (

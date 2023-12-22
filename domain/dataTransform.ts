@@ -1,7 +1,7 @@
 import { Status } from "@/components/StatusChip";
-import { ActeLegislatif, Document } from "../repository/types";
+import { ActeLegislatif, Document as DocumentData} from "../repository/types";
 
-export function getDocumentURL(document?: Document) {
+export function getDocumentURL(document?: DocumentData) {
   if (!document || !document?.legislature || !document.numNotice) {
     return undefined;
   }
