@@ -3,6 +3,7 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import { createTheme } from "@mui/material/styles";
 import { MinusIcon } from "@/icons/MinusIcon";
 import { PlusIcon } from "@/icons/PlusIcon";
+import type {} from "@mui/lab/themeAugmentation";
 
 const AccordionIcon = (props: SvgIconProps) => (
   <>
@@ -156,6 +157,14 @@ const theme = createTheme({
           "& .MuiOutlinedInput-notchedOutline": {
             border: "none",
           },
+        },
+      },
+    },
+    MuiTimelineDot: {
+      styleOverrides: {
+        root: {
+          marginLeft: "auto",
+          marginRight: "auto",
         },
       },
     },

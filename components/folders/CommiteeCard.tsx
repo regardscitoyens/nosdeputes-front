@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 
 import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
-import { Acteur, Organe } from "@/repository/database";
+import { Acteur, Organe } from "@/repository/types";
 
 export const CommiteeCard = ({
   commissionFond,

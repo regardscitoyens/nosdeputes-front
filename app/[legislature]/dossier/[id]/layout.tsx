@@ -10,11 +10,11 @@ export default async function Dossier({
 }: React.PropsWithChildren<{
   params: { legislature: string; id: string };
 }>) {
-  const dossier = await getDossier(params.legislature, params.id);
+  const dossierData = await getDossier(params.legislature, params.id);
 
   return (
     <>
-      <HeroSection {...dossier} />
+      <HeroSection dossier={dossierData?.dossier} acts={dossierData?.acts} />
       <Tabs />
       {children}
     </>

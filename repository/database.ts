@@ -34,34 +34,34 @@ export async function getDossiers(
     throw error;
   }
 }
+
+export type DossierData = {
+  dossier: Dossier;
+  /**
+   * uid de la commission saisie sur le fond.
+   * Données à ércupérer dans organes.
+   */
+  commissionFondId?: string;
+  /**
+   * uid de la commission saisie pour avis.
+   * Données à ércupérer dans organes.
+   */
+  commissionAvisId?: string;
+  /**
+   * liste des uid des rapporteurs de la commission saisie sur le fond.
+   * Données à ércupérer dans acteurs.
+   */
+  rapporteursFondIds?: string[];
+  acts: ActeLegislatif[];
+  documents: Record<string, Document>;
+  organes: Record<string, Organe>;
+  acteurs: Record<string, Acteur>;
+};
+
 export async function getDossier(
   legislature: string,
   id: string
-): Promise<
-  | {
-      dossier: Dossier;
-      /**
-       * uid de la commission saisie sur le fond.
-       * Données à ércupérer dans organes.
-       */
-      commissionFondId?: string;
-      /**
-       * uid de la commission saisie pour avis.
-       * Données à ércupérer dans organes.
-       */
-      commissionAvisId?: string;
-      /**
-       * liste des uid des rapporteurs de la commission saisie sur le fond.
-       * Données à ércupérer dans acteurs.
-       */
-      rapporteursFondIds?: string[];
-      acts: ActeLegislatif[];
-      documents: Record<string, Document>;
-      organes: Record<string, Organe>;
-      acteurs: Record<string, Acteur>;
-    }
-  | undefined
-> {
+): Promise<DossierData | undefined> {
   try {
     const dossiers = await db
       .select("*")

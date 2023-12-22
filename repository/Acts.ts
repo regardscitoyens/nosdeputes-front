@@ -1,3 +1,5 @@
+import { ActeLegislatif } from "./types";
+
 export type SN1_DEPOT = {
   codeActe: "SN1-DEPOT";
   uid: string;
@@ -412,7 +414,7 @@ export type ANLUNI_COM = {
   dossierRefUid: string;
 };
 
-export type ActeLegislatif =
+export type ActLegislatif =
   | SN1_DEPOT
   | AN1
   | SN1_COM
@@ -479,210 +481,676 @@ export type ActWithDate =
   | CMP_SAISIE;
 
 const CONTEXT = {
-  "AN-APPLI": { lvl: 0, display: true },
-  AN1: { lvl: 0, display: true },
-  AN2: { lvl: 0, display: true },
-  AN20: { lvl: 0, display: true },
-  AN21: { lvl: 0, display: true },
-  AN3: { lvl: 0, display: true },
-  ANLDEF: { lvl: 0, display: true },
-  ANLUNI: { lvl: 0, display: true },
-  ANNLEC: { lvl: 0, display: true },
-  CC: { lvl: 0, display: true },
-  CMP: { lvl: 0, display: true },
-  EU: { lvl: 0, display: true },
-  PROM: { lvl: 0, display: true },
-  SN1: { lvl: 0, display: true },
-  SN2: { lvl: 0, display: true },
-  SN3: { lvl: 0, display: true },
-  SNNLEC: { lvl: 0, display: true },
-  "AN-APPLI-RAPPORT": { lvl: 1, display: "?" },
-  "AN1-ACIN": { lvl: 1, display: true },
-  "AN1-AVCE": { lvl: 1, display: true },
-  "AN1-COM": { lvl: 1, display: true },
-  "AN1-DEBATS": { lvl: 1, display: true },
-  "AN1-DEPOT": { lvl: 1, display: true },
-  "AN1-DGVT": { lvl: 1, display: true },
-  "AN1-DPTLETTRECT": { lvl: 1, display: true },
-  "AN1-ETI": { lvl: 1, display: true },
-  "AN1-MOTION": { lvl: 1, display: true },
-  "AN1-PROCACC": { lvl: 1, display: true },
-  "AN1-RECBUREAU": { lvl: 1, display: true },
-  "AN1-RTRINI": { lvl: 1, display: true },
-  "AN2-COM": { lvl: 1, display: true },
-  "AN2-DEBATS": { lvl: 1, display: true },
-  "AN2-DEPOT": { lvl: 1, display: true },
-  "AN20-COMENQ": { lvl: 1, display: true },
-  "AN20-MISINF": { lvl: 1, display: true },
-  "AN20-RAPPORT": { lvl: 1, display: true },
-  "AN21-APAN": { lvl: 1, display: true },
-  "AN21-DEBATS": { lvl: 1, display: true },
-  "AN21-DGVT": { lvl: 1, display: true },
-  "AN21-MOTION": { lvl: 1, display: true },
-  "AN21-MPR": { lvl: 1, display: true },
-  "AN3-COM": { lvl: 1, display: true },
-  "AN3-DEBATS": { lvl: 1, display: true },
-  "AN3-DEPOT": { lvl: 1, display: true },
-  "ANLDEF-COM": { lvl: 1, display: true },
-  "ANLDEF-DEBATS": { lvl: 1, display: true },
-  "ANLDEF-DEPOT": { lvl: 1, display: true },
-  "ANLDEF-DGVT": { lvl: 1, display: true },
-  "ANLDEF-MOTION": { lvl: 1, display: true },
-  "ANLUNI-COM": { lvl: 1, display: true },
-  "ANLUNI-DEBATS": { lvl: 1, display: true },
-  "ANLUNI-DEPOT": { lvl: 1, display: true },
-  "ANLUNI-RTRINI": { lvl: 1, display: true },
-  "ANNLEC-COM": { lvl: 1, display: true },
-  "ANNLEC-DEBATS": { lvl: 1, display: true },
-  "ANNLEC-DEPOT": { lvl: 1, display: true },
-  "ANNLEC-DGVT": { lvl: 1, display: true },
-  "ANNLEC-MOTION": { lvl: 1, display: true },
-  "CC-CONCLUSION": { lvl: 1, display: true },
-  "CC-SAISIE-AN": { lvl: 1, display: true },
-  "CC-SAISIE-DROIT": { lvl: 1, display: true },
-  "CC-SAISIE-PAN": { lvl: 1, display: true },
-  "CC-SAISIE-PM": { lvl: 1, display: true },
-  "CC-SAISIE-PR": { lvl: 1, display: true },
-  "CC-SAISIE-PSN": { lvl: 1, display: true },
-  "CC-SAISIE-SN": { lvl: 1, display: true },
-  "CMP-COM": { lvl: 1, display: true },
-  "CMP-DEBATS-AN": { lvl: 1, display: true },
-  "CMP-DEBATS-SN": { lvl: 1, display: true },
-  "CMP-DEC": { lvl: 1, display: true },
-  "CMP-DEPOT": { lvl: 1, display: true },
-  "CMP-DGVT": { lvl: 1, display: true },
-  "CMP-MOTION": { lvl: 1, display: true },
-  "CMP-SAISIE": { lvl: 1, display: true },
-  "EU-DEC": { lvl: 1, display: true },
-  "PROM-PUB": { lvl: 1, display: true },
-  "SN1-AVCE": { lvl: 1, display: true },
-  "SN1-COM": { lvl: 1, display: true },
-  "SN1-DEBATS": { lvl: 1, display: true },
-  "SN1-DEPOT": { lvl: 1, display: true },
-  "SN1-DPTLETTRECT": { lvl: 1, display: true },
-  "SN1-ETI": { lvl: 1, display: true },
-  "SN1-PROCACC": { lvl: 1, display: true },
-  "SN1-RTRINI": { lvl: 1, display: true },
-  "SN2-COM": { lvl: 1, display: true },
-  "SN2-DEBATS": { lvl: 1, display: true },
-  "SN2-DEPOT": { lvl: 1, display: true },
-  "SN3-COM": { lvl: 1, display: true },
-  "SN3-DEBATS": { lvl: 1, display: true },
-  "SN3-DEPOT": { lvl: 1, display: true },
-  "SNNLEC-COM": { lvl: 1, display: true },
-  "SNNLEC-DEBATS": { lvl: 1, display: true },
-  "SNNLEC-DEPOT": { lvl: 1, display: true },
-  "AN1-COM-AVIS": { lvl: 2, display: true },
-  "AN1-COM-FOND": { lvl: 2, display: true },
-  "AN1-DEBATS-DEC": { lvl: 2, display: true },
-  "AN1-DEBATS-MOTION": { lvl: 2, display: true },
-  "AN1-DEBATS-MOTION-VOTE": { lvl: 2, display: true },
-  "AN1-DEBATS-SEANCE": { lvl: 2, display: true },
-  "AN2-COM-AVIS": { lvl: 2, display: true },
-  "AN2-COM-FOND": { lvl: 2, display: true },
-  "AN2-DEBATS-DEC": { lvl: 2, display: true },
-  "AN2-DEBATS-SEANCE": { lvl: 2, display: true },
-  "AN21-DEBATS-MOTION-VOTE": { lvl: 2, display: true },
-  "AN21-DEBATS-SEANCE": { lvl: 2, display: true },
-  "AN3-COM-FOND": { lvl: 2, display: true },
-  "AN3-DEBATS-DEC": { lvl: 2, display: true },
-  "AN3-DEBATS-SEANCE": { lvl: 2, display: true },
-  "ANLDEF-COM-FOND": { lvl: 2, display: true },
-  "ANLDEF-DEBATS-DEC": { lvl: 2, display: true },
-  "ANLDEF-DEBATS-MOTION-VOTE": { lvl: 2, display: true },
-  "ANLDEF-DEBATS-SEANCE": { lvl: 2, display: true },
-  "ANLUNI-COM-CAE": { lvl: 2, display: true },
-  "ANLUNI-COM-FOND": { lvl: 2, display: true },
-  "ANLUNI-DEBATS-DEC": { lvl: 2, display: true },
-  "ANLUNI-DEBATS-SEANCE": { lvl: 2, display: true },
-  "ANNLEC-COM-AVIS": { lvl: 2, display: true },
-  "ANNLEC-COM-FOND": { lvl: 2, display: true },
-  "ANNLEC-DEBATS-DEC": { lvl: 2, display: true },
-  "ANNLEC-DEBATS-MOTION-VOTE": { lvl: 2, display: true },
-  "ANNLEC-DEBATS-SEANCE": { lvl: 2, display: true },
-  "CMP-COM-NOMIN": { lvl: 2, display: true },
-  "CMP-COM-RAPPORT-AN": { lvl: 2, display: true },
-  "CMP-COM-RAPPORT-SN": { lvl: 2, display: true },
-  "CMP-DEBATS-AN-DEC": { lvl: 2, display: true },
-  "CMP-DEBATS-AN-SEANCE": { lvl: 2, display: true },
-  "CMP-DEBATS-SN-DEC": { lvl: 2, display: true },
-  "CMP-DEBATS-SN-SEANCE": { lvl: 2, display: true },
-  "SN1-COM-AVIS": { lvl: 2, display: true },
-  "SN1-COM-FOND": { lvl: 2, display: true },
-  "SN1-DEBATS-DEC": { lvl: 2, display: true },
-  "SN1-DEBATS-MOTION": { lvl: 2, display: true },
-  "SN1-DEBATS-MOTION-VOTE": { lvl: 2, display: true },
-  "SN1-DEBATS-SEANCE": { lvl: 2, display: true },
-  "SN2-COM-AVIS": { lvl: 2, display: true },
-  "SN2-COM-FOND": { lvl: 2, display: true },
-  "SN2-DEBATS-DEC": { lvl: 2, display: true },
-  "SN2-DEBATS-SEANCE": { lvl: 2, display: true },
-  "SN3-COM-FOND": { lvl: 2, display: true },
-  "SN3-DEBATS-DEC": { lvl: 2, display: true },
-  "SN3-DEBATS-SEANCE": { lvl: 2, display: true },
-  "SNNLEC-COM-FOND": { lvl: 2, display: true },
-  "SNNLEC-DEBATS-DEC": { lvl: 2, display: true },
-  "SNNLEC-DEBATS-SEANCE": { lvl: 2, display: true },
-  "AN1-COM-AVIS-NOMIN": { lvl: 3, display: false },
-  "AN1-COM-AVIS-RAPPORT": { lvl: 3, display: true },
-  "AN1-COM-AVIS-REUNION": { lvl: 3, display: false },
-  "AN1-COM-AVIS-SAISIE": { lvl: 3, display: false },
-  "AN1-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "AN1-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "AN1-COM-FOND-REUNION": { lvl: 3, display: false },
-  "AN1-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "AN2-COM-AVIS-RAPPORT": { lvl: 3, display: true },
-  "AN2-COM-AVIS-REUNION": { lvl: 3, display: false },
-  "AN2-COM-AVIS-SAISIE": { lvl: 3, display: false },
-  "AN2-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "AN2-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "AN2-COM-FOND-REUNION": { lvl: 3, display: false },
-  "AN2-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "AN20-COMENQ-CREA": { lvl: 3, display: false },
-  "AN20-COMENQ-NOMIN": { lvl: 3, display: false },
-  "AN20-COMENQ-RAPPORT": { lvl: 3, display: true },
-  "AN20-MISINF-CREA": { lvl: 3, display: false },
-  "AN20-MISINF-NOMIN": { lvl: 3, display: false },
-  "AN20-MISINF-RAPPORT": { lvl: 3, display: true },
-  "AN3-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "AN3-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "AN3-COM-FOND-REUNION": { lvl: 3, display: false },
-  "AN3-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "ANLDEF-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "ANLDEF-COM-FOND-REUNION": { lvl: 3, display: false },
-  "ANLDEF-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "ANLUNI-COM-CAE-DEC": { lvl: 3, display: false },
-  "ANLUNI-COM-CAE-NOMIN": { lvl: 3, display: false },
-  "ANLUNI-COM-CAE-RAPPORT": { lvl: 3, display: true },
-  "ANLUNI-COM-CAE-REUNION": { lvl: 3, display: false },
-  "ANLUNI-COM-CAE-SAISIE": { lvl: 3, display: false },
-  "ANLUNI-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "ANLUNI-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "ANLUNI-COM-FOND-REUNION": { lvl: 3, display: false },
-  "ANLUNI-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "ANNLEC-COM-AVIS-NOMIN": { lvl: 3, display: false },
-  "ANNLEC-COM-AVIS-RAPPORT": { lvl: 3, display: true },
-  "ANNLEC-COM-AVIS-REUNION": { lvl: 3, display: false },
-  "ANNLEC-COM-AVIS-SAISIE": { lvl: 3, display: false },
-  "ANNLEC-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "ANNLEC-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "ANNLEC-COM-FOND-REUNION": { lvl: 3, display: false },
-  "ANNLEC-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "SN1-COM-AVIS-NOMIN": { lvl: 3, display: false },
-  "SN1-COM-AVIS-RAPPORT": { lvl: 3, display: true },
-  "SN1-COM-AVIS-SAISIE": { lvl: 3, display: false },
-  "SN1-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "SN1-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "SN1-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "SN2-COM-AVIS-NOMIN": { lvl: 3, display: false },
-  "SN2-COM-AVIS-RAPPORT": { lvl: 3, display: true },
-  "SN2-COM-AVIS-SAISIE": { lvl: 3, display: false },
-  "SN2-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "SN2-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "SN2-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "SN3-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "SN3-COM-FOND-SAISIE": { lvl: 3, display: false },
-  "SNNLEC-COM-FOND-NOMIN": { lvl: 3, display: false },
-  "SNNLEC-COM-FOND-RAPPORT": { lvl: 3, display: true },
-  "SNNLEC-COM-FOND-SAISIE": { lvl: 3, display: false },
+  "AN-APPLI": { lvl: 0, display: true, parents: [] },
+  AN1: { lvl: 0, display: true, parents: [] },
+  AN2: { lvl: 0, display: true, parents: [] },
+  AN20: { lvl: 0, display: true, parents: [] },
+  AN21: { lvl: 0, display: true, parents: [] },
+  AN3: { lvl: 0, display: true, parents: [] },
+  ANLDEF: { lvl: 0, display: true, parents: [] },
+  ANLUNI: { lvl: 0, display: true, parents: [] },
+  ANNLEC: { lvl: 0, display: true, parents: [] },
+  CC: { lvl: 0, display: true, parents: [] },
+  CMP: { lvl: 0, display: true, parents: [] },
+  EU: { lvl: 0, display: true, parents: [] },
+  PROM: { lvl: 0, display: true, parents: [] },
+  SN1: { lvl: 0, display: true, parents: [] },
+  SN2: { lvl: 0, display: true, parents: [] },
+  SN3: { lvl: 0, display: true, parents: [] },
+  SNNLEC: { lvl: 0, display: true, parents: [] },
+  "AN-APPLI-RAPPORT": { lvl: 1, display: "?", parents: ["AN-APPLI"] },
+  "AN1-ACIN": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-AVCE": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-COM": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-DEBATS": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-DEPOT": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-DGVT": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-DPTLETTRECT": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-ETI": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-MOTION": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-PROCACC": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-RECBUREAU": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN1-RTRINI": { lvl: 1, display: true, parents: ["AN1"] },
+  "AN2-COM": { lvl: 1, display: true, parents: ["AN2"] },
+  "AN2-DEBATS": { lvl: 1, display: true, parents: ["AN2"] },
+  "AN2-DEPOT": { lvl: 1, display: true, parents: ["AN2"] },
+  "AN20-COMENQ": { lvl: 1, display: true, parents: ["AN20"] },
+  "AN20-MISINF": { lvl: 1, display: true, parents: ["AN20"] },
+  "AN20-RAPPORT": { lvl: 1, display: true, parents: ["AN20"] },
+  "AN21-APAN": { lvl: 1, display: true, parents: ["AN21"] },
+  "AN21-DEBATS": { lvl: 1, display: true, parents: ["AN21"] },
+  "AN21-DGVT": { lvl: 1, display: true, parents: ["AN21"] },
+  "AN21-MOTION": { lvl: 1, display: true, parents: ["AN21"] },
+  "AN21-MPR": { lvl: 1, display: true, parents: ["AN21"] },
+  "AN3-COM": { lvl: 1, display: true, parents: ["AN3"] },
+  "AN3-DEBATS": { lvl: 1, display: true, parents: ["AN3"] },
+  "AN3-DEPOT": { lvl: 1, display: true, parents: ["AN3"] },
+  "ANLDEF-COM": { lvl: 1, display: true, parents: ["ANLDEF"] },
+  "ANLDEF-DEBATS": { lvl: 1, display: true, parents: ["ANLDEF"] },
+  "ANLDEF-DEPOT": { lvl: 1, display: true, parents: ["ANLDEF"] },
+  "ANLDEF-DGVT": { lvl: 1, display: true, parents: ["ANLDEF"] },
+  "ANLDEF-MOTION": { lvl: 1, display: true, parents: ["ANLDEF"] },
+  "ANLUNI-COM": { lvl: 1, display: true, parents: ["ANLUNI"] },
+  "ANLUNI-DEBATS": { lvl: 1, display: true, parents: ["ANLUNI"] },
+  "ANLUNI-DEPOT": { lvl: 1, display: true, parents: ["ANLUNI"] },
+  "ANLUNI-RTRINI": { lvl: 1, display: true, parents: ["ANLUNI"] },
+  "ANNLEC-COM": { lvl: 1, display: true, parents: ["ANNLEC"] },
+  "ANNLEC-DEBATS": { lvl: 1, display: true, parents: ["ANNLEC"] },
+  "ANNLEC-DEPOT": { lvl: 1, display: true, parents: ["ANNLEC"] },
+  "ANNLEC-DGVT": { lvl: 1, display: true, parents: ["ANNLEC"] },
+  "ANNLEC-MOTION": { lvl: 1, display: true, parents: ["ANNLEC"] },
+  "CC-CONCLUSION": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-AN": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-DROIT": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-PAN": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-PM": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-PR": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-PSN": { lvl: 1, display: true, parents: ["CC"] },
+  "CC-SAISIE-SN": { lvl: 1, display: true, parents: ["CC"] },
+  "CMP-COM": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-DEBATS-AN": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-DEBATS-SN": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-DEC": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-DEPOT": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-DGVT": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-MOTION": { lvl: 1, display: true, parents: ["CMP"] },
+  "CMP-SAISIE": { lvl: 1, display: true, parents: ["CMP"] },
+  "EU-DEC": { lvl: 1, display: true, parents: ["EU"] },
+  "PROM-PUB": { lvl: 1, display: true, parents: ["PROM"] },
+  "SN1-AVCE": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-COM": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-DEBATS": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-DEPOT": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-DPTLETTRECT": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-ETI": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-PROCACC": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN1-RTRINI": { lvl: 1, display: true, parents: ["SN1"] },
+  "SN2-COM": { lvl: 1, display: true, parents: ["SN2"] },
+  "SN2-DEBATS": { lvl: 1, display: true, parents: ["SN2"] },
+  "SN2-DEPOT": { lvl: 1, display: true, parents: ["SN2"] },
+  "SN3-COM": { lvl: 1, display: true, parents: ["SN3"] },
+  "SN3-DEBATS": { lvl: 1, display: true, parents: ["SN3"] },
+  "SN3-DEPOT": { lvl: 1, display: true, parents: ["SN3"] },
+  "SNNLEC-COM": { lvl: 1, display: true, parents: ["SNNLEC"] },
+  "SNNLEC-DEBATS": { lvl: 1, display: true, parents: ["SNNLEC"] },
+  "SNNLEC-DEPOT": { lvl: 1, display: true, parents: ["SNNLEC"] },
+  "AN1-COM-AVIS": { lvl: 2, display: true, parents: ["AN1", "AN1-COM"] },
+  "AN1-COM-FOND": { lvl: 2, display: true, parents: ["AN1", "AN1-COM"] },
+  "AN1-DEBATS-DEC": { lvl: 2, display: true, parents: ["AN1", "AN1-DEBATS"] },
+  "AN1-DEBATS-MOTION": {
+    lvl: 2,
+    display: true,
+    parents: ["AN1", "AN1-DEBATS"],
+  },
+  "AN1-DEBATS-MOTION-VOTE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN1", "AN1-DEBATS", "AN1-DEBATS-MOTION"],
+  },
+  "AN1-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN1", "AN1-DEBATS"],
+  },
+  "AN2-COM-AVIS": { lvl: 2, display: true, parents: ["AN2", "AN2-COM"] },
+  "AN2-COM-FOND": { lvl: 2, display: true, parents: ["AN2", "AN2-COM"] },
+  "AN2-DEBATS-DEC": { lvl: 2, display: true, parents: ["AN2", "AN2-DEBATS"] },
+  "AN2-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN2", "AN2-DEBATS"],
+  },
+  "AN21-DEBATS-MOTION-VOTE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN21", "AN21-DEBATS"],
+  },
+  "AN21-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN21", "AN21-DEBATS"],
+  },
+  "AN3-COM-FOND": { lvl: 2, display: true, parents: ["AN3", "AN3-COM"] },
+  "AN3-DEBATS-DEC": { lvl: 2, display: true, parents: ["AN3", "AN3-DEBATS"] },
+  "AN3-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["AN3", "AN3-DEBATS"],
+  },
+  "ANLDEF-COM-FOND": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLDEF", "ANLDEF-COM"],
+  },
+  "ANLDEF-DEBATS-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLDEF", "ANLDEF-DEBATS"],
+  },
+  "ANLDEF-DEBATS-MOTION-VOTE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLDEF", "ANLDEF-DEBATS"],
+  },
+  "ANLDEF-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLDEF", "ANLDEF-DEBATS"],
+  },
+  "ANLUNI-COM-CAE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-COM"],
+  },
+  "ANLUNI-COM-FOND": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-COM"],
+  },
+  "ANLUNI-DEBATS-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-DEBATS"],
+  },
+  "ANLUNI-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-DEBATS"],
+  },
+  "ANNLEC-COM-AVIS": {
+    lvl: 2,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-COM"],
+  },
+  "ANNLEC-COM-FOND": {
+    lvl: 2,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-COM"],
+  },
+  "ANNLEC-DEBATS-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-DEBATS"],
+  },
+  "ANNLEC-DEBATS-MOTION-VOTE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-DEBATS"],
+  },
+  "ANNLEC-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-DEBATS"],
+  },
+  "CMP-COM-NOMIN": { lvl: 2, display: true, parents: ["CMP", "CMP-COM"] },
+  "CMP-COM-RAPPORT-AN": { lvl: 2, display: true, parents: ["CMP", "CMP-COM"] },
+  "CMP-COM-RAPPORT-SN": { lvl: 2, display: true, parents: ["CMP", "CMP-COM"] },
+  "CMP-DEBATS-AN-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["CMP", "CMP-DEBATS-AN"],
+  },
+  "CMP-DEBATS-AN-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["CMP", "CMP-DEBATS-AN"],
+  },
+  "CMP-DEBATS-SN-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["CMP", "CMP-DEBATS-SN"],
+  },
+  "CMP-DEBATS-SN-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["CMP", "CMP-DEBATS-SN"],
+  },
+  "SN1-COM-AVIS": { lvl: 2, display: true, parents: ["SN1", "SN1-COM"] },
+  "SN1-COM-FOND": { lvl: 2, display: true, parents: ["SN1", "SN1-COM"] },
+  "SN1-DEBATS-DEC": { lvl: 2, display: true, parents: ["SN1", "SN1-DEBATS"] },
+  "SN1-DEBATS-MOTION": {
+    lvl: 2,
+    display: true,
+    parents: ["SN1", "SN1-DEBATS"],
+  },
+  "SN1-DEBATS-MOTION-VOTE": {
+    lvl: 2,
+    display: true,
+    parents: ["SN1", "SN1-DEBATS", "SN1-DEBATS-MOTION"],
+  },
+  "SN1-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["SN1", "SN1-DEBATS"],
+  },
+  "SN2-COM-AVIS": { lvl: 2, display: true, parents: ["SN2", "SN2-COM"] },
+  "SN2-COM-FOND": { lvl: 2, display: true, parents: ["SN2", "SN2-COM"] },
+  "SN2-DEBATS-DEC": { lvl: 2, display: true, parents: ["SN2", "SN2-DEBATS"] },
+  "SN2-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["SN2", "SN2-DEBATS"],
+  },
+  "SN3-COM-FOND": { lvl: 2, display: true, parents: ["SN3", "SN3-COM"] },
+  "SN3-DEBATS-DEC": { lvl: 2, display: true, parents: ["SN3", "SN3-DEBATS"] },
+  "SN3-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["SN3", "SN3-DEBATS"],
+  },
+  "SNNLEC-COM-FOND": {
+    lvl: 2,
+    display: true,
+    parents: ["SNNLEC", "SNNLEC-COM"],
+  },
+  "SNNLEC-DEBATS-DEC": {
+    lvl: 2,
+    display: true,
+    parents: ["SNNLEC", "SNNLEC-DEBATS"],
+  },
+  "SNNLEC-DEBATS-SEANCE": {
+    lvl: 2,
+    display: true,
+    parents: ["SNNLEC", "SNNLEC-DEBATS"],
+  },
+  "AN1-COM-AVIS-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-AVIS"],
+  },
+  "AN1-COM-AVIS-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN1", "AN1-COM", "AN1-COM-AVIS"],
+  },
+  "AN1-COM-AVIS-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-AVIS"],
+  },
+  "AN1-COM-AVIS-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-AVIS"],
+  },
+  "AN1-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-FOND"],
+  },
+  "AN1-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN1", "AN1-COM", "AN1-COM-FOND"],
+  },
+  "AN1-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-FOND"],
+  },
+  "AN1-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["AN1", "AN1-COM", "AN1-COM-FOND"],
+  },
+  "AN2-COM-AVIS-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN2", "AN2-COM", "AN2-COM-AVIS"],
+  },
+  "AN2-COM-AVIS-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["AN2", "AN2-COM", "AN2-COM-AVIS"],
+  },
+  "AN2-COM-AVIS-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["AN2", "AN2-COM", "AN2-COM-AVIS"],
+  },
+  "AN2-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN2", "AN2-COM", "AN2-COM-FOND"],
+  },
+  "AN2-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN2", "AN2-COM", "AN2-COM-FOND"],
+  },
+  "AN2-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["AN2", "AN2-COM", "AN2-COM-FOND"],
+  },
+  "AN2-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["AN2", "AN2-COM", "AN2-COM-FOND"],
+  },
+  "AN20-COMENQ-CREA": {
+    lvl: 3,
+    display: false,
+    parents: ["AN20", "AN20-COMENQ"],
+  },
+  "AN20-COMENQ-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN20", "AN20-COMENQ"],
+  },
+  "AN20-COMENQ-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN20", "AN20-COMENQ"],
+  },
+  "AN20-MISINF-CREA": {
+    lvl: 3,
+    display: false,
+    parents: ["AN20", "AN20-MISINF"],
+  },
+  "AN20-MISINF-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN20", "AN20-MISINF"],
+  },
+  "AN20-MISINF-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN20", "AN20-MISINF"],
+  },
+  "AN3-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["AN3", "AN3-COM", "AN3-COM-FOND"],
+  },
+  "AN3-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["AN3", "AN3-COM", "AN3-COM-FOND"],
+  },
+  "AN3-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["AN3", "AN3-COM", "AN3-COM-FOND"],
+  },
+  "AN3-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["AN3", "AN3-COM", "AN3-COM-FOND"],
+  },
+  "ANLDEF-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["ANLDEF", "ANLDEF-COM", "ANLDEF-COM-FOND"],
+  },
+  "ANLDEF-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLDEF", "ANLDEF-COM", "ANLDEF-COM-FOND"],
+  },
+  "ANLDEF-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLDEF", "ANLDEF-COM", "ANLDEF-COM-FOND"],
+  },
+  "ANLUNI-COM-CAE-DEC": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-CAE"],
+  },
+  "ANLUNI-COM-CAE-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-CAE"],
+  },
+  "ANLUNI-COM-CAE-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-CAE"],
+  },
+  "ANLUNI-COM-CAE-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-CAE"],
+  },
+  "ANLUNI-COM-CAE-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-CAE"],
+  },
+  "ANLUNI-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-FOND"],
+  },
+  "ANLUNI-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-FOND"],
+  },
+  "ANLUNI-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-FOND"],
+  },
+  "ANLUNI-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["ANLUNI", "ANLUNI-COM", "ANLUNI-COM-FOND"],
+  },
+  "ANNLEC-COM-AVIS-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-AVIS"],
+  },
+  "ANNLEC-COM-AVIS-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-AVIS"],
+  },
+  "ANNLEC-COM-AVIS-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-AVIS"],
+  },
+  "ANNLEC-COM-AVIS-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-AVIS"],
+  },
+  "ANNLEC-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-FOND"],
+  },
+  "ANNLEC-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-FOND"],
+  },
+  "ANNLEC-COM-FOND-REUNION": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-FOND"],
+  },
+  "ANNLEC-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["ANNLEC", "ANNLEC-COM", "ANNLEC-COM-FOND"],
+  },
+  "SN1-COM-AVIS-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["SN1", "SN1-COM", "SN1-COM-AVIS"],
+  },
+  "SN1-COM-AVIS-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SN1", "SN1-COM", "SN1-COM-AVIS"],
+  },
+  "SN1-COM-AVIS-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SN1", "SN1-COM", "SN1-COM-AVIS"],
+  },
+  "SN1-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["SN1", "SN1-COM", "SN1-COM-FOND"],
+  },
+  "SN1-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SN1", "SN1-COM", "SN1-COM-FOND"],
+  },
+  "SN1-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SN1", "SN1-COM", "SN1-COM-FOND"],
+  },
+  "SN2-COM-AVIS-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["SN2", "SN2-COM", "SN2-COM-AVIS"],
+  },
+  "SN2-COM-AVIS-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SN2", "SN2-COM", "SN2-COM-AVIS"],
+  },
+  "SN2-COM-AVIS-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SN2", "SN2-COM", "SN2-COM-AVIS"],
+  },
+  "SN2-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["SN2", "SN2-COM", "SN2-COM-FOND"],
+  },
+  "SN2-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SN2", "SN2-COM", "SN2-COM-FOND"],
+  },
+  "SN2-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SN2", "SN2-COM", "SN2-COM-FOND"],
+  },
+  "SN3-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SN3", "SN3-COM", "SN3-COM-FOND"],
+  },
+  "SN3-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SN3", "SN3-COM", "SN3-COM-FOND"],
+  },
+  "SNNLEC-COM-FOND-NOMIN": {
+    lvl: 3,
+    display: false,
+    parents: ["SNNLEC", "SNNLEC-COM", "SNNLEC-COM-FOND"],
+  },
+  "SNNLEC-COM-FOND-RAPPORT": {
+    lvl: 3,
+    display: true,
+    parents: ["SNNLEC", "SNNLEC-COM", "SNNLEC-COM-FOND"],
+  },
+  "SNNLEC-COM-FOND-SAISIE": {
+    lvl: 3,
+    display: false,
+    parents: ["SNNLEC", "SNNLEC-COM", "SNNLEC-COM-FOND"],
+  },
 } as const;
+
+export type ActsStructure = Record<
+  string,
+  {
+    ids?: string[];
+    date?: Date;
+    children?: ActsStructure;
+  }
+>;
+
+function addDatesHelper(
+  item: {
+    ids?: string[];
+    date?: Date;
+    children?: ActsStructure;
+  },
+  lookup: Record<string, ActeLegislatif>
+) {
+  const rep = {};
+
+  const idsDates =
+    item.ids?.map((id) => lookup[id].dateActe).filter((date) => date != null) ??
+    ([] as Date[]);
+
+  const idsMinDate =
+    idsDates?.length === 0
+      ? undefined
+      : new Date(Math.min(...idsDates.map((d) => d.getTime())));
+
+  if (item.children === undefined) {
+    item.date = idsMinDate;
+    return idsMinDate;
+  }
+
+  let childrenMinDate: Date | undefined = undefined;
+  Object.keys(item.children).forEach((key) => {
+    const date = addDatesHelper(item.children![key], lookup);
+
+    childrenMinDate =
+      childrenMinDate === undefined ||
+      (date !== undefined && childrenMinDate.getTime() > date.getTime())
+        ? date
+        : childrenMinDate;
+  });
+
+  item.date = idsMinDate || childrenMinDate;
+  return item.date;
+}
+
+function addDates(
+  structure: ActsStructure,
+  lookup: Record<string, ActLegislatif>
+) {
+  Object.keys(structure).forEach((key) => {
+    addDatesHelper(structure[key], lookup);
+  });
+}
+
+export function groupActs(acts: ActeLegislatif[]) {
+  const actsStructure: ActsStructure = {};
+  const actsLookup: Record<string, ActeLegislatif> = {};
+
+  acts.forEach((act) => {
+    const { codeActe, uid } = act;
+    let parentPointer: ActsStructure = actsStructure;
+
+    CONTEXT[codeActe as keyof typeof CONTEXT].parents.forEach((code) => {
+      if (parentPointer[code] === undefined) {
+        parentPointer[code] = { children: {} } as ActsStructure;
+      }
+      if (parentPointer[code].children === undefined) {
+        parentPointer[code].children = {} as ActsStructure;
+      }
+      parentPointer = parentPointer[code].children as ActsStructure;
+    });
+
+    if (parentPointer[codeActe] === undefined) {
+      parentPointer[codeActe] = { ids: [] };
+    }
+    parentPointer[codeActe].ids?.push(uid);
+    actsLookup[uid] = act;
+  });
+
+  addDates(actsStructure, actsLookup);
+
+  return {
+    actsStructure,
+    actsLookup,
+  };
+}

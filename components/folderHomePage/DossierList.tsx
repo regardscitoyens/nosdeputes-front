@@ -4,9 +4,10 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { THEMES, ThemeKeys } from "../const";
 import LabelChip from "../LabelChip";
-import { DossierRow, getDossiers } from "@/repository/database";
+import { getDossiers } from "@/repository/database";
+import { Dossier } from "@/repository/types";
 
-type DossierType = DossierRow & {
+type DossierType = Dossier & {
   theme: ThemeKeys;
 };
 type MonthDossier = { date: string; dossiers: DossierType[] };
