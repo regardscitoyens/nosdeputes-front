@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import {
   Autocomplete,
   TextField,
@@ -106,7 +107,7 @@ export default function SearchBar() {
                 sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
                 {...props}
               >
-                <img loading="lazy" width="20" src="/picture.png" alt="" />
+                <Image loading="lazy" height="20" width="20" src="/picture.png" alt="" />
                 <Typography variant="body2">
                   {option.prenom} {option.nom}
                 </Typography>
