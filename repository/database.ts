@@ -9,7 +9,21 @@ import {
   Document as DocumentData,
 } from "./types";
 
-const db = knex(config.development);
+/**
+ * So Nextjs does not create too many db connections.
+ *  https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
+ */
+function registerService<T>(name: string, initFn: () => T): T {
+  if (process.env.NODE_ENV === 'development') {
+    if (!(name in global)) {
+      (global as any)[name] = initFn();
+    }
+    return (global as any)[name];
+  }
+  return initFn();
+};
+
+const db = registerService("database", () => knex(config.development));
 
 export async function listTables() {
   try {
