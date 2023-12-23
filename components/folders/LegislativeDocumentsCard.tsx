@@ -9,8 +9,12 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import LinkIcon from "@/icons/LinkIcon";
 
 import Link from "next/link";
+import { DossierData } from "@/repository/database";
+import { getDocumentURL } from "@/domain/dataTransform";
 
-export const LegislativeDocumentsCard = () => {
+export const LegislativeDocumentsCard = ({
+  documents,
+}: Pick<DossierData, "documents">) => {
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
@@ -21,16 +25,28 @@ export const LegislativeDocumentsCard = () => {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
-          {Array.from(Array(10).keys()).map((link) => (
-            <Stack key={link} direction="row" spacing={1} alignItems="center">
-              <LinkIcon sx={{ fontSize: "14px" }} />
-              <Link href="">
-                <Typography variant="body2" fontWeight="bold">
-                  Lien vers {link}
+          {Object.values(documents).map((document) => {
+            const url = getDocumentURL(document);
+
+            return (
+              <Stack
+                key={document.uid}
+                direction="row"
+                spacing={1}
+                alignItems="center"
+              >
+                <Typography
+                  variant="body2"
+                  fontWeight="bold"
+                  href={url}
+                  component={url ? Link : "p"}
+                >
+                  {document.titrePrincipalCourt}{" "}
+                  {url && <LinkIcon sx={{ fontSize: "14px" }} />}
                 </Typography>
-              </Link>
-            </Stack>
-          ))}
+              </Stack>
+            );
+          })}
         </Stack>
       </AccordionDetails>
     </Accordion>

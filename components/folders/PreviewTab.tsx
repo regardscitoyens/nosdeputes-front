@@ -25,9 +25,11 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
     commissionAvisId,
     organes = {},
     rapporteursFondIds,
+    coSignatairesIds,
     acteurs = {},
     acts = [],
     documents = [],
+    amendementCount = {},
   } = dossier ?? {};
 
   return (
@@ -44,14 +46,19 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
     >
       <Stack spacing={3} useFlexGap flex={2}>
         <CommiteeCard
-          commissionFond={commissionFondId && organes[commissionFondId]}
-          commissionAvis={commissionAvisId && organes[commissionAvisId]}
-          rapporteursFond={rapporteursFondIds
-            ?.map((id: string) => acteurs[id])
-            .filter((acteur: undefined | Acteur) => !!acteur)}
+          commissionFondId={commissionFondId}
+          commissionAvisId={commissionAvisId}
+          organes={organes}
+          rapporteursFondIds={rapporteursFondIds}
+          acteurs={acteurs}
         />
-        <AdditionalInfoCard />
-        <LegislativeDocumentsCard />
+        <AdditionalInfoCard
+          amendementCount={amendementCount}
+          documents={documents}
+          coSignatairesIds={coSignatairesIds}
+          acteurs={acteurs}
+        />
+        <LegislativeDocumentsCard documents={documents} />
       </Stack>
       <Stack spacing={3} flex={5}>
         <CardLayout title="Temps de parole par groupe">
