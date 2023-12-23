@@ -3,7 +3,30 @@ import config from "./knexfile";
 import { AN1_COM_FOND, AN1_COM_FOND_NOMIN } from "./Acts";
 import { Dossier, ActeLegislatif, Organe, Acteur } from "./types";
 
-const db = knex(config.development);
+/**
+ * So Nextjs does not create to many db connections.
+ *  https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
+ */
+function registerService<T>(name: string, initFn: () => T): T {
+  if (process.env.NODE_ENV === 'development') {
+    if (!(name in global)) {
+      // @ts-ignore
+      global[name] = initFn();
+    }
+    // @ts-ignore
+    return global[name];
+  }
+  return initFn();
+};
+
+const db = registerService("database", () => knex(config.development));
+
+export function closeConnection() {
+  db.destroy(() => {
+    console.log("Database connection closed");
+    process.exit(0);
+  });
+}
 
 export async function listTables() {
   try {
