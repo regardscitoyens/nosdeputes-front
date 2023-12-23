@@ -4,7 +4,7 @@ import { AN1_COM_FOND, AN1_COM_FOND_NOMIN } from "./Acts";
 import { Dossier, ActeLegislatif, Organe, Acteur } from "./types";
 
 /**
- * So Nextjs does not create to many db connections.
+ * So Nextjs does not create too many db connections.
  *  https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
  */
 function registerService<T>(name: string, initFn: () => T): T {
