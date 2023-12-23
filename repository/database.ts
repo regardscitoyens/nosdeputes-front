@@ -10,11 +10,9 @@ import { Dossier, ActeLegislatif, Organe, Acteur } from "./types";
 function registerService<T>(name: string, initFn: () => T): T {
   if (process.env.NODE_ENV === 'development') {
     if (!(name in global)) {
-      // @ts-ignore
-      global[name] = initFn();
+      (global as any)[name] = initFn();
     }
-    // @ts-ignore
-    return global[name];
+    return (global as any)[name];
   }
   return initFn();
 };
