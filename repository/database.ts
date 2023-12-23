@@ -21,13 +21,6 @@ function registerService<T>(name: string, initFn: () => T): T {
 
 const db = registerService("database", () => knex(config.development));
 
-export function closeConnection() {
-  db.destroy(() => {
-    console.log("Database connection closed");
-    process.exit(0);
-  });
-}
-
 export async function listTables() {
   try {
     const result = await db.raw(
