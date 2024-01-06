@@ -7,6 +7,7 @@ import {
   Organe,
   Acteur,
   Document as DocumentData,
+  Amendement,
 } from "./types";
 
 /**
@@ -14,14 +15,14 @@ import {
  *  https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
  */
 function registerService<T>(name: string, initFn: () => T): T {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     if (!(name in global)) {
       (global as any)[name] = initFn();
     }
     return (global as any)[name];
   }
   return initFn();
-};
+}
 
 const db = registerService("database", () => knex(config.development));
 
@@ -81,6 +82,7 @@ export type DossierData = {
    * Map les document id avec leur nombre d'amendement.
    */
   amendementCount: Record<string, number>;
+  amendements: Amendement[];
   acts: ActeLegislatif[];
   documents: Record<string, DocumentData>;
   organes: Record<string, Organe>;
@@ -208,6 +210,11 @@ export async function getDossier(
       amendementCount[texteLegislatifRefUid] = count;
     });
 
+    const amendements = await db
+      .select("*")
+      .from("Amendement")
+      .whereIn("texteLegislatifRefUid", Array.from(documentsIds));
+
     return {
       dossier,
       commissionFondId,
@@ -219,6 +226,7 @@ export async function getDossier(
       organes,
       acteurs,
       amendementCount,
+      amendements,
     };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);

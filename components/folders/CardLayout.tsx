@@ -3,7 +3,7 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import { CardHeader, CardHeaderProps, Theme, useTheme } from "@mui/material";
+import { CardHeader, CardHeaderProps } from "@mui/material";
 
 export interface CardLayoutProps
   extends Pick<CardHeaderProps, "title" | "action"> {

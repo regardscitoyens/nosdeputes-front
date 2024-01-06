@@ -1,6 +1,7 @@
 import React from "react";
 
 import { PreviewTab } from "@/components/folders/PreviewTab";
+import { AmendementTab } from "@/components/folders/AmendementTab";
 import { DebateTab } from "@/components/folders/DebateTab";
 import { getDossier } from "@/repository/database";
 
@@ -26,7 +27,7 @@ export default async function Page({
       return <DebateTab />;
 
     case "amendement":
-      return <p>Amendements</p>;
+      return <AmendementTab dossier={dossier} />;
 
     case "votes":
       return <p>Votes</p>;
