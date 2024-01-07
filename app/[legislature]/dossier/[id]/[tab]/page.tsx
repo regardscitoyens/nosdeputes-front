@@ -4,7 +4,6 @@ import { PreviewTab } from "@/components/folders/PreviewTab";
 import { AmendementTab } from "@/components/folders/AmendementTab";
 import { DebateTab } from "@/components/folders/DebateTab";
 import { getDossier } from "@/repository/database";
-import { AmendementsFilterState } from "@/components/folders/AmendementTab/useFilter";
 
 export const dynamicParams = true;
 

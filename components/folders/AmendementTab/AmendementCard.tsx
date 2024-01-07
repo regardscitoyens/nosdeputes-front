@@ -64,7 +64,7 @@ export default function AmendementCard(props: Amendement) {
                 </Typography>
               </Typography>
               <Typography component="li" fontWeight="light" variant="body2">
-                Date d'examen:&nbsp;
+                Date d&apos;examen:&nbsp;
                 <Typography component="span" variant="body2">
                   {dateSort?.toLocaleDateString("fr-FR", {
                     year: "numeric",
