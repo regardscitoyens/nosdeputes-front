@@ -1,31 +1,25 @@
 "use client";
-
 import React from "react";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 
 import { DossierData } from "@/repository/database";
-import AmendementCard from "./AmendementCard";
-import { Divider } from "@mui/material";
+import { FilterContainer } from "@/components/FilterContainer";
+
+import { Filter } from "./Filter";
+import { useFilterState } from "./useFilter";
+import AmendementList from "./AmendementList";
 
 type AmendementTabProps = {
   dossier?: DossierData;
 };
 
 export const AmendementTab = ({ dossier }: AmendementTabProps) => {
-  const {
-    commissionFondId,
-    commissionAvisId,
-    organes = {},
-    rapporteursFondIds,
-    coSignatairesIds,
-    acteurs = {},
-    acts = [],
-    documents = [],
-    amendementCount = {},
-    amendements = [],
-  } = dossier ?? {};
+  const { amendements = [], acteurs = {} } = dossier ?? {};
+
+  const { numero, handleNumero } = useFilterState();
 
   return (
     <Container
@@ -33,20 +27,24 @@ export const AmendementTab = ({ dossier }: AmendementTabProps) => {
         pt: 3,
         display: "flex",
         flexDirection: {
-          xs: "column-reverse",
+          xs: "column",
           md: "row",
         },
         gap: 5,
       }}
     >
-      <Stack>
-        {amendements.slice(0, 10).map((amendement) => (
-          <React.Fragment key={amendement.uid}>
-            <AmendementCard {...amendement} />
-            <Divider />
-          </React.Fragment>
-        ))}
+      <Stack spacing={3} useFlexGap flex={2}>
+        <FilterContainer>
+          <Filter numero={numero} handleNumero={handleNumero} />
+        </FilterContainer>
       </Stack>
+      <Box flex={8} sx={{ minWidth: 0 }}>
+        <AmendementList
+          amendements={amendements}
+          acteurs={acteurs}
+          numero={numero}
+        />
+      </Box>
     </Container>
   );
 };

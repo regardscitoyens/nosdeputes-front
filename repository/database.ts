@@ -189,16 +189,6 @@ export async function getDossier(
         .whereIn("documentRefUid", Array.from(documentsIds))
     ).map((item) => item.acteurRefUid);
 
-    const acteursData = await db
-      .select("*")
-      .from("Acteur")
-      .whereIn("uid", [...rapporteursFondIds, ...coSignatairesIds]);
-
-    const acteurs: Record<string, Acteur> = {};
-    acteursData.forEach((acteur) => {
-      acteurs[acteur.uid] = acteur;
-    });
-
     const amendementCountData = await db
       .select("texteLegislatifRefUid", db.raw("COUNT(uid)"))
       .from("Amendement")
@@ -214,6 +204,21 @@ export async function getDossier(
       .select("*")
       .from("Amendement")
       .whereIn("texteLegislatifRefUid", Array.from(documentsIds));
+
+    // TODO: Les auteurs des amendements devraient être retrouvé avec une jointure de table
+    const acteursData = await db
+      .select("*")
+      .from("Acteur")
+      .whereIn("uid", [
+        ...rapporteursFondIds,
+        ...coSignatairesIds,
+        ...amendements.map((a) => a.acteurRefUid),
+      ]);
+
+    const acteurs: Record<string, Acteur> = {};
+    acteursData.forEach((acteur) => {
+      acteurs[acteur.uid] = acteur;
+    });
 
     return {
       dossier,
