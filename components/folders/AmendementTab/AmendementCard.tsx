@@ -43,11 +43,7 @@ export default function AmendementCard(props: Amendement) {
         }}
       >
         {true && (
-          <Collapse
-            // direction="right"
-            orientation="horizontal"
-            in={showMore}
-          >
+          <Collapse orientation="horizontal" in={showMore}>
             <Stack
               component="li"
               spacing={1.25}
