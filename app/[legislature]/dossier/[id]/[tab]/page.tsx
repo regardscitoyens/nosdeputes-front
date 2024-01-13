@@ -3,7 +3,7 @@ import React from "react";
 import { PreviewTab } from "@/components/folders/PreviewTab";
 import { AmendementTab } from "@/components/folders/AmendementTab";
 import { DebateTab } from "@/components/folders/DebateTab";
-import { getDossier } from "@/repository/database";
+import { getDossier, getDossierAmendements } from "@/repository/database";
 
 export const dynamicParams = true;
 
@@ -23,13 +23,29 @@ export default async function Page({
   // searchParams: Partial<AmendementsFilterState>;
 }) {
   const dossier = await getDossier(params.legislature, params.id);
+  const amendements = await getDossierAmendements(
+    params.legislature,
+    params.id
+  );
+  if (!dossier) {
+    return null;
+  }
 
   switch (params.tab) {
     case "debat":
       return <DebateTab />;
 
     case "amendement":
-      return <AmendementTab dossier={dossier} />;
+      if (!amendements) {
+        return null;
+      }
+      return (
+        <AmendementTab
+          amendements={amendements}
+          documents={dossier?.documents}
+          amendementCount={dossier?.amendementCount}
+        />
+      );
 
     case "votes":
       return <p>Votes</p>;

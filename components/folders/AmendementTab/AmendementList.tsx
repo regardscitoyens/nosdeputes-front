@@ -1,17 +1,19 @@
 "use client";
 import React from "react";
 
-import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { Divider } from "@mui/material";
 
-import { DossierData } from "@/repository/database";
 import AmendementCard from "./AmendementCard";
+import { AmendementTabProps } from ".";
 
 export default function AmendementsList(
-  props: Pick<DossierData, "amendements" | "acteurs"> & { numero: string }
+  props: Pick<AmendementTabProps, "amendements"> & {
+    numero: string;
+    selectedDocument: string;
+  }
 ) {
-  const { amendements, acteurs, numero } = props;
+  const { amendements, numero, selectedDocument } = props;
 
   const filteredAmendements = amendements
     .filter((amendement) => {
@@ -24,7 +26,7 @@ export default function AmendementsList(
     })
     .filter(
       ({ texteLegislatifRefUid }) =>
-        texteLegislatifRefUid === "PIONANR5L16B0360"
+        !selectedDocument || texteLegislatifRefUid === selectedDocument
     )
     .sort((a, b) =>
       Number.parseInt(a.numeroOrdreDepot) < Number.parseInt(b.numeroOrdreDepot)
@@ -36,10 +38,7 @@ export default function AmendementsList(
     <Stack>
       {filteredAmendements.slice(0, 10).map((amendement) => (
         <React.Fragment key={amendement.uid}>
-          <AmendementCard
-            {...amendement}
-            acteur={acteurs[amendement.acteurRefUid]}
-          />
+          <AmendementCard {...amendement} />
           <Divider />
         </React.Fragment>
       ))}

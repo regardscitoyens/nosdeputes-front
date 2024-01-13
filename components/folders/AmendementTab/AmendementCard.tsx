@@ -22,6 +22,8 @@ export default function AmendementCard(props: Amendement) {
     signatairesLibelle,
     numeroLong,
     acteur,
+    prenom,
+    nom,
     ...other
   } = props;
 
@@ -33,7 +35,7 @@ export default function AmendementCard(props: Amendement) {
     <Stack direction="column" spacing={2} sx={{ my: 2 }}>
       <Stack direction="row" justifyContent="space-between">
         <span>
-          {acteur.prenom} {acteur.nom}
+          {prenom} {nom}
         </span>
         <span>{sortAmendement || etatLibelle}</span>
       </Stack>
@@ -45,9 +47,9 @@ export default function AmendementCard(props: Amendement) {
         {true && (
           <Collapse orientation="horizontal" in={showMore}>
             <Stack
-              component="li"
+              component="ul"
               spacing={1.25}
-              sx={{ listStyle: "none", pr: 2, width: 500 }}
+              sx={{ listStyle: "none", pr: 2, width: 250 }}
             >
               <Typography component="li" fontWeight="light" variant="body2">
                 Date de dépôt:&nbsp;
@@ -93,6 +95,8 @@ export default function AmendementCard(props: Amendement) {
           fontWeight="light"
           variant="body2"
           flexGrow={1}
+          flexShrink={1}
+          flexBasis={0}
           component="div"
           dangerouslySetInnerHTML={{ __html: dispositif }}
         />

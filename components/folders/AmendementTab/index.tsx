@@ -11,15 +11,22 @@ import { FilterContainer } from "@/components/FilterContainer";
 import { Filter } from "./Filter";
 import { useFilterState } from "./useFilter";
 import AmendementList from "./AmendementList";
+import { Amendement, Acteur } from "@/repository/types";
 
-type AmendementTabProps = {
-  dossier?: DossierData;
+export type AmendementTabProps = Pick<
+  DossierData,
+  "amendementCount" | "documents"
+> & {
+  amendements: (Amendement & Acteur)[];
 };
 
-export const AmendementTab = ({ dossier }: AmendementTabProps) => {
-  const { amendements = [], acteurs = {} } = dossier ?? {};
-
-  const { numero, handleNumero } = useFilterState();
+export const AmendementTab = ({
+  amendements,
+  documents,
+  amendementCount,
+}: AmendementTabProps) => {
+  const { numero, handleNumero, selectedDocument, setSelectedDocument } =
+    useFilterState();
 
   return (
     <Container
@@ -35,14 +42,21 @@ export const AmendementTab = ({ dossier }: AmendementTabProps) => {
     >
       <Stack spacing={3} useFlexGap flex={2}>
         <FilterContainer>
-          <Filter numero={numero} handleNumero={handleNumero} />
+          <Filter
+            numero={numero}
+            handleNumero={handleNumero}
+            selectedDocument={selectedDocument}
+            setSelectedDocument={setSelectedDocument}
+            documents={documents}
+            amendementCount={amendementCount}
+          />
         </FilterContainer>
       </Stack>
       <Box flex={8} sx={{ minWidth: 0 }}>
         <AmendementList
           amendements={amendements}
-          acteurs={acteurs}
           numero={numero}
+          selectedDocument={selectedDocument}
         />
       </Box>
     </Container>

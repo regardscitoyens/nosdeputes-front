@@ -82,7 +82,7 @@ export type DossierData = {
    * Map les document id avec leur nombre d'amendement.
    */
   amendementCount: Record<string, number>;
-  amendements: Amendement[];
+
   acts: ActeLegislatif[];
   documents: Record<string, DocumentData>;
   organes: Record<string, Organe>;
@@ -200,20 +200,10 @@ export async function getDossier(
       amendementCount[texteLegislatifRefUid] = count;
     });
 
-    const amendements = await db
-      .select("*")
-      .from("Amendement")
-      .whereIn("texteLegislatifRefUid", Array.from(documentsIds));
-
-    // TODO: Les auteurs des amendements devraient être retrouvé avec une jointure de table
     const acteursData = await db
       .select("*")
       .from("Acteur")
-      .whereIn("uid", [
-        ...rapporteursFondIds,
-        ...coSignatairesIds,
-        ...amendements.map((a) => a.acteurRefUid),
-      ]);
+      .whereIn("uid", [...rapporteursFondIds, ...coSignatairesIds]);
 
     const acteurs: Record<string, Acteur> = {};
     acteursData.forEach((acteur) => {
@@ -231,8 +221,73 @@ export async function getDossier(
       organes,
       acteurs,
       amendementCount,
-      amendements,
     };
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export type DossierAmendementsData = {
+  dossier: Dossier;
+  documents: Record<string, DocumentData>;
+  amendements: Amendement[];
+};
+
+export async function getDossierAmendements(
+  legislature: string,
+  dossierId: string
+): Promise<(Amendement & Pick<Acteur, "nom" | "prenom">)[] | undefined> {
+  try {
+    const dossiers = await db
+      .select("*")
+      .from("Dossier")
+      .where("legislature", "=", legislature)
+      .where("uid", "=", dossierId);
+
+    const dossier = dossiers[0];
+    if (dossier === undefined) {
+      return undefined;
+    }
+
+    const acts = await db
+      .select("*")
+      .from("ActeLegislatif")
+      .where("dossierRefUid", "=", dossier.uid);
+
+    const documentsIds = new Set<string>();
+    acts.forEach((act) => {
+      const { texteAssocieRefUid, texteAdopteRefUid } = act;
+      if (texteAssocieRefUid) documentsIds.add(texteAssocieRefUid);
+      if (texteAdopteRefUid) documentsIds.add(texteAdopteRefUid);
+    });
+
+    const documentsData = await db
+      .select("*")
+      .from("Document")
+      .whereIn("uid", Array.from(documentsIds));
+
+    const documents: Record<string, DocumentData> = {};
+    documentsData.forEach((doc) => {
+      documents[doc.uid] = doc;
+    });
+
+    const amendements = await db
+      .select("*")
+      .from("Amendement")
+      .whereIn("texteLegislatifRefUid", Array.from(documentsIds))
+      .leftJoin(
+        function () {
+          this.select(["uid as acteur_uid", "prenom", "nom"])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Amendement.acteurRefUid",
+        "acteur.acteur_uid"
+      )
+      .options({ nestTables: true });
+
+    return amendements;
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;

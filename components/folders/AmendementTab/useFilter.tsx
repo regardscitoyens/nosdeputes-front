@@ -18,6 +18,7 @@ export function useFilterState() {
   const [numero, setNumero] = React.useState<string>(
     searchParams.get("numero") ?? ""
   );
+  const [selectedDocument, setSelectedDocument] = React.useState("");
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(window.location.search);
@@ -46,5 +47,12 @@ export function useFilterState() {
     });
   }
 
-  return { isPending, handleSearch, handleNumero, numero };
+  return {
+    isPending,
+    handleSearch,
+    handleNumero,
+    numero,
+    selectedDocument,
+    setSelectedDocument,
+  };
 }
