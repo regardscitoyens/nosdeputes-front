@@ -7,6 +7,7 @@ import {
   Organe,
   Acteur,
   Document as DocumentData,
+  Amendement,
 } from "./types";
 
 /**
@@ -14,14 +15,14 @@ import {
  *  https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
  */
 function registerService<T>(name: string, initFn: () => T): T {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     if (!(name in global)) {
       (global as any)[name] = initFn();
     }
     return (global as any)[name];
   }
   return initFn();
-};
+}
 
 const db = registerService("database", () => knex(config.development));
 
@@ -81,6 +82,7 @@ export type DossierData = {
    * Map les document id avec leur nombre d'amendement.
    */
   amendementCount: Record<string, number>;
+
   acts: ActeLegislatif[];
   documents: Record<string, DocumentData>;
   organes: Record<string, Organe>;
@@ -187,16 +189,6 @@ export async function getDossier(
         .whereIn("documentRefUid", Array.from(documentsIds))
     ).map((item) => item.acteurRefUid);
 
-    const acteursData = await db
-      .select("*")
-      .from("Acteur")
-      .whereIn("uid", [...rapporteursFondIds, ...coSignatairesIds]);
-
-    const acteurs: Record<string, Acteur> = {};
-    acteursData.forEach((acteur) => {
-      acteurs[acteur.uid] = acteur;
-    });
-
     const amendementCountData = await db
       .select("texteLegislatifRefUid", db.raw("COUNT(uid)"))
       .from("Amendement")
@@ -206,6 +198,16 @@ export async function getDossier(
     const amendementCount: Record<string, number> = {};
     amendementCountData.forEach(({ texteLegislatifRefUid, count }) => {
       amendementCount[texteLegislatifRefUid] = count;
+    });
+
+    const acteursData = await db
+      .select("*")
+      .from("Acteur")
+      .whereIn("uid", [...rapporteursFondIds, ...coSignatairesIds]);
+
+    const acteurs: Record<string, Acteur> = {};
+    acteursData.forEach((acteur) => {
+      acteurs[acteur.uid] = acteur;
     });
 
     return {
@@ -220,6 +222,72 @@ export async function getDossier(
       acteurs,
       amendementCount,
     };
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export type DossierAmendementsData = {
+  dossier: Dossier;
+  documents: Record<string, DocumentData>;
+  amendements: Amendement[];
+};
+
+export async function getDossierAmendements(
+  legislature: string,
+  dossierId: string
+): Promise<(Amendement & Pick<Acteur, "nom" | "prenom">)[] | undefined> {
+  try {
+    const dossiers = await db
+      .select("*")
+      .from("Dossier")
+      .where("legislature", "=", legislature)
+      .where("uid", "=", dossierId);
+
+    const dossier = dossiers[0];
+    if (dossier === undefined) {
+      return undefined;
+    }
+
+    const acts = await db
+      .select("*")
+      .from("ActeLegislatif")
+      .where("dossierRefUid", "=", dossier.uid);
+
+    const documentsIds = new Set<string>();
+    acts.forEach((act) => {
+      const { texteAssocieRefUid, texteAdopteRefUid } = act;
+      if (texteAssocieRefUid) documentsIds.add(texteAssocieRefUid);
+      if (texteAdopteRefUid) documentsIds.add(texteAdopteRefUid);
+    });
+
+    const documentsData = await db
+      .select("*")
+      .from("Document")
+      .whereIn("uid", Array.from(documentsIds));
+
+    const documents: Record<string, DocumentData> = {};
+    documentsData.forEach((doc) => {
+      documents[doc.uid] = doc;
+    });
+
+    const amendements = await db
+      .select("*")
+      .from("Amendement")
+      .whereIn("texteLegislatifRefUid", Array.from(documentsIds))
+      .leftJoin(
+        function () {
+          this.select(["uid as acteur_uid", "prenom", "nom"])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Amendement.acteurRefUid",
+        "acteur.acteur_uid"
+      )
+      .options({ nestTables: true });
+
+    return amendements;
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;
