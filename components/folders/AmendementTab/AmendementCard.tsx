@@ -2,7 +2,7 @@
 import * as React from "react";
 
 import { Amendement } from "@/repository/types";
-import { Box, Typography, Button, Collapse, Slide, Link } from "@mui/material";
+import { Box, Typography, Collapse, Link } from "@mui/material";
 import Stack from "@mui/material/Stack";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";

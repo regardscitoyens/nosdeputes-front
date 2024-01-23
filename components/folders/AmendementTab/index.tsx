@@ -9,7 +9,7 @@ import { DossierData } from "@/repository/database";
 import { FilterContainer } from "@/components/FilterContainer";
 
 import { Filter } from "./Filter";
-import { useFilterState } from "./useFilter";
+import { useFilterSearch } from "./useFilter";
 import AmendementList from "./AmendementList";
 import { Amendement, Acteur } from "@/repository/types";
 
@@ -25,8 +25,10 @@ export const AmendementTab = ({
   documents,
   amendementCount,
 }: AmendementTabProps) => {
-  const { numero, handleNumero, selectedDocument, setSelectedDocument } =
-    useFilterState();
+  const [numero, handleNumero] = useFilterSearch("numero");
+  const [document, handleDocument] = useFilterSearch("document");
+  const [depute, handleDepute] = useFilterSearch("depute");
+  const [status, handleStatus] = useFilterSearch("status");
 
   return (
     <Container
@@ -45,10 +47,15 @@ export const AmendementTab = ({
           <Filter
             numero={numero}
             handleNumero={handleNumero}
-            selectedDocument={selectedDocument}
-            setSelectedDocument={setSelectedDocument}
+            selectedDocument={document}
+            setSelectedDocument={handleDocument}
             documents={documents}
             amendementCount={amendementCount}
+            depute={depute}
+            handleDepute={handleDepute}
+            status={status}
+            handleStatus={handleStatus}
+            amendements={amendements}
           />
         </FilterContainer>
       </Stack>
@@ -56,7 +63,9 @@ export const AmendementTab = ({
         <AmendementList
           amendements={amendements}
           numero={numero}
-          selectedDocument={selectedDocument}
+          selectedDocument={document}
+          depute={depute}
+          status={status}
         />
       </Box>
     </Container>
