@@ -11,11 +11,25 @@ export default function AmendementsList(
   props: Pick<AmendementTabProps, "amendements"> & {
     numero: string;
     selectedDocument: string;
+    depute: string;
+    status: string;
   }
 ) {
-  const { amendements, numero, selectedDocument } = props;
+  const { amendements, numero, depute, status, selectedDocument } = props;
 
   const filteredAmendements = amendements
+    .filter((amendement) => {
+      if (status === "") {
+        return true;
+      }
+      return (amendement.sortAmendement || amendement.etatLibelle) === status;
+    })
+    .filter((amendement) => {
+      if (depute === "") {
+        return true;
+      }
+      return amendement.acteur_uid === depute;
+    })
     .filter((amendement) => {
       if (numero === "") {
         return true;

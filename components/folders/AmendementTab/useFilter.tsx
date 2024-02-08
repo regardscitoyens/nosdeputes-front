@@ -8,51 +8,31 @@ export type AmendementsFilterState = {
   search: string;
 };
 
-export function useFilterState() {
+export function useFilterSearch(
+  queryName: string
+): [string, (val: string) => void, boolean] {
   const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
 
-  const [numero, setNumero] = React.useState<string>(
-    searchParams.get("numero") ?? ""
+  const [value, setValue] = React.useState<string>(
+    searchParams.get(queryName) ?? ""
   );
-  const [selectedDocument, setSelectedDocument] = React.useState("");
 
-  function handleSearch(term: string) {
+  function handleUpdate(term: string) {
     const params = new URLSearchParams(window.location.search);
+    setValue(term);
     if (term) {
-      params.set("q", term);
+      params.set(queryName, term);
     } else {
-      params.delete("q");
+      params.delete(queryName);
     }
 
     startTransition(() => {
       replace(`${pathname}?${params.toString()}`);
     });
   }
-
-  function handleNumero(numero: string) {
-    const params = new URLSearchParams(window.location.search);
-    setNumero(numero);
-    if (numero === "") {
-      params.delete("numero");
-    } else {
-      params.set("numero", numero);
-    }
-
-    startTransition(() => {
-      replace(`${pathname}?${params.toString()}`);
-    });
-  }
-
-  return {
-    isPending,
-    handleSearch,
-    handleNumero,
-    numero,
-    selectedDocument,
-    setSelectedDocument,
-  };
+  return [value, handleUpdate, isPending];
 }
