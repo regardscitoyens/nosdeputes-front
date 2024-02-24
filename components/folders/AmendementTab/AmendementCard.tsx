@@ -2,11 +2,13 @@
 import * as React from "react";
 
 import { Amendement } from "@/repository/types";
-import { Box, Typography, Collapse, Link } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 export default function AmendementCard(props: Amendement) {
   const {
     dateDepot,
@@ -24,100 +26,89 @@ export default function AmendementCard(props: Amendement) {
     acteur,
     prenom,
     nom,
+    uid,
     ...other
   } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
   const nbSignataires = signatairesLibelle.split("&#160;").length - 1;
 
-  const [showMore, setShowMore] = React.useState(false);
   return (
-    <Stack direction="column" spacing={2} sx={{ my: 2 }}>
-      <Stack direction="row" justifyContent="space-between">
-        <span>
-          {prenom} {nom}
-        </span>
-        <span>{sortAmendement || etatLibelle}</span>
-      </Stack>
-      <Box
-        sx={{
-          display: "flex",
-        }}
+    <Accordion
+      elevation={0}
+      sx={(theme) => ({
+        borderBottom: `solid ${theme.palette.divider} 1px`,
+        borderRadius: 0,
+      })}
+    >
+      <AccordionSummary
+        aria-controls={`${uid}-pannel`}
+        id={`${uid}-header`}
+        expandIcon={<ExpandMoreIcon />}
       >
-        {true && (
-          <Collapse orientation="horizontal" in={showMore}>
-            <Stack
-              component="ul"
-              spacing={1.25}
-              sx={{ listStyle: "none", pr: 2, width: 250 }}
-            >
-              <Typography component="li" fontWeight="light" variant="body2">
-                Date de dépôt:&nbsp;
-                <Typography component="span" variant="body2">
-                  {dateDepot.toLocaleDateString("fr-FR", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </Typography>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          sx={{ width: "100%", mr: 2 }}
+        >
+          <span>
+            {prenom} {nom}
+          </span>
+          <span>{sortAmendement || etatLibelle}</span>
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack direction="column" spacing={2}>
+          <Typography variant="caption">N°{numeroLong}</Typography>
+          <Typography
+            fontWeight="light"
+            variant="body2"
+            flexGrow={1}
+            flexShrink={1}
+            flexBasis={0}
+            component="div"
+            sx={{ bgcolor: "#F8F9FA", p: 1 }}
+            dangerouslySetInnerHTML={{ __html: dispositif }}
+          />
+
+          <Typography fontWeight="light" variant="body2">
+            Examiné par:&nbsp;
+            <Typography component="a" variant="body2">
+              Le nom d&apos;une commission parlementaire
+            </Typography>
+          </Typography>
+          <Stack direction="row" justifyContent="space-between" flexBasis={0}>
+            <Typography fontWeight="light" variant="body2">
+              Déposé par:&nbsp;
+              <Typography component="span" variant="body2">
+                {nbSignataires} député{nbSignataires > 1 ? "s" : ""}
               </Typography>
-              <Typography component="li" fontWeight="light" variant="body2">
-                Date d&apos;examen:&nbsp;
-                <Typography component="span" variant="body2">
-                  {dateSort?.toLocaleDateString("fr-FR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </Typography>
+            </Typography>
+
+            <Typography fontWeight="light" variant="body2">
+              Date de dépôt:&nbsp;
+              <Typography component="span" variant="body2">
+                {dateDepot.toLocaleDateString("fr-FR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
-              <Typography component="li" fontWeight="light" variant="body2">
-                Déposé par:&nbsp;
-                <Typography component="span" variant="body2">
-                  {nbSignataires} député{nbSignataires > 1 ? "s" : ""}
-                </Typography>
+            </Typography>
+
+            <Typography fontWeight="light" variant="body2">
+              Date d&apos;examen:&nbsp;
+              <Typography component="span" variant="body2">
+                {dateSort?.toLocaleDateString("fr-FR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
-              {/* TODO */}
-              {/* <Typography component="li" fontWeight="light" variant="body2">
-              Examiné par:{" "}
-              <Typography component="span" variant="body2"></Typography>
-            </Typography> */}
-              <Typography component="li">
-                Etat:{" "}
-                <Typography component="span" variant="body2">
-                  {etatLibelle}
-                </Typography>
-              </Typography>
-            </Stack>
-          </Collapse>
-        )}
-        <Typography
-          fontWeight="light"
-          variant="body2"
-          flexGrow={1}
-          flexShrink={1}
-          flexBasis={0}
-          component="div"
-          dangerouslySetInnerHTML={{ __html: dispositif }}
-        />
-      </Box>
-      <Stack direction="row">
-        <Typography variant="caption">N°{numeroLong}</Typography>
-      </Stack>
-      <Link
-        onClick={() => setShowMore((p) => !p)}
-        component="button"
-        variant="body2"
-        sx={{
-          alignSelf: "baseline",
-          display: "flex",
-          alignItems: "center",
-          "&>span": { ml: 1 },
-        }}
-      >
-        {showMore ? <RemoveCircleOutlineIcon /> : <AddCircleOutlineIcon />}
-        <span>Voir {showMore ? "moins" : "plus"}</span>
-      </Link>
-    </Stack>
+            </Typography>
+          </Stack>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 }
