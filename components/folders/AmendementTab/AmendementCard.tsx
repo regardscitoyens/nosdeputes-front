@@ -9,6 +9,25 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import StatusChip from "@/components/StatusChip";
+
+function getStatus(label: string) {
+  switch (label) {
+    case "Adopté":
+      return "validated";
+    case "Rejeté":
+    case "Irrecevable":
+    case "Tombé":
+    case "Irrecevable 40":
+      return "refused";
+    case "Non soutenu":
+    case "Retiré":
+      return "dropped";
+    default:
+      return "review";
+  }
+}
+
 export default function AmendementCard(props: Amendement) {
   const {
     dateDepot,
@@ -55,7 +74,11 @@ export default function AmendementCard(props: Amendement) {
           <span>
             {prenom} {nom}
           </span>
-          <span>{sortAmendement || etatLibelle}</span>
+          <StatusChip
+            size="small"
+            label={sortAmendement || etatLibelle}
+            status={getStatus(sortAmendement || etatLibelle)}
+          />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

@@ -49,7 +49,7 @@ export default function AmendementsList(
 
   return (
     <Stack>
-      {filteredAmendements.slice(0, 10).map((amendement) => (
+      {filteredAmendements.map((amendement) => (
         <AmendementCard {...amendement} key={amendement.uid} />
       ))}
     </Stack>
