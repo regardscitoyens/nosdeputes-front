@@ -36,6 +36,7 @@ export default function AmendementCard(props: Amendement) {
   return (
     <Accordion
       elevation={0}
+      disableGutters
       sx={(theme) => ({
         borderBottom: `solid ${theme.palette.divider} 1px`,
         borderRadius: 0,
