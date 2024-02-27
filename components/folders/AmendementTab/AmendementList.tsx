@@ -2,7 +2,6 @@
 import React from "react";
 
 import Stack from "@mui/material/Stack";
-import { Divider } from "@mui/material";
 
 import AmendementCard from "./AmendementCard";
 import { AmendementTabProps } from ".";
@@ -50,11 +49,8 @@ export default function AmendementsList(
 
   return (
     <Stack>
-      {filteredAmendements.slice(0, 10).map((amendement) => (
-        <React.Fragment key={amendement.uid}>
-          <AmendementCard {...amendement} />
-          <Divider />
-        </React.Fragment>
+      {filteredAmendements.map((amendement) => (
+        <AmendementCard {...amendement} key={amendement.uid} />
       ))}
     </Stack>
   );

@@ -4,20 +4,21 @@ import Chip, { chipClasses, ChipProps } from "@mui/material/Chip";
 
 export type Status = "validated" | "review" | "refused" | "dropped";
 interface StatusChipProps extends ChipProps {
-  status: Status;
+  status?: Status;
 }
 
 function getColor(status: StatusChipProps["status"], theme: Theme) {
-  if (status === "validated") {
-    return theme.palette.success;
+  switch (status) {
+    case "validated":
+      return theme.palette.success;
+    case "review":
+      return theme.palette.info;
+    case "refused":
+      return theme.palette.warning;
+    case "dropped":
+    default:
+      return { main: theme.palette.grey[800], light: theme.palette.grey[100] };
   }
-  if (status === "review") {
-    return theme.palette.info;
-  }
-  if (status === "dropped") {
-    return theme.palette.warning;
-  }
-  return { main: theme.palette.grey[800], light: theme.palette.grey[100] };
 }
 
 function StatusChip(props: StatusChipProps) {
@@ -40,7 +41,6 @@ const StyledStatusChip = styled(StatusChip, {
     ...(size === "small" && {
       height: 26,
       borderRadius: 26 / 2,
-      color: theme.palette.grey[900],
     }),
     [`& .${chipClasses.label}`]: {
       paddingLeft: theme.spacing(1),
