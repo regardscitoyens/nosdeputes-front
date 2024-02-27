@@ -3,7 +3,12 @@ import React from "react";
 import { PreviewTab } from "@/components/folders/PreviewTab";
 import { AmendementTab } from "@/components/folders/AmendementTab";
 import { DebateTab } from "@/components/folders/DebateTab";
-import { getDossier, getDossierAmendements } from "@/repository/database";
+import {
+  getDossier,
+  getDossierAmendements,
+  getDossierVotes,
+} from "@/repository/database";
+import VotesTab from "@/components/folders/VotesTab";
 
 export const dynamicParams = true;
 
@@ -27,6 +32,9 @@ export default async function Page({
     params.legislature,
     params.id
   );
+  const { votes, acts } =
+    (await getDossierVotes(params.legislature, params.id)) ?? {};
+
   if (!dossier) {
     return null;
   }
@@ -48,7 +56,7 @@ export default async function Page({
       );
 
     case "votes":
-      return <p>Votes</p>;
+      return <VotesTab votes={votes} acts={acts} />;
 
     default:
       return <PreviewTab dossier={dossier} />;

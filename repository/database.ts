@@ -8,6 +8,7 @@ import {
   Acteur,
   Document as DocumentData,
   Amendement,
+  Vote,
 } from "./types";
 
 /**
@@ -288,6 +289,43 @@ export async function getDossierAmendements(
       .options({ nestTables: true });
 
     return amendements;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getDossierVotes(
+  legislature: string,
+  dossierId: string
+): Promise<{ votes: Vote[]; acts: ActeLegislatif[] } | undefined> {
+  try {
+    const dossiers = await db
+      .select("*")
+      .from("Dossier")
+      .where("legislature", "=", legislature)
+      .where("uid", "=", dossierId);
+
+    const dossier = dossiers[0];
+    if (dossier === undefined) {
+      return undefined;
+    }
+
+    const acts = await db
+      .select("*")
+      .from("ActeLegislatif")
+      .where("dossierRefUid", "=", dossier.uid);
+
+    const actsIds = acts.map((act) => act.uid);
+
+    const votes = await db
+      .select("*")
+      .from("VoteActeLegislatif")
+      .whereIn("acteLegislatifRefUid", actsIds)
+      .rightJoin("Vote", "VoteActeLegislatif.voteRefUid", "Vote.scrutinRefUid")
+      .options({ nestTables: true });
+
+    return { votes, acts };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;
