@@ -20,7 +20,7 @@ export function useSearchState<V extends string | number>(
   const [isPending, startTransition] = React.useTransition();
 
   const [value, setValue] = React.useState<V>(
-    searchParams.get(queryName) ?? defaultValue ?? ""
+    (searchParams.get(queryName) as V) ?? defaultValue ?? ""
   );
 
   function handleUpdate(term: V) {

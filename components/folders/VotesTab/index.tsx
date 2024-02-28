@@ -3,6 +3,7 @@
 import { ActLegislatif } from "@/repository/Acts";
 import { Vote } from "@/repository/types";
 import { useSearchState } from "./useVoteState";
+import { VotesDeputes } from "./VoteDetail";
 import {
   Box,
   Button,
@@ -51,7 +52,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
 
   const [actIndex, setActIndex] = useSearchState<number>("actIndex", 0);
   const [voteId, setVoteId] = useSearchState("voteId", "");
-  const [zoom, setZoom] = useSearchState("zoom", "");
+  const [zoom, setZoom] = useSearchState<"depute" | "group" | "">("zoom", "");
 
   if (actsWithVote.length === 0) {
     return <p>Pas de vote disponible pour ce dossier pour l instant</p>;
@@ -88,22 +89,37 @@ export default function VotesTab({ votes, acts }: VoteProps) {
           </Button>
         </div>
       </Stack>
-      <Typography>Vote solenel</Typography>
-      <Tooltip title={`pour: ${voteSolenel.pour}`}>
+      <Tooltip title="Détail du vote solenel">
         <Box
+          onClick={() => {
+            setZoom("depute");
+          }}
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 1,
-            width: "100%",
-            height: 10,
+            ":hover": {
+              cursor: "pointer",
+            },
           }}
         >
-          <Box sx={{ backgroundColor: "green", flexGrow: voteSolenel.pour }} />
-          <Box sx={{ backgroundColor: "red", flexGrow: voteSolenel.contre }} />
+          <Typography>Vote solenel</Typography>
           <Box
-            sx={{ backgroundColor: "gray", flexGrow: voteSolenel.nonVotant }}
-          />
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 1,
+              width: "100%",
+              height: 10,
+            }}
+          >
+            <Box
+              sx={{ backgroundColor: "green", flexGrow: voteSolenel.pour }}
+            />
+            <Box
+              sx={{ backgroundColor: "red", flexGrow: voteSolenel.contre }}
+            />
+            <Box
+              sx={{ backgroundColor: "gray", flexGrow: voteSolenel.nonVotant }}
+            />
+          </Box>
         </Box>
       </Tooltip>
       <Box
@@ -151,6 +167,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
           {voteSolenel.nonVotant} Abstension
         </Typography>
       </Box>
+      <VotesDeputes votes={votes} />
     </Box>
   );
 }

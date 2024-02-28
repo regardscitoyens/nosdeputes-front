@@ -323,6 +323,15 @@ export async function getDossierVotes(
       .from("VoteActeLegislatif")
       .whereIn("acteLegislatifRefUid", actsIds)
       .rightJoin("Vote", "VoteActeLegislatif.voteRefUid", "Vote.scrutinRefUid")
+      .leftJoin(
+        function () {
+          this.select(["uid as acteur_uid", "prenom", "nom"])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Vote.acteurRefUid",
+        "acteur.acteur_uid"
+      )
       .options({ nestTables: true });
 
     return { votes, acts };
