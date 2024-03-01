@@ -22,7 +22,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
     [votes]
   );
   const votesAbstension = React.useMemo(
-    () => votes.filter((vote) => vote.positionVote === "nonVotant"),
+    () => votes.filter((vote) => vote.positionVote === "abstension"),
     [votes]
   );
 
@@ -97,7 +97,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                         color: group_color,
                       }}
                       vote={positionVote}
-                      isDissident={group_position !== positionVote}
+                      groupPosition={group_position}
                     />
                   )
                 )}

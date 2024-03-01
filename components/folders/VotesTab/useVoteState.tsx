@@ -19,9 +19,16 @@ export function useSearchState<V extends string | number>(
 
   const [isPending, startTransition] = React.useTransition();
 
-  const [value, setValue] = React.useState<V>(
-    (searchParams.get(queryName) as V) ?? defaultValue ?? ""
-  );
+  const [value, setValue] = React.useState<V>(() => {
+    if (typeof defaultValue === "number") {
+      const rep = Number.parseInt(searchParams.get(queryName) ?? "");
+      if (!Number.isNaN(rep)) {
+        return rep as V;
+      }
+      return defaultValue ?? (0 as V);
+    }
+    return (searchParams.get(queryName) as V) ?? defaultValue ?? ("" as V);
+  });
 
   function handleUpdate(term: V) {
     const params = new URLSearchParams(window.location.search);
