@@ -56,7 +56,7 @@ export default async function Page({
       );
 
     case "votes":
-      return <VotesTab votes={votes} acts={acts} />;
+      return <VotesTab votes={votes ?? []} acts={acts ?? []} />;
 
     default:
       return <PreviewTab dossier={dossier} />;
