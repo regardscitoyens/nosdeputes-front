@@ -8,6 +8,7 @@ import {
   Acteur,
   Document as DocumentData,
   Amendement,
+  Vote,
 } from "./types";
 
 /**
@@ -288,6 +289,80 @@ export async function getDossierAmendements(
       .options({ nestTables: true });
 
     return amendements;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getDossierVotes(
+  legislature: string,
+  dossierId: string
+): Promise<{ votes: Vote[]; acts: ActeLegislatif[] } | undefined> {
+  try {
+    const dossiers = await db
+      .select("*")
+      .from("Dossier")
+      .where("legislature", "=", legislature)
+      .where("uid", "=", dossierId);
+
+    const dossier = dossiers[0];
+    if (dossier === undefined) {
+      return undefined;
+    }
+
+    const acts = await db
+      .select("*")
+      .from("ActeLegislatif")
+      .where("dossierRefUid", "=", dossier.uid);
+
+    const actsIds = acts.map((act) => act.uid);
+
+    const votes = await db
+      .select("*")
+      .from("VoteActeLegislatif")
+      .whereIn("acteLegislatifRefUid", actsIds)
+      .rightJoin("Vote", "VoteActeLegislatif.voteRefUid", "Vote.scrutinRefUid")
+      .leftJoin(
+        function () {
+          this.select(["uid as acteur_uid", "prenom", "nom"])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Vote.acteurRefUid",
+        "acteur.acteur_uid"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "id as group_id",
+            "organeRefUid",
+            "positionMajoritaire as group_position",
+          ])
+            .from("GroupeVotant")
+            .as("groupeVotant");
+        },
+        "Vote.groupeVotantRefId",
+        "groupeVotant.group_id"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "groupeVotant.organeRefUid",
+        "organe.organe_uid"
+      )
+      .options({ nestTables: true });
+
+    return { votes, acts };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
     throw error;
