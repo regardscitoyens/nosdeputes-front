@@ -3,14 +3,18 @@
 import { ActLegislatif } from "@/repository/Acts";
 import { Vote } from "@/repository/types";
 import { useSearchState } from "./useVoteState";
-import { VotesDeputes } from "./VoteDetail";
+import { VotesDeputes } from "./VotesDeputes";
+import { VotesGroups } from "./VotesGroups";
 import {
   Box,
   Button,
-  Menu,
+  Dialog,
+  DialogContent,
   MenuItem,
   Select,
   Stack,
+  Tab,
+  Tabs,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -167,7 +171,52 @@ export default function VotesTab({ votes, acts }: VoteProps) {
           {voteSolenel.nonVotant} Abstension
         </Typography>
       </Box>
-      <VotesDeputes votes={votes} />
+      <Dialog
+        onClose={() => setZoom("")}
+        open={zoom !== ""}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogContent>
+          <Tabs
+            value={zoom}
+            onChange={(event, newVal) => {
+              setZoom(newVal);
+            }}
+            centered
+            aria-label="basic tabs example"
+          >
+            <Tab
+              value="depute"
+              label="Deputés"
+              id="tabpanel-depute"
+              aria-controls="tabpanel-depute"
+            />
+            <Tab
+              value="group"
+              label="Groups"
+              id="tabpanel-groups"
+              aria-controls="tabpanel-groups"
+            />
+          </Tabs>
+          <div
+            role="tabpanel"
+            hidden={zoom !== "depute"}
+            id={`tabpanel-depute`}
+            aria-labelledby={`tabpanel-depute`}
+          >
+            {zoom === "depute" && <VotesDeputes votes={voteSolenel.votes} />}
+          </div>
+          <div
+            role="tabpanel"
+            hidden={zoom !== "group"}
+            id={`tabpanel-groups`}
+            aria-labelledby={`tabpanel-groups`}
+          >
+            {zoom === "group" && <VotesGroups votes={voteSolenel.votes} />}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

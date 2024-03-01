@@ -332,6 +332,34 @@ export async function getDossierVotes(
         "Vote.acteurRefUid",
         "acteur.acteur_uid"
       )
+      .leftJoin(
+        function () {
+          this.select([
+            "id as group_id",
+            "organeRefUid",
+            "positionMajoritaire as group_position",
+          ])
+            .from("GroupeVotant")
+            .as("groupeVotant");
+        },
+        "Vote.groupeVotantRefId",
+        "groupeVotant.group_id"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "groupeVotant.organeRefUid",
+        "organe.organe_uid"
+      )
       .options({ nestTables: true });
 
     return { votes, acts };
