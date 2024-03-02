@@ -16,8 +16,8 @@ type DeputeCardProps = {
     fullName: string;
     shortName: string;
   };
-  vote?: "pour" | "contre" | "nonVotant" | "abstension";
-  groupPosition?: "pour" | "contre" | "abstension";
+  vote?: "pour" | "contre" | "nonVotant" | "abstention";
+  groupPosition?: "pour" | "contre" | "abstention";
 };
 
 export default function DeputeCard(props: DeputeCardProps) {

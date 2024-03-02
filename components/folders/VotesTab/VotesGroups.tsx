@@ -16,7 +16,7 @@ type GroupInfo = {
   groupId: string;
   pour: number;
   contre: number;
-  abstension: number;
+  abstention: number;
   nonVotant: number;
   fullName: string;
   shortName: string;
@@ -33,7 +33,7 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
         groups[vote.organe_uid] = {
           pour: 0,
           contre: 0,
-          abstension: 0,
+          abstention: 0,
           nonVotant: 0,
           fullName: vote.group_libelle,
           shortName: vote.group_libelle_short,
@@ -43,7 +43,7 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
       }
 
       groups[vote.organe_uid][
-        vote.positionVote as "contre" | "pour" | "nonVotant" | "abstension"
+        vote.positionVote as "contre" | "pour" | "nonVotant" | "abstention"
       ] += 1;
       groups[vote.organe_uid].votes.push(vote);
     });
@@ -60,7 +60,7 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
           groupId,
           pour,
           contre,
-          abstension,
+          abstention,
           fullName,
           shortName,
           color,
@@ -98,7 +98,7 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
                   </Typography>
                   <CircleDiv color="gray" />
                   <Typography sx={{ color: "gray", minWidth: 30 }}>
-                    {abstension}
+                    {abstention}
                   </Typography>
                 </Stack>
               </AccordionSummary>
