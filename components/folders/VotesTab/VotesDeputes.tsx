@@ -21,8 +21,8 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
     () => votes.filter((vote) => vote.positionVote === "contre"),
     [votes]
   );
-  const votesAbstension = React.useMemo(
-    () => votes.filter((vote) => vote.positionVote === "nonVotant"),
+  const votesabstention = React.useMemo(
+    () => votes.filter((vote) => vote.positionVote === "abstention"),
     [votes]
   );
 
@@ -41,8 +41,8 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
         },
         {
           color: "gray",
-          label: "abstension",
-          votes: votesAbstension,
+          label: "abstention",
+          votes: votesabstention,
         },
       ].map(({ color, label, votes: innerVotes }) => (
         <React.Fragment key={label}>
@@ -97,7 +97,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                         color: group_color,
                       }}
                       vote={positionVote}
-                      isDissident={group_position !== positionVote}
+                      groupPosition={group_position}
                     />
                   )
                 )}

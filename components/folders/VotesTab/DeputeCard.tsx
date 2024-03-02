@@ -16,12 +16,14 @@ type DeputeCardProps = {
     fullName: string;
     shortName: string;
   };
-  vote?: "pour" | "contre" | "nonVotant";
-  isDissident?: boolean;
+  vote?: "pour" | "contre" | "nonVotant" | "abstention";
+  groupPosition?: "pour" | "contre" | "abstention";
 };
 
 export default function DeputeCard(props: DeputeCardProps) {
-  const { prenom, nom, group, vote, isDissident } = props;
+  const { prenom, nom, group, vote, groupPosition } = props;
+
+  const isDissident = groupPosition !== vote && vote !== "nonVotant";
 
   return (
     <Box
@@ -101,17 +103,16 @@ export default function DeputeCard(props: DeputeCardProps) {
             <CompareArrowsSharpIcon />
           </Tooltip>
         )}
-        {vote && (
-          <Tooltip title={vote}>
-            <CircleDiv
-              color={
-                (vote === "pour" && "green") ||
-                (vote === "contre" && "red") ||
-                "gray"
-              }
-            />
-          </Tooltip>
+        {vote && vote !== "nonVotant" && (
+          <CircleDiv
+            color={
+              (vote === "pour" && "green") ||
+              (vote === "contre" && "red") ||
+              "gray"
+            }
+          />
         )}
+        {vote === "nonVotant" && <span>(non votant)</span>}
       </Stack>
     </Box>
   );

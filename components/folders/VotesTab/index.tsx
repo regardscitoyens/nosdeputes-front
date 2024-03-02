@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 
-type VoteOption = "pour" | "contre" | "nonVotant";
+type VoteOption = "pour" | "contre" | "nonVotant" | "abstention";
 
 type VoteProps = {
   votes: Vote[];
@@ -33,6 +33,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
       pour: number;
       contre: number;
       nonVotant: number;
+      abstention: number;
     }
   > = {};
   votes.forEach((vote) => {
@@ -42,6 +43,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
         pour: 0,
         contre: 0,
         nonVotant: 0,
+        abstention: 0,
         [vote.positionVote]: 1,
       };
       return;
@@ -65,6 +67,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
   const act = actsWithVote[actIndex];
   const voteSolenel = votesPerAct[act.uid];
 
+  console.log(voteSolenel);
   return (
     <Box sx={{ p: 2 }}>
       <Stack direction="row" justifyContent="space-between" sx={{ my: 2 }}>
@@ -121,7 +124,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
               sx={{ backgroundColor: "red", flexGrow: voteSolenel.contre }}
             />
             <Box
-              sx={{ backgroundColor: "gray", flexGrow: voteSolenel.nonVotant }}
+              sx={{ backgroundColor: "gray", flexGrow: voteSolenel.abstention }}
             />
           </Box>
         </Box>
@@ -168,7 +171,7 @@ export default function VotesTab({ votes, acts }: VoteProps) {
           }}
         />
         <Typography sx={{ color: "gray" }}>
-          {voteSolenel.nonVotant} Abstension
+          {voteSolenel.abstention} abstention
         </Typography>
       </Box>
       <Dialog
