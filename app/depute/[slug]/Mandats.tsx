@@ -23,7 +23,6 @@ export default function Mandats({ mandats }: { mandats: any[] }) {
     .filter((m) => !ignoredTypeOrgane.includes(m.typeOrgane))
     .reduce((acc, mandat) => {
       const { typeOrgane, libelle, libQualiteSex } = mandat;
-      console.log(acc);
       return {
         ...acc,
         [typeOrgane]: [
