@@ -14,12 +14,22 @@ import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import XIcon from "@mui/icons-material/X";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
+/**
+ * Types d'adresses existantes mais non affichées:
+ *
+ *  - 'Url sénateur': page peu mise a jour
+ *  - 'Contact presse': seulement un acteur l'a
+ *  - 'Télécopie': seul 3 deputés de la 16eme legislature consernés
+ */
 
 const internetPlatformsIcons = {
   "Site internet": PublicRoundedIcon,
   Twitter: XIcon,
   Facebook: FacebookIcon,
   Instagram: InstagramIcon,
+  Linkedin: LinkedInIcon,
 };
 
 const getHref = {
@@ -27,6 +37,7 @@ const getHref = {
   Twitter: (val: string) => `https://x.com/${val}`,
   Facebook: (val: string) => `https://facebook.com/${val}`,
   Instagram: (val: string) => `https://instagram.com/${val}`,
+  Linkedin: (val: string) => `https://linkedin.com/${val}`,
 };
 
 export default function Contacts({ adresses }: { adresses: any[] }) {
