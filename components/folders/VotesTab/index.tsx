@@ -67,7 +67,6 @@ export default function VotesTab({ votes, acts }: VoteProps) {
   const act = actsWithVote[actIndex];
   const voteSolenel = votesPerAct[act.uid];
 
-  console.log(voteSolenel);
   return (
     <Box sx={{ p: 2 }}>
       <Stack direction="row" justifyContent="space-between" sx={{ my: 2 }}>

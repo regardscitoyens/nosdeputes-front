@@ -369,6 +369,47 @@ export async function getDossierVotes(
   }
 }
 
+export async function getDepute(slug: string) {
+  try {
+    const depute = await db.select("*").from("Acteur").where("slug", "=", slug);
+    if (!depute) {
+      return {};
+    }
+
+    const group = await db
+      .select("*")
+      .from("Organe")
+      .where("uid", "=", depute[0].deputeGroupeParlementaireUid);
+
+    const adressesElect = await db
+      .select("*")
+      .from("AdresseElectronique")
+      .where("acteurRefUid", "=", depute[0].uid);
+
+    const adressesPostal = await db
+      .select("*")
+      .from("AdressePostale")
+      .where("acteurRefUid", "=", depute[0].uid);
+
+    const mandats = await db
+      .select("*")
+      .from("Mandat")
+      .where("acteurRefUid", "=", depute[0].uid)
+      .leftJoin("OrganeMandat", "Mandat.uid", "OrganeMandat.mandatRefUid")
+      .leftJoin("Organe", "OrganeMandat.organeRefUid", "Organe.uid");
+
+    return {
+      depute: depute[0],
+      group: group[0],
+      adresses: [...adressesElect, ...adressesPostal],
+      mandats,
+    };
+  } catch (error) {
+    console.error("Error fetching depute:", error);
+    throw error;
+  }
+}
+
 export async function getTable(table: string, limit = 10): Promise<Dossier[]> {
   try {
     const rows = await db
