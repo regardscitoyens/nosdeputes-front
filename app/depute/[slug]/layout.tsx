@@ -25,9 +25,9 @@ export default async function Page({
     return <p>Deputé Not Found</p>;
   }
 
-  const circonscription = mandats?.filter(
-    (mandat) => mandat.dateFin === null && mandat.codeType === "ASSEMBLEE"
-  )[0];
+  const circonscription = mandats
+    ?.filter((mandat) => mandat.codeType === "ASSEMBLEE")
+    .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1))[0];
 
   // A décider: Faut il afficher les mandats passé?
   // Exemple: la partoissipation a des commission d'enquête
@@ -50,21 +50,32 @@ export default async function Page({
               <Typography variant="body1" fontWeight="light">
                 {circonscription.departement} ({circonscription.numDepartement})
                 circonscription n°{circonscription.numCirco}
+                {circonscription.dateFin !== null && (
+                  <>
+                    <br />
+                    Fin de mandat le{" "}
+                    {new Date(circonscription.dateFin).toLocaleDateString()}
+                  </>
+                )}
               </Typography>
             )}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                mt: 1,
-              }}
-            >
-              <CircleDiv color={group.couleurAssociee} />{" "}
-              <Typography sx={{ ml: 1 }} variant="body1" fontWeight="light">
-                {group.libelle} ({group.libelleAbrev})
-              </Typography>
-            </Box>
+
+            {group && (
+              // Deputes sans mandat n'ont plus d'organe associé
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  mt: 1,
+                }}
+              >
+                <CircleDiv color={group.couleurAssociee} />{" "}
+                <Typography sx={{ ml: 1 }} variant="body1" fontWeight="light">
+                  {group.libelle} ({group.libelleAbrev})
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
       </Stack>

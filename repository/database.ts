@@ -436,6 +436,40 @@ export async function getDeputeAmendement(slug: string) {
   }
 }
 
+export async function getDeputes(legislature: string) {
+  try {
+    const deputes = await db
+      .select("*")
+      .from("Mandat")
+      .where("legislature", "=", legislature)
+      .where("typeOrgane", "=", "ASSEMBLEE")
+      .leftJoin("Acteur", "Mandat.acteurRefUid", "Acteur.uid")
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "Acteur.deputeGroupeParlementaireUid",
+        "organe.organe_uid"
+      );
+
+    return deputes;
+  } catch (error) {
+    console.error(
+      `Error fetching deputes from legislature ${legislature}:`,
+      error
+    );
+    throw error;
+  }
+}
+
 export async function getTable(table: string, limit = 10): Promise<Dossier[]> {
   try {
     const rows = await db

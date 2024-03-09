@@ -91,7 +91,7 @@ export default function AmendementCard(props: Amendement) {
             flexShrink={1}
             flexBasis={0}
             component="div"
-            sx={{ bgcolor: "#F8F9FA", p: 1 }}
+            sx={{ bgcolor: "grey.50", p: 1 }}
             dangerouslySetInnerHTML={{ __html: dispositif }}
           />
 
