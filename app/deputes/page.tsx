@@ -15,41 +15,45 @@ export default async function DeputesList() {
         columnGap: 4,
       }}
     >
-      {deputes.map(
-        ({
-          nom,
-          prenom,
-          slug,
-          dateFin,
-          group_color,
-          group_libelle,
-          group_libelle_short,
-        }) => (
-          <DeputeCard
-            key={slug}
-            prenom={prenom}
-            nom={nom}
-            group={
-              dateFin !== null
-                ? {
-                    color: "black",
-                    fullName: "mandat terminé",
-                    shortName: "",
-                  }
-                : {
-                    color: group_color,
-                    fullName: group_libelle,
-                    shortName: group_libelle_short,
-                  }
-            }
-            component={Link}
-            href={`/depute/${slug}`}
-            sx={{
-              "&:hover": { bgcolor: "grey.50" },
-            }}
-          />
+      {deputes
+        .sort((a, b) =>
+          `${a.prenom} ${a.nom}`.localeCompare(`${b.prenom} ${b.nom}`)
         )
-      )}
+        .map(
+          ({
+            nom,
+            prenom,
+            slug,
+            dateFin,
+            group_color,
+            group_libelle,
+            group_libelle_short,
+          }) => (
+            <DeputeCard
+              key={slug}
+              prenom={prenom}
+              nom={nom}
+              group={
+                dateFin !== null
+                  ? {
+                      color: "black",
+                      fullName: "mandat terminé",
+                      shortName: "",
+                    }
+                  : {
+                      color: group_color,
+                      fullName: group_libelle,
+                      shortName: group_libelle_short,
+                    }
+              }
+              component={Link}
+              href={`/depute/${slug}`}
+              sx={{
+                "&:hover": { bgcolor: "grey.50" },
+              }}
+            />
+          )
+        )}
     </Box>
   );
 }
