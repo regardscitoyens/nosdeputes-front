@@ -9,7 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { Vote } from "@/repository/types";
 import { Divider, Typography } from "@mui/material";
-import DeputeCard from "./DeputeCard";
+import DeputeCard from "../DeputeCard";
 import CircleDiv from "@/icons/CircleDiv";
 
 export function VotesDeputes({ votes }: { votes: Vote[] }) {

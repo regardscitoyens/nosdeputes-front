@@ -1,14 +1,14 @@
 import * as React from "react";
 
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import CompareArrowsSharpIcon from "@mui/icons-material/CompareArrowsSharp";
 import { Stack, Tooltip } from "@mui/material";
 import CircleDiv from "@/icons/CircleDiv";
 
-type DeputeCardProps = {
+type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   prenom: string;
   nom: string;
   group?: {
@@ -18,22 +18,28 @@ type DeputeCardProps = {
   };
   vote?: "pour" | "contre" | "nonVotant" | "abstention";
   groupPosition?: "pour" | "contre" | "abstention";
-};
+} & BoxProps<RootComponent>;
 
-export default function DeputeCard(props: DeputeCardProps) {
-  const { prenom, nom, group, vote, groupPosition } = props;
+export default function DeputeCard<RootComponent extends React.ElementType>(
+  props: DeputeCardProps<RootComponent>
+) {
+  const { prenom, nom, group, vote, groupPosition, sx, ...other } = props;
 
   const isDissident = groupPosition !== vote && vote !== "nonVotant";
 
   return (
     <Box
-      sx={{
-        px: 1.5,
-        py: 0.5,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
+      sx={[
+        {
+          px: 1.5,
+          py: 0.5,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+      {...other}
     >
       <Box sx={{ display: "flex", minWidth: 0 }}>
         <Avatar sx={{ height: 40, width: 40 }}>
@@ -73,7 +79,7 @@ export default function DeputeCard(props: DeputeCardProps) {
                       marginRight: 4,
                     }}
                   >
-                    {group.shortName}:
+                    {group.shortName && `${group.shortName}:`}
                   </span>
                   <span
                     style={{
