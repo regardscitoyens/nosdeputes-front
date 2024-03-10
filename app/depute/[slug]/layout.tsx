@@ -5,8 +5,8 @@ import { Avatar, Box, Container, Stack, Typography } from "@mui/material";
 import CircleDiv from "@/icons/CircleDiv";
 import Mandats from "./Mandats";
 import Contacts from "./Contacts";
-import Link from "next/link";
 import Tabs from "./Tabs";
+import InfoPersonelles from "./InfoPersonelles";
 
 export default async function Page({
   children,
@@ -16,10 +16,6 @@ export default async function Page({
   children: React.ReactNode;
 }) {
   const { depute, group, adresses, mandats } = await getDepute(params.slug);
-
-  // const [currentTab, setCurrenTab] = React.useState<
-  //   "activites" | "traveaux" | "amendements" | "votes"
-  // >("amendements");
 
   if (depute === undefined) {
     return <p>Deputé Not Found</p>;
@@ -91,6 +87,7 @@ export default async function Page({
         }}
       >
         <Stack spacing={3} useFlexGap flex={2}>
+          <InfoPersonelles mandats={mandats ?? []} depute={depute} />
           <Mandats mandats={mandasEnCours ?? []} />
           <Contacts adresses={adresses ?? []} />
         </Stack>
