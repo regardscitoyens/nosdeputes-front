@@ -436,6 +436,147 @@ export async function getDeputeAmendement(slug: string) {
   }
 }
 
+export async function getDeputeVotes(slug: string) {
+  try {
+    const depute = await db
+      .select("uid", "prenom", "nom")
+      .from("Acteur")
+      .where("slug", "=", slug);
+    if (!depute) {
+      return {};
+    }
+
+    const votes = await db
+      .select("*")
+      .from("Vote")
+      .where("acteurRefUid", "=", depute[0].uid)
+      .rightJoin(
+        // I don't know why this has to be a right join to work
+        function () {
+          this.select(["voteRefUid", "acteLegislatifRefUid"])
+            .from("VoteActeLegislatif")
+            .as("voteActe");
+        },
+        "voteActe.voteRefUid",
+        "Vote.scrutinRefUid"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as acte_uid",
+            "codeActe",
+            "nomCanonique",
+            "libelleCourtActe",
+          ])
+            .from("ActeLegislatif")
+            .as("acte");
+        },
+        "voteActe.acteLegislatifRefUid",
+        "acte.acte_uid"
+      )
+      .rightJoin(
+        // I don't know why this has to be a right join to work
+        function () {
+          this.select(["texteAssocieRefUid", "acteLegislatifRefUid"])
+            .from("TexteAssocie")
+            .as("texteAssocie");
+        },
+        "texteAssocie.acteLegislatifRefUid",
+        "acte.acte_uid"
+      )
+      .leftJoin(
+        // I don't know why this has to be a right join to work
+        function () {
+          this.select(["uid as docu_uid", "titrePrincipalCourt"])
+            .from("Document")
+            .as("docu");
+        },
+        "texteAssocie.texteAssocieRefUid",
+        "docu.docu_uid"
+      )
+      .options({ nestTables: true });
+
+    return {
+      depute: depute[0],
+      votes,
+    };
+  } catch (error) {
+    console.error(`Error fetching amendement from depute ${slug}:`, error);
+    throw error;
+  }
+}
+
+export async function getDeputeDocuments(slug: string) {
+  try {
+    const depute = await db
+      .select("uid", "prenom", "nom")
+      .from("Acteur")
+      .where("slug", "=", slug);
+    if (!depute) {
+      return {};
+    }
+
+    const documents = await db
+      .select("*")
+      .from("Auteur")
+      // .where("qualite", "=", "auteur")
+      .where("acteurRefUid", "=", depute[0].uid)
+      .leftJoin("Document", "Document.uid", "Auteur.documentRefUid");
+
+    /**
+     * Je pensais que ca donnerait des textes legislatifs. Mais la pluspart des acteur de InitiateurActeLegislatif c'est Elisabeth Borne
+     */
+    // const actes = await db
+    //   .select("*")
+    //   .from("InitiateurActeLegislatif")
+    //   .leftJoin(
+    //     // I don't know why this has to be a right join to work
+    //     function () {
+    //       this.select(["uid as acteur_uid", "prenom", "nom", "slug as depute_slug"])
+    //         .from("Acteur")
+    //         .as("acteur");
+    //     },
+    //     "InitiateurActeLegislatif.acteurRefUid",
+    //     "acteur.acteur_uid"
+    //   )
+    // .where("acteurRefUid", "=", depute[0].uid);
+    // .leftJoin(
+    //   "ActeLegislatif",
+    //   "ActeLegislatif.uid",
+    //   "InitiateurActeLegislatif.acteLegislatifRefUid"
+    // )
+    // .rightJoin(
+    //   // I don't know why this has to be a right join to work
+    //   function () {
+    //     this.select(["texteAssocieRefUid", "acteLegislatifRefUid"])
+    //       .from("TexteAssocie")
+    //       .as("texteAssocie");
+    //   },
+    //   "texteAssocie.acteLegislatifRefUid",
+    //   "ActeLegislatif.uid"
+    // )
+    // .leftJoin(
+    //   // I don't know why this has to be a right join to work
+    //   function () {
+    //     this.select(["uid as docu_uid", "titrePrincipalCourt"])
+    //       .from("Document")
+    //       .as("docu");
+    //   },
+    //   "texteAssocie.texteAssocieRefUid",
+    //   "docu.docu_uid"
+    // );
+
+    return {
+      depute: depute[0],
+      documents,
+      // actes,
+    };
+  } catch (error) {
+    console.error(`Error fetching amendement from depute ${slug}:`, error);
+    throw error;
+  }
+}
+
 export async function getDeputes(legislature: string) {
   try {
     const deputes = await db
