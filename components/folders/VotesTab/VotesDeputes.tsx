@@ -84,7 +84,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                     group_libelle,
                     group_libelle_short,
                     group_color,
-                    positionVote,
+                    // positionVote,
                     group_position,
                   }) => (
                     <DeputeCard
@@ -96,7 +96,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                         shortName: group_libelle_short,
                         color: group_color,
                       }}
-                      vote={positionVote}
+                      // vote={positionVote}
                       groupPosition={group_position}
                     />
                   )
