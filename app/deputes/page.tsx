@@ -1,10 +1,18 @@
-import DeputeCard from "@/components/folders/DeputeCard";
-import { getDeputes } from "@/repository/database";
+import * as React from "react";
+
 import Box from "@mui/material/Box";
 import Link from "next/link";
 
+import DeputeCard from "@/components/folders/DeputeCard";
+import { getDeputes } from "@/repository/database";
+import { DeputeData, groupDeputes } from "./groupDeputes";
+
 export default async function DeputesList() {
-  const deputes = (await getDeputes("16")) ?? [];
+  const deputes: DeputeData[] = (await getDeputes("16")) ?? [];
+
+  const { indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
+    groupDeputes(deputes);
+
   return (
     <Box
       sx={{
@@ -40,11 +48,13 @@ export default async function DeputesList() {
                       fullName: "mandat terminé",
                       shortName: "",
                     }
-                  : {
+                  : group_color !== null
+                  ? {
                       color: group_color,
                       fullName: group_libelle,
                       shortName: group_libelle_short,
                     }
+                  : undefined
               }
               component={Link}
               href={`/depute/${slug}`}
