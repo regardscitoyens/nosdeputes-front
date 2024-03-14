@@ -8,10 +8,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-
+import MuiLink from "@mui/material/Link";
 import { DeputyPreview } from "./DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
 import { DossierData } from "@/repository/database";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export const AdditionalInfoCard = ({
   amendementCount,
@@ -22,6 +24,7 @@ export const AdditionalInfoCard = ({
   DossierData,
   "amendementCount" | "documents" | "coSignatairesIds" | "acteurs"
 >) => {
+  const params = useParams<{ legislature: string; id: string }>();
   const [fullCosignataires, setFullCosignataires] = React.useState(false);
 
   const amendements = Object.values(documents)
@@ -56,9 +59,14 @@ export const AdditionalInfoCard = ({
                     <Typography variant="body2" fontWeight="bold">
                       {count} amendements
                     </Typography>
-                    <Typography variant="body2" fontWeight="light">
+                    <MuiLink
+                      variant="body2"
+                      fontWeight="light"
+                      component={Link}
+                      href={`/${params.legislature}/dossier/${params.id}/amendement?document=${uid}`}
+                    >
                       {titre}
-                    </Typography>
+                    </MuiLink>
                   </div>
                 ))}
               </Stack>
