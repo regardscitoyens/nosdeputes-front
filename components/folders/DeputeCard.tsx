@@ -11,6 +11,7 @@ import CircleDiv from "@/icons/CircleDiv";
 type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   prenom: string;
   nom: string;
+  secondaryText?: string;
   group?: {
     color: string;
     fullName: string;
@@ -23,7 +24,16 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
 export default function DeputeCard<RootComponent extends React.ElementType>(
   props: DeputeCardProps<RootComponent>
 ) {
-  const { prenom, nom, group, vote, groupPosition, sx, ...other } = props;
+  const {
+    prenom,
+    nom,
+    group,
+    vote,
+    groupPosition,
+    sx,
+    secondaryText,
+    ...other
+  } = props;
 
   const isDissident = groupPosition !== vote && vote !== "nonVotant";
 
@@ -58,6 +68,11 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
           <Typography variant="body2" fontWeight="bold">
             {prenom} {nom}
           </Typography>
+          {secondaryText && (
+            <Typography variant="body2" fontWeight="light">
+              {secondaryText}
+            </Typography>
+          )}
           {group && (
             <Tooltip title={group.fullName}>
               <Box sx={{ display: "flex", alignItems: "center" }}>

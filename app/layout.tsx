@@ -39,6 +39,7 @@ const navigation: NavigationItem[] = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Dossiers", href: "/dossiers" }, // old url is "/dossiers/date"
+  { name: "Député·e·s", href: "/deputes" },
   // ... more items
 ];
 

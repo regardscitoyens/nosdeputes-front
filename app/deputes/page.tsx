@@ -1,59 +1,45 @@
-import DeputeCard from "@/components/folders/DeputeCard";
+import * as React from "react";
+
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+
 import { getDeputes } from "@/repository/database";
-import Box from "@mui/material/Box";
-import Link from "next/link";
+import { DeputeData, groupDeputes } from "./groupDeputes";
+import DeputesView from "./DeputesView";
+import { FilterContainer } from "@/components/FilterContainer";
 
 export default async function DeputesList() {
-  const deputes = (await getDeputes("16")) ?? [];
+  const deputes: DeputeData[] = (await getDeputes("16")) ?? [];
+
+  const { indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
+    groupDeputes(deputes);
+
   return (
-    <Box
+    <Container
       sx={{
-        display: "grid",
-        alignItems: "center",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        rowGap: 1.5,
-        columnGap: 4,
+        pt: 3,
+        display: "flex",
+        flexDirection: {
+          xs: "column",
+          md: "row",
+        },
+        gap: 5,
       }}
     >
-      {deputes
-        .sort((a, b) =>
-          `${a.prenom} ${a.nom}`.localeCompare(`${b.prenom} ${b.nom}`)
-        )
-        .map(
-          ({
-            nom,
-            prenom,
-            slug,
-            dateFin,
-            group_color,
-            group_libelle,
-            group_libelle_short,
-          }) => (
-            <DeputeCard
-              key={slug}
-              prenom={prenom}
-              nom={nom}
-              group={
-                dateFin !== null
-                  ? {
-                      color: "black",
-                      fullName: "mandat terminé",
-                      shortName: "",
-                    }
-                  : {
-                      color: group_color,
-                      fullName: group_libelle,
-                      shortName: group_libelle_short,
-                    }
-              }
-              component={Link}
-              href={`/depute/${slug}`}
-              sx={{
-                "&:hover": { bgcolor: "grey.50" },
-              }}
-            />
-          )
-        )}
-    </Box>
+      {/* <Stack spacing={3} useFlexGap flex={2}>
+        <FilterContainer>
+          //<Filter theme={searchParams.theme ?? ""} />
+        </FilterContainer>
+      </Stack> */}
+      <Stack spacing={3} flex={5}>
+        <DeputesView
+          deputes={deputes}
+          indexesPerNom={indexesPerNom}
+          indexesPerGroup={indexesPerGroup}
+          indexesPerCirco={indexesPerCirco}
+          groups={groups}
+        />
+      </Stack>
+    </Container>
   );
 }

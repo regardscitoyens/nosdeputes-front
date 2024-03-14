@@ -17,6 +17,7 @@ export default function CircleDiv({ color, size = 16, style }: CircleDivProps) {
         width: size,
         height: size,
         borderRadius: "50%",
+        flexShrink: 0,
         ...style,
       }}
     />
