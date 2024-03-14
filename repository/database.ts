@@ -173,16 +173,6 @@ export async function getDossier(
       documents[doc.uid] = doc;
     });
 
-    const organesData = await db
-      .select("*")
-      .from("Organe")
-      .whereIn("uid", Array.from(organesIds));
-
-    const organes: Record<string, Organe> = {};
-    organesData.forEach((doc) => {
-      organes[doc.uid] = doc;
-    });
-
     const coSignatairesIds = (
       await db
         .select("acteurRefUid")
@@ -209,6 +199,22 @@ export async function getDossier(
     const acteurs: Record<string, Acteur> = {};
     acteursData.forEach((acteur) => {
       acteurs[acteur.uid] = acteur;
+    });
+
+    acteursData.forEach((acteur: Acteur) => {
+      if (acteur.deputeGroupeParlementaireUid) {
+        organesIds.add(acteur.deputeGroupeParlementaireUid);
+      }
+    });
+
+    const organesData = await db
+      .select("*")
+      .from("Organe")
+      .whereIn("uid", Array.from(organesIds));
+
+    const organes: Record<string, Organe> = {};
+    organesData.forEach((doc) => {
+      organes[doc.uid] = doc;
     });
 
     return {

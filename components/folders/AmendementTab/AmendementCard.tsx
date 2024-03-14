@@ -10,8 +10,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StatusChip from "@/components/StatusChip";
-import CircleDiv from "@/icons/CircleDiv";
-import { Avatar } from "@mui/material";
+import DeputeCard from "../DeputeCard";
 
 function getStatus(label: string) {
   switch (label) {
@@ -76,20 +75,17 @@ export default function AmendementCard(props: Amendement) {
           spacing={1}
           sx={{ width: "100%", mr: 2 }}
         >
-          <Avatar>
-            {prenom[0]} {nom[0]}
-          </Avatar>
-          <Stack direction="column" flexGrow={1}>
-            <span>
-              {prenom} {nom}
-            </span>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <CircleDiv color={group_color} size={10} />
-              <Typography fontWeight="light" variant="body2">
-                {group_libelle}
-              </Typography>
-            </Stack>
-          </Stack>
+          <DeputeCard
+            prenom={prenom}
+            nom={nom}
+            group={{
+              fullName: group_libelle,
+              shortName: "",
+              color: group_color,
+            }}
+            smallGroupColor
+            sx={{ flexGrow: 1 }}
+          />
 
           <StatusChip
             size="small"

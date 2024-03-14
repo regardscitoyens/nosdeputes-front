@@ -10,6 +10,7 @@ import { DeputyPreview } from "@/components/folders/DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
 import { Acteur, Organe } from "@/repository/types";
 import { DossierData } from "@/repository/database";
+import DeputeCard from "./DeputeCard";
 
 export const CommiteeCard = ({
   commissionFondId,
@@ -75,9 +76,26 @@ export const CommiteeCard = ({
               <Typography variant="body2" fontWeight="light" pb={1}>
                 Rapporteur
               </Typography>
-              {rapporteursFond.map((acteur) => (
-                <DeputyPreview acteur={acteur} key={acteur.uid} />
-              ))}
+              {rapporteursFond.map((acteur) => {
+                const { prenom, nom, slug, deputeGroupeParlementaireUid } =
+                  acteur;
+                const group = organes[deputeGroupeParlementaireUid];
+                return (
+                  <DeputeCard
+                    key={acteur.uid}
+                    prenom={prenom}
+                    nom={nom}
+                    slug={slug}
+                    group={
+                      group && {
+                        fullName: "",
+                        shortName: group.libelleAbrev,
+                        color: group.couleurAssociee,
+                      }
+                    }
+                  />
+                );
+              })}
             </div>
           )}
         </Stack>
