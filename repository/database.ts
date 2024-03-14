@@ -173,16 +173,6 @@ export async function getDossier(
       documents[doc.uid] = doc;
     });
 
-    const organesData = await db
-      .select("*")
-      .from("Organe")
-      .whereIn("uid", Array.from(organesIds));
-
-    const organes: Record<string, Organe> = {};
-    organesData.forEach((doc) => {
-      organes[doc.uid] = doc;
-    });
-
     const coSignatairesIds = (
       await db
         .select("acteurRefUid")
@@ -209,6 +199,22 @@ export async function getDossier(
     const acteurs: Record<string, Acteur> = {};
     acteursData.forEach((acteur) => {
       acteurs[acteur.uid] = acteur;
+    });
+
+    acteursData.forEach((acteur: Acteur) => {
+      if (acteur.deputeGroupeParlementaireUid) {
+        organesIds.add(acteur.deputeGroupeParlementaireUid);
+      }
+    });
+
+    const organesData = await db
+      .select("*")
+      .from("Organe")
+      .whereIn("uid", Array.from(organesIds));
+
+    const organes: Record<string, Organe> = {};
+    organesData.forEach((doc) => {
+      organes[doc.uid] = doc;
     });
 
     return {
@@ -279,14 +285,33 @@ export async function getDossierAmendements(
       .whereIn("texteLegislatifRefUid", Array.from(documentsIds))
       .leftJoin(
         function () {
-          this.select(["uid as acteur_uid", "prenom", "nom"])
+          this.select([
+            "uid as acteur_uid",
+            "prenom",
+            "nom",
+            "deputeGroupeParlementaireUid",
+          ])
             .from("Acteur")
             .as("acteur");
         },
         "Amendement.acteurRefUid",
         "acteur.acteur_uid"
       )
-      .options({ nestTables: true });
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "acteur.deputeGroupeParlementaireUid",
+        "organe.organe_uid"
+      );
 
     return amendements;
   } catch (error) {

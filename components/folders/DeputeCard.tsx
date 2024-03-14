@@ -3,10 +3,13 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import MuiLink from "@mui/material/Link";
 
 import CompareArrowsSharpIcon from "@mui/icons-material/CompareArrowsSharp";
-import { Stack, Tooltip } from "@mui/material";
 import CircleDiv from "@/icons/CircleDiv";
+import Link from "next/link";
 
 type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   prenom: string;
@@ -17,6 +20,7 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
     fullName: string;
     shortName: string;
   };
+  smallGroupColor?: boolean;
   vote?: "pour" | "contre" | "nonVotant" | "abstention";
   groupPosition?: "pour" | "contre" | "abstention";
 } & BoxProps<RootComponent>;
@@ -27,7 +31,9 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
   const {
     prenom,
     nom,
+    slug,
     group,
+    smallGroupColor,
     vote,
     groupPosition,
     sx,
@@ -65,9 +71,21 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
             minWidth: 0,
           }}
         >
-          <Typography variant="body2" fontWeight="bold">
-            {prenom} {nom}
-          </Typography>
+          {slug ? (
+            <MuiLink
+              variant="body2"
+              fontWeight="bold"
+              underline="hover"
+              component={Link}
+              href={`/depute/${slug}`}
+            >
+              {prenom} {nom}
+            </MuiLink>
+          ) : (
+            <Typography variant="body2" fontWeight="bold">
+              {prenom} {nom}
+            </Typography>
+          )}
           {secondaryText && (
             <Typography variant="body2" fontWeight="light">
               {secondaryText}
@@ -76,7 +94,10 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
           {group && (
             <Tooltip title={group.fullName}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <CircleDiv color={group.color} style={{ minWidth: 16 }} />
+                <CircleDiv
+                  color={group.color}
+                  size={smallGroupColor ? 10 : 16}
+                />
                 <Typography
                   sx={{
                     ml: 0.5,
@@ -94,7 +115,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
                       marginRight: 4,
                     }}
                   >
-                    {group.shortName && `${group.shortName}:`}
+                    {group.shortName} {group.shortName && group.fullName && ":"}
                   </span>
                   <span
                     style={{

@@ -8,20 +8,25 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-
+import MuiLink from "@mui/material/Link";
 import { DeputyPreview } from "./DeputyPreview";
 import InfoIcon from "@/icons/InfoIcon";
 import { DossierData } from "@/repository/database";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import DeputeCard from "./DeputeCard";
 
 export const AdditionalInfoCard = ({
   amendementCount,
   documents,
   coSignatairesIds,
   acteurs,
+  organes,
 }: Pick<
   DossierData,
-  "amendementCount" | "documents" | "coSignatairesIds" | "acteurs"
+  "amendementCount" | "documents" | "coSignatairesIds" | "acteurs" | "organes"
 >) => {
+  const params = useParams<{ legislature: string; id: string }>();
   const [fullCosignataires, setFullCosignataires] = React.useState(false);
 
   const amendements = Object.values(documents)
@@ -56,9 +61,14 @@ export const AdditionalInfoCard = ({
                     <Typography variant="body2" fontWeight="bold">
                       {count} amendements
                     </Typography>
-                    <Typography variant="body2" fontWeight="light">
+                    <MuiLink
+                      variant="body2"
+                      fontWeight="light"
+                      component={Link}
+                      href={`/${params.legislature}/dossier/${params.id}/amendement?document=${uid}`}
+                    >
                       {titre}
-                    </Typography>
+                    </MuiLink>
                   </div>
                 ))}
               </Stack>
@@ -75,9 +85,27 @@ export const AdditionalInfoCard = ({
               </Stack>
               {coSignatairesIds
                 ?.slice(0, fullCosignataires ? coSignatairesIds.length : 3)
-                ?.map((id) => (
-                  <DeputyPreview key={id} acteur={acteurs[id]} />
-                ))}
+                ?.map((id) => {
+                  const { prenom, nom, slug, deputeGroupeParlementaireUid } =
+                    acteurs[id];
+
+                  const group = organes[deputeGroupeParlementaireUid];
+                  return (
+                    <DeputeCard
+                      key={id}
+                      prenom={prenom}
+                      nom={nom}
+                      slug={slug}
+                      group={
+                        group && {
+                          fullName: "",
+                          shortName: group.libelleAbrev,
+                          color: group.couleurAssociee,
+                        }
+                      }
+                    />
+                  );
+                })}
               {!fullCosignataires && (
                 <Button
                   fullWidth

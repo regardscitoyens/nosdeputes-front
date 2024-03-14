@@ -57,6 +57,7 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
           documents={documents}
           coSignatairesIds={coSignatairesIds}
           acteurs={acteurs}
+          organes={organes}
         />
         <LegislativeDocumentsCard documents={documents} />
       </Stack>

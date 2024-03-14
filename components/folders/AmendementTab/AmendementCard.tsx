@@ -10,6 +10,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StatusChip from "@/components/StatusChip";
+import DeputeCard from "../DeputeCard";
 
 function getStatus(label: string) {
   switch (label) {
@@ -46,7 +47,9 @@ export default function AmendementCard(props: Amendement) {
     prenom,
     nom,
     uid,
-    ...other
+    group_color,
+    group_libelle,
+    group_libelle_short,
   } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
@@ -68,12 +71,22 @@ export default function AmendementCard(props: Amendement) {
       >
         <Stack
           direction="row"
-          justifyContent="space-between"
+          alignItems="center"
+          spacing={1}
           sx={{ width: "100%", mr: 2 }}
         >
-          <span>
-            {prenom} {nom}
-          </span>
+          <DeputeCard
+            prenom={prenom}
+            nom={nom}
+            group={{
+              fullName: group_libelle,
+              shortName: "",
+              color: group_color,
+            }}
+            smallGroupColor
+            sx={{ flexGrow: 1 }}
+          />
+
           <StatusChip
             size="small"
             label={sortAmendement || etatLibelle}
