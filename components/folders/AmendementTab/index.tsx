@@ -12,6 +12,7 @@ import { Filter } from "./Filter";
 import { useFilterSearch } from "./useFilter";
 import AmendementList from "./AmendementList";
 import { Amendement, Acteur } from "@/repository/types";
+import { Typography } from "@mui/material";
 
 export type AmendementTabProps = Pick<
   DossierData,
@@ -59,7 +60,10 @@ export const AmendementTab = ({
           />
         </FilterContainer>
       </Stack>
-      <Box flex={8} sx={{ minWidth: 0 }}>
+      <Stack spacing={3} useFlexGap flex={8} sx={{ minWidth: 0 }}>
+        <Typography variant="h2" fontWeight="bold" fontFamily="Raleway">
+          {amendements.length} Amendements
+        </Typography>
         <AmendementList
           amendements={amendements}
           numero={numero}
@@ -67,7 +71,7 @@ export const AmendementTab = ({
           depute={depute}
           status={status}
         />
-      </Box>
+      </Stack>
     </Container>
   );
 };
