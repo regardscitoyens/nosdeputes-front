@@ -36,8 +36,6 @@ export function groupDeputes(deputes: DeputeData[]) {
   deputes.forEach((depute, deputeIndex) => {
     const {
       nom,
-      prenom,
-      slug,
       numDepartement,
       organe_uid,
       group_color,
@@ -45,14 +43,17 @@ export function groupDeputes(deputes: DeputeData[]) {
       group_libelle_short,
     } = depute;
 
-    if (!indexesPerNom[nom]) {
-      indexesPerNom[nom] = [];
+    // Prend la premiere majuscule du nom pour eviter de trier par particule ("de Courson" renvoit "C" et pas "d")
+    const initial = nom[nom.match(/[A-Z]/)!.index ?? 0];
+
+    if (!indexesPerNom[initial]) {
+      indexesPerNom[initial] = [];
     }
     if (!indexesPerCirco[numDepartement]) {
       indexesPerCirco[numDepartement] = [];
     }
 
-    indexesPerNom[nom].push(deputeIndex);
+    indexesPerNom[initial].push(deputeIndex);
     indexesPerCirco[numDepartement].push(deputeIndex);
 
     if (organe_uid && group_color) {

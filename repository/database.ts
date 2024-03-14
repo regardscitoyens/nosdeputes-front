@@ -601,7 +601,20 @@ export async function getDeputes(legislature: string) {
         "organe.organe_uid"
       );
 
-    return deputes;
+    const lastStartDate = new Map();
+
+    deputes.forEach(({ dateDebut, slug }) => {
+      const savedDate = lastStartDate.get(slug);
+      if (!savedDate || savedDate < dateDebut) {
+        lastStartDate.set(slug, dateDebut);
+      }
+    });
+
+    // Have fun, certains deputes ont plusieurs mandat dans une même legislature.
+    // Par exemple si ils sont élu, que le vote et annullé par le conseil consti, et qu'il gagnent à nouveau par la suite (#Bertrand Petit)
+    return deputes.filter(
+      ({ dateDebut, slug }) => lastStartDate.get(slug) === dateDebut
+    );
   } catch (error) {
     console.error(
       `Error fetching deputes from legislature ${legislature}:`,
