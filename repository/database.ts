@@ -279,14 +279,33 @@ export async function getDossierAmendements(
       .whereIn("texteLegislatifRefUid", Array.from(documentsIds))
       .leftJoin(
         function () {
-          this.select(["uid as acteur_uid", "prenom", "nom"])
+          this.select([
+            "uid as acteur_uid",
+            "prenom",
+            "nom",
+            "deputeGroupeParlementaireUid",
+          ])
             .from("Acteur")
             .as("acteur");
         },
         "Amendement.acteurRefUid",
         "acteur.acteur_uid"
       )
-      .options({ nestTables: true });
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "acteur.deputeGroupeParlementaireUid",
+        "organe.organe_uid"
+      );
 
     return amendements;
   } catch (error) {
