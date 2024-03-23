@@ -114,9 +114,17 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
                   }}
                 >
                   {votes.map(
-                    ({ slug, prenom, nom, positionVote, group_position }) => (
+                    ({
+                      slug,
+                      depute_slug,
+                      prenom,
+                      nom,
+                      positionVote,
+                      group_position,
+                    }) => (
                       <DeputeCard
                         key={slug}
+                        slug={depute_slug}
                         prenom={prenom}
                         nom={nom}
                         vote={positionVote}

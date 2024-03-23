@@ -350,7 +350,12 @@ export async function getDossierVotes(
       .rightJoin("Vote", "VoteActeLegislatif.voteRefUid", "Vote.scrutinRefUid")
       .leftJoin(
         function () {
-          this.select(["uid as acteur_uid", "prenom", "nom"])
+          this.select([
+            "uid as acteur_uid",
+            "prenom",
+            "nom",
+            "slug as depute_slug",
+          ])
             .from("Acteur")
             .as("acteur");
         },

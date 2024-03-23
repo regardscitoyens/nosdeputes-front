@@ -14,6 +14,7 @@ import Link from "next/link";
 type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   prenom: string;
   nom: string;
+  slug: string;
   secondaryText?: string;
   group?: {
     color: string;
@@ -58,7 +59,11 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
       {...other}
     >
       <Box sx={{ display: "flex", minWidth: 0 }}>
-        <Avatar sx={{ height: 40, width: 40 }}>
+        <Avatar
+          sx={{ height: 40, width: 40 }}
+          alt={`${prenom} ${nom}`}
+          src={`https://www.nosdeputes.fr/depute/photo/${slug}/${52}`}
+        >
           {prenom[0].toUpperCase()}
           {nom[0].toUpperCase()}
         </Avatar>
