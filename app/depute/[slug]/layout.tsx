@@ -33,7 +33,11 @@ export default async function Page({
     <Box sx={{ maxWidth: "1024px", mx: "auto", my: 5 }}>
       <Stack direction="row" justifyContent="space-between">
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Avatar sx={{ bgcolor: "grey.200", width: 100, height: 100, mr: 1 }}>
+          <Avatar
+            sx={{ bgcolor: "grey.200", width: 100, height: 100, mr: 1 }}
+            alt={`${depute.prenom} ${depute.nom}`}
+            src={`https://www.nosdeputes.fr/depute/photo/${depute.slug}/${128}`}
+          >
             {depute.prenom[0]}
             {depute.nom[0]}
           </Avatar>

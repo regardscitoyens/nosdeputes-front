@@ -108,6 +108,7 @@ function Deputes({
           return (
             <DeputeCard
               key={uid}
+              slug={slug}
               prenom={prenom}
               nom={nom}
               secondaryText={

@@ -79,6 +79,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                 {innerVotes.map(
                   ({
                     slug,
+                    depute_slug,
                     prenom,
                     nom,
                     group_libelle,
@@ -89,6 +90,7 @@ export function VotesDeputes({ votes }: { votes: Vote[] }) {
                   }) => (
                     <DeputeCard
                       key={slug}
+                      slug={depute_slug}
                       prenom={prenom}
                       nom={nom}
                       group={{
