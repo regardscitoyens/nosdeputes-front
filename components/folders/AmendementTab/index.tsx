@@ -3,7 +3,6 @@ import React from "react";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 
 import { DossierData } from "@/repository/database";
 import { FilterContainer } from "@/components/FilterContainer";

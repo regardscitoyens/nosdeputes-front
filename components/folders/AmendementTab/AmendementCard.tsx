@@ -34,22 +34,16 @@ export default function AmendementCard(props: Amendement) {
     dateDepot,
     dateSort,
     sortAmendement,
-    etatCode,
     etatLibelle,
-    sousEtatCode,
-    sousEtatLibelle,
     dispositif,
-    exposeSommaire,
-    urlDivisionTexteVise,
     signatairesLibelle,
     numeroLong,
-    acteur,
+    acteur_slug,
     prenom,
     nom,
     uid,
     group_color,
     group_libelle,
-    group_libelle_short,
   } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
@@ -76,6 +70,7 @@ export default function AmendementCard(props: Amendement) {
           sx={{ width: "100%", mr: 2 }}
         >
           <DeputeCard
+            slug={acteur_slug}
             prenom={prenom}
             nom={nom}
             group={{

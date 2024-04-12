@@ -287,6 +287,7 @@ export async function getDossierAmendements(
         function () {
           this.select([
             "uid as acteur_uid",
+            "slug as acteur_slug",
             "prenom",
             "nom",
             "deputeGroupeParlementaireUid",
