@@ -20,17 +20,15 @@ type DossierListProps = {
 export default async function DossierList(props: DossierListProps) {
   const { theme, search } = props;
 
-  const dossiers = (await getDossiers({ legislature: 16 }, 50)).map(
-    (dossier, i) => ({ ...dossier, theme: THEMES[i % 5] })
-  );
+  const dossiers = await getDossiers({ legislature: 16 }, 50);
 
-  const dossierMensuels = [{ date: "2023-12-01", dossiers }];
+  const dossierMensuels = [{ date: "2024-03-01", dossiers }];
   const dossierMensuelsFiltered = dossierMensuels
     .map((month) => {
       return {
         ...month,
         dossiers: month.dossiers.filter(
-          (dossier) => theme === "" || dossier.theme === theme
+          (dossier) => theme === "" || dossier.themes_labels?.includes(theme)
         ),
       };
     })
@@ -53,7 +51,7 @@ export default async function DossierList(props: DossierListProps) {
             </Typography>
             <Divider />
             <Stack component="ol" sx={{ m: 2 }} gap={1}>
-              {dossiers.map(({ uid, titre, theme, legislature }) => (
+              {dossiers.map(({ uid, titre, themes_labels, legislature }) => (
                 <Stack
                   key={uid}
                   direction="row"
@@ -74,7 +72,14 @@ export default async function DossierList(props: DossierListProps) {
                     {titre}
                   </Typography>
 
-                  <LabelChip label={theme} size="small" sx={{ ml: 1.5 }} />
+                  {themes_labels.map((theme: string) => (
+                    <LabelChip
+                      key={theme}
+                      label={theme}
+                      size="small"
+                      sx={{ ml: 1.5 }}
+                    />
+                  ))}
                 </Stack>
               ))}
             </Stack>

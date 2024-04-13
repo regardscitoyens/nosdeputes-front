@@ -69,16 +69,72 @@ export const partis: Record<PartisKeys, PartisInfo> = {
 };
 
 export type ThemeKeys =
-  | "Environement"
-  | "Transport"
+  | "Union européenne"
+  | "fiscalité"
+  | "Économie et finances"
+  | "Énergie"
+  | "Culture"
+  | "Famille"
+  | "Justice"
+  | "Société"
+  | "Éducation"
+  | "Pouvoirs publics et Constitution"
+  | "Police et sécurité"
+  | "Agriculture et pêche"
+  | "Environnement"
+  | "Aménagement du territoire"
+  | "Collectivités territoriales"
+  | "Entreprises"
+  | "Questions sociales et santé"
+  | "PME"
+  | "commerce et artisanat"
   | "Défense"
-  | "Agriculture"
-  | "Economie";
+  | "Travail"
+  | "Affaires étrangères et coopération"
+  | "Logement et urbanisme"
+  | "Traités et conventions"
+  | "Budget"
+  | "Transports"
+  | "Outre-mer"
+  | "Recherche"
+  | "sciences et techniques"
+  | "Sécurité sociale"
+  | "Sports"
+  | "Anciens combattants"
+  | "Fonction publique";
 
-export const THEMES: ThemeKeys[] = [
-  "Environement",
-  "Transport",
+export const THEMES = [
+  "Union européenne",
+  "fiscalité",
+  "Économie et finances",
+  "Énergie",
+  "Culture",
+  "Famille",
+  "Justice",
+  "Société",
+  "Éducation",
+  "Pouvoirs publics et Constitution",
+  "Police et sécurité",
+  "Agriculture et pêche",
+  "Environnement",
+  "Aménagement du territoire",
+  "Collectivités territoriales",
+  "Entreprises",
+  "Questions sociales et santé",
+  "PME",
+  "commerce et artisanat",
   "Défense",
-  "Agriculture",
-  "Economie",
+  "Travail",
+  "Affaires étrangères et coopération",
+  "Logement et urbanisme",
+  "Traités et conventions",
+  "Budget",
+  "Transports",
+  "Outre-mer",
+  "Recherche",
+  "sciences et techniques",
+  "Sécurité sociale",
+  "Sports",
+  "Anciens combattants",
+  "Fonction publique",
 ];
