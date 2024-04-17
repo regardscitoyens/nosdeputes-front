@@ -48,6 +48,15 @@ export async function getDossiers(
       .select("*")
       .from("Dossier")
       .where("legislature", "=", legislature)
+      .leftJoin(
+        function () {
+          this.select(["labels as themes_labels", "dossierRefUid"])
+            .from("Theme")
+            .as("theme");
+        },
+        "Dossier.uid",
+        "theme.dossierRefUid"
+      )
       .limit(limit);
 
     return rows;
@@ -57,8 +66,27 @@ export async function getDossiers(
   }
 }
 
+// export async function getThemes(): Promise<string[]> {
+//   try {
+//     const rows = await db.select("labels").from("Theme").groupBy("labels");
+
+//     const themes: Record<string, boolean> = {};
+//     rows.forEach(({ labels }) =>
+//       labels.forEach((label: string) => {
+//         if (!themes[label]) {
+//           themes[label] = true;
+//         }
+//       })
+//     );
+//     return Object.keys(themes);
+//   } catch (error) {
+//     console.error("Error fetching rows from Dossier:", error);
+//     throw error;
+//   }
+// }
+
 export type DossierData = {
-  dossier: Dossier;
+  dossier: Dossier & { themes_labels?: string[] };
   /**
    * uid de la commission saisie sur le fond.
    * Données à ércupérer dans organes.
@@ -99,6 +127,15 @@ export async function getDossier(
       .select("*")
       .from("Dossier")
       .where("legislature", "=", legislature)
+      .leftJoin(
+        function () {
+          this.select(["labels as themes_labels", "dossierRefUid"])
+            .from("Theme")
+            .as("theme");
+        },
+        "Dossier.uid",
+        "theme.dossierRefUid"
+      )
       .where("uid", "=", id);
 
     const dossier = dossiers[0];
