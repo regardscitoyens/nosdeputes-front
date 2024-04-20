@@ -22,6 +22,7 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
     shortName: string;
   };
   smallGroupColor?: boolean;
+  showVote?: boolean;
   vote?: "pour" | "contre" | "nonVotant" | "abstention";
   groupPosition?: "pour" | "contre" | "abstention";
 } & BoxProps<RootComponent>;
@@ -36,6 +37,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
     group,
     smallGroupColor,
     vote,
+    showVote,
     groupPosition,
     sx,
     secondaryText,
@@ -150,7 +152,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
             <CompareArrowsSharpIcon />
           </Tooltip>
         )}
-        {vote && vote !== "nonVotant" && (
+        {showVote && vote && vote !== "nonVotant" && (
           <CircleDiv
             color={
               (vote === "pour" && "green") ||
