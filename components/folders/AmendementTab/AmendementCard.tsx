@@ -120,22 +120,26 @@ export default function AmendementCard(props: Amendement) {
             <Typography fontWeight="light" variant="body2">
               Date de dépôt:&nbsp;
               <Typography component="span" variant="body2">
-                {dateDepot.toLocaleDateString("fr-FR", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+                {dateDepot
+                  ? new Date(dateDepot).toLocaleDateString("fr-FR", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "-"}
               </Typography>
             </Typography>
 
             <Typography fontWeight="light" variant="body2">
               Date d&apos;examen:&nbsp;
               <Typography component="span" variant="body2">
-                {dateSort?.toLocaleDateString("fr-FR", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+                {dateSort
+                  ? new Date(dateSort).toLocaleDateString("fr-FR", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "-"}
               </Typography>
             </Typography>
           </Stack>

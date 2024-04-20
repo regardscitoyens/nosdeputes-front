@@ -128,6 +128,7 @@ export function VotesGroups({ votes }: { votes: Vote[] }) {
                         prenom={prenom}
                         nom={nom}
                         vote={positionVote}
+                        showVote
                         groupPosition={group_position}
                       />
                     )
