@@ -406,12 +406,13 @@ export async function getDossierVotes(
             "id as group_id",
             "organeRefUid",
             "positionMajoritaire as group_position",
+            "hash",
           ])
             .from("GroupeVotant")
             .as("groupeVotant");
         },
         "Vote.groupeVotantRefId",
-        "groupeVotant.group_id"
+        "groupeVotant.hash"
       )
       .leftJoin(
         function () {
@@ -427,9 +428,7 @@ export async function getDossierVotes(
         },
         "groupeVotant.organeRefUid",
         "organe.organe_uid"
-      )
-      .options({ nestTables: true });
-
+      );
     return { votes, acts };
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
