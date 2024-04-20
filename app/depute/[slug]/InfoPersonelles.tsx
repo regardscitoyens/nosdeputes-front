@@ -12,7 +12,7 @@ export default function InfoPersonelles({
   depute: Acteur;
 }) {
   const sortedMandats = mandats
-    .filter((mandat) => mandat.legislature === "16")
+    // .filter((mandat) => mandat.legislature === "16") Partis politique est `null`
     .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1));
 
   const dernerMandatDepute = sortedMandats.filter(
