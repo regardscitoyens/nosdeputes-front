@@ -86,6 +86,9 @@ export const AdditionalInfoCard = ({
               {coSignatairesIds
                 ?.slice(0, fullCosignataires ? coSignatairesIds.length : 3)
                 ?.map((id) => {
+                  if (!acteurs[id]) {
+                    return null;
+                  }
                   const { prenom, nom, slug, deputeGroupeParlementaireUid } =
                     acteurs[id];
 

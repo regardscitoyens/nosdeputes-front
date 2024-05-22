@@ -41,7 +41,7 @@ export default async function Page({
 
   switch (params.tab) {
     case "debat":
-      return <DebateTab />;
+      return <DebateTab actesLegislatifs={dossier.acts} />;
 
     case "amendement":
       if (!amendements) {
