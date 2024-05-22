@@ -22,6 +22,7 @@ export default async function DossierList(props: DossierListProps) {
 
   const dossiers = await getDossiers({ legislature: 16 }, 50);
 
+  console.log(dossiers.map(d => d.uid))
   const dossierMensuels = [{ date: "2024-03-01", dossiers }];
   const dossierMensuelsFiltered = dossierMensuels
     .map((month) => {
