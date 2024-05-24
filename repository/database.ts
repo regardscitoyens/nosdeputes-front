@@ -691,21 +691,37 @@ export async function getDeputes(legislature: string) {
   }
 }
 
-export async function getDebat(reunionIds: string[]): Promise<any[]> {
+export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
   try {
     const rows = await db
       .select("*")
-      .from("Agenda")
-      .whereIn("uid", reunionIds)
-      .leftJoin(
-        function () {
-          this.select("*")
-            .from("Paragraphe")
-            .as("paragraphe");
-        },
-        "Agenda.compteRenduRef",
-        "paragraphe.debatRefUid"
-      );
+      .from("Paragraphe")
+      .whereIn("debatRefUid", compteRendus);
+
+    return rows;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getAgendas(reunionIds: string[]): Promise<any[]> {
+  try {
+    const rows = await db.select("*").from("Agenda").whereIn("uid", reunionIds);
+
+    return rows;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getPtsOdj(reunionIds: string[]): Promise<any[]> {
+  try {
+    const rows = await db
+      .select("*")
+      .from("PointOdj")
+      .whereIn("agendaRefUid", reunionIds);
 
     return rows;
   } catch (error) {

@@ -1,13 +1,7 @@
 import React from "react";
-
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
-
-import { DebateFilterBar } from "./DebateFilterBar";
-import { DebateSummary } from "./DebateSummary";
-import { DebateTranscript } from "./DebateTranscript";
 import { ActeLegislatif } from "@/repository/types";
-import { getDebat } from "@/repository/database";
+import { getAgendas, getParagraphs, getPtsOdj } from "@/repository/database";
+import { DebatePage } from "./DebatePage";
 
 const CODE_ACTS_AVEC_DEBAT = [
   "AN1-DEBATS-SEANCE",
@@ -24,12 +18,13 @@ const CODE_ACTS_AVEC_DEBAT = [
 interface DebatTableProps {
   actesLegislatifs: ActeLegislatif[];
 }
+
 export async function DebateTab(props: DebatTableProps) {
   const { actesLegislatifs } = props;
 
   const seen = new Set();
   const reunionsIds = actesLegislatifs
-    // .filter((act) => CODE_ACTS_AVEC_DEBAT.includes(act.codeActe))
+    .filter((act) => CODE_ACTS_AVEC_DEBAT.includes(act.codeActe))
     .map((act) => act.reunionRefUid)
     .filter((id) => !!id)
     .filter((id) => {
@@ -40,40 +35,30 @@ export async function DebateTab(props: DebatTableProps) {
       seen.add(id);
       return true;
     });
-  console.log(reunionsIds);
 
-  const agendas = await getDebat(reunionsIds.slice(0, 1));
+  const agendas = await getAgendas(reunionsIds);
+  const ptOdj = await getPtsOdj(reunionsIds);
+  ptOdj.sort((a, b) => (a.uid < b.uid ? -1 : 1));
 
-  return (
-    <>
-      <pre>
-        {JSON.stringify(
-          agendas
-            .sort((a, b) => a.ordreAbsoluSeance - b.ordreAbsoluSeance)
-            .map((a) => a.texte),
-          null,
-          2
-        )}
-      </pre>
-      <DebateFilterBar />
-      <Container
-        sx={{
-          pt: 3,
-          display: "flex",
-          flexDirection: {
-            xs: "column",
-            md: "row",
-          },
-          gap: 5,
-        }}
-      >
-        <Stack flex={2}>
-          <DebateSummary />
-        </Stack>
-        <Stack spacing={3} flex={5} alignItems="flex-start">
-          <DebateTranscript />
-        </Stack>
-      </Container>
-    </>
-  );
+  const debats = agendas
+    .map((agenda) => {
+      const act = actesLegislatifs.find((a) => a.reunionRefUid === agenda.uid);
+      if (!act) {
+        return {};
+      }
+
+      return {
+        ...agenda,
+        ptIndex:
+          ptOdj
+            .filter((pt) => pt.agendaRefUid === agenda.uid)
+            .findIndex((pt) => pt.uid === act.odjRefUid) + 1,
+      };
+    })
+    .filter((x) => x.compteRenduRef && x.ptIndex)
+    .sort((a, b) => (a.timestampDebut < b.timestampDebut ? -1 : 1));
+
+  const paragraphs = await getParagraphs(debats.map((x) => x.compteRenduRef));
+
+  return <DebatePage debats={debats} paragraphs={paragraphs} />;
 }
