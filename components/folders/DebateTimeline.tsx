@@ -57,16 +57,32 @@ export const DebateTimeline = ({ paragraphs }) => {
     <div>
       {paragraphs
         .sort((a, b) => a.ordreAbsoluSeance - b.ordreAbsoluSeance)
-        .map(({ uid, texte, codeGrammaire }) =>
-          codeGrammaire === "PAROLE_GENERIQUE" ? (
-            <p key={uid} dangerouslySetInnerHTML={{ __html: texte }} />
-          ) : (
-            <div style={{ margin: "15px 0" }} key={uid}>
-              <h5>{codeGrammaire}</h5>
-              <p dangerouslySetInnerHTML={{ __html: texte }} />
-            </div>
-          )
-        )}
+        .map(({ uid, texte, codeGrammaire, ...other }) => (
+          <div onClick={() => console.log(other)} style={{ marginTop: 30 }}>
+            {other.acteurRef && (
+              <p>
+                {other.prenom} {other.nom}{" "}
+                <span style={{ color: other.group_color }}>
+                  {other.group_libelle} ({other.group_libelle_short})
+                </span>
+                {other.roleDebat && (
+                  <>
+                    <br />
+                    {other.roleDebat}
+                  </>
+                )}
+              </p>
+            )}
+            {codeGrammaire === "PAROLE_GENERIQUE" ? (
+              <p key={uid} dangerouslySetInnerHTML={{ __html: texte }} />
+            ) : (
+              <div key={uid}>
+                <h5>{codeGrammaire}</h5>
+                <p dangerouslySetInnerHTML={{ __html: texte }} />
+              </div>
+            )}
+          </div>
+        ))}
     </div>
     // <Timeline
     //   sx={{

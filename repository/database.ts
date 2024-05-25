@@ -696,8 +696,37 @@ export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
     const rows = await db
       .select("*")
       .from("Paragraphe")
-      .whereIn("debatRefUid", compteRendus);
-
+      .whereIn("debatRefUid", compteRendus)
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as acteur_uid",
+            "slug as acteur_slug",
+            "prenom",
+            "nom",
+            "deputeGroupeParlementaireUid",
+          ])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Paragraphe.acteurRef",
+        "acteur.acteur_uid"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "acteur.deputeGroupeParlementaireUid",
+        "organe.organe_uid"
+      );
     return rows;
   } catch (error) {
     console.error("Error fetching rows from Dossier:", error);
