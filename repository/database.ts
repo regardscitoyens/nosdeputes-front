@@ -750,6 +750,7 @@ export async function getPtsOdj(reunionIds: string[]): Promise<any[]> {
     const rows = await db
       .select("*")
       .from("PointOdj")
+      .where("etat", "=", "Confirmé")
       .whereIn("agendaRefUid", reunionIds);
 
     return rows;

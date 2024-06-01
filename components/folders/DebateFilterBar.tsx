@@ -12,13 +12,23 @@ import Typography from "@mui/material/Typography";
 import { ArrowLeftIcon } from "@/icons/ArrowLeftIcon";
 import { ArrowRightIcon } from "@/icons/ArrowRightIcon";
 
+type Debat = {
+  uid: string;
+  libelleCourtLieu: string | null;
+  libelleLongLieu: string | null;
+  timestampDebut: Date;
+};
 type DebateFilterBarProps = {
   debatIndex: number;
   setDebatIndex: (newVal: number) => void;
-  debats: any;
+  debats: Debat[];
 };
 export const DebateFilterBar = (props: DebateFilterBarProps) => {
-  const [placeholderValue, setPlaceholderValue] = React.useState("1");
+  const { debatIndex, setDebatIndex, debats } = props;
+
+  console.log(debatIndex);
+
+  console.log({ debats });
 
   return (
     <Box
@@ -46,34 +56,41 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           sx={{ width: "100%" }}
         >
           <Select
-            value={placeholderValue}
-            onChange={(e) => setPlaceholderValue(e.target.value)}
+            value={debatIndex}
+            onChange={(e) => setDebatIndex(e.target.value as number)}
             displayEmpty
             sx={{ flex: 1 }}
           >
-            <MenuItem value={1}>
-              <Typography
-                variant="caption"
-                sx={{
-                  textTransform: {
-                    xs: "uppercase",
-                    md: "none",
-                  },
-                }}
-              >
-                Séance en hémicycle du Jeudi 22 Juin 2023 à 9h00
-              </Typography>
-            </MenuItem>
-            <MenuItem value={2}>
-              <Typography variant="caption">
-                Séance en hémicycle du Vendredi 23 Juin 2023 à 9h00
-              </Typography>
-            </MenuItem>
-            <MenuItem value={3}>
-              <Typography variant="caption">
-                Séance en hémicycle du Samedi 24 Juin 2023 à 9h00
-              </Typography>
-            </MenuItem>
+            {debats.map(
+              (
+                { uid, libelleCourtLieu, libelleLongLieu, timestampDebut },
+                index
+              ) => {
+                return (
+                  <MenuItem key={uid} value={index}>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        textTransform: {
+                          xs: "uppercase",
+                          md: "none",
+                        },
+                      }}
+                    >
+                      {libelleCourtLieu ?? libelleLongLieu ?? ""}, le{" "}
+                      {timestampDebut.toLocaleString("fr-FR", {
+                        month: "long",
+                        day: "numeric",
+                        weekday: "long",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </Typography>
+                  </MenuItem>
+                );
+              }
+            )}
           </Select>
           <Stack
             justifyContent="flex-end"
@@ -87,10 +104,18 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
               },
             }}
           >
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => setDebatIndex(debatIndex - 1)}
+              disabled={debatIndex <= 0}
+            >
               <ArrowLeftIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small">
+            <IconButton
+              size="small"
+              onClick={() => setDebatIndex(debatIndex + 1)}
+              disabled={debatIndex >= debats.length - 1}
+            >
               <ArrowRightIcon fontSize="small" />
             </IconButton>
           </Stack>
