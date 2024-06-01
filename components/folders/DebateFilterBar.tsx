@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import Box from "@mui/material/Box";
@@ -11,7 +12,12 @@ import Typography from "@mui/material/Typography";
 import { ArrowLeftIcon } from "@/icons/ArrowLeftIcon";
 import { ArrowRightIcon } from "@/icons/ArrowRightIcon";
 
-export const DebateFilterBar = () => {
+type DebateFilterBarProps = {
+  debatIndex: number;
+  setDebatIndex: (newVal: number) => void;
+  debats: any;
+};
+export const DebateFilterBar = (props: DebateFilterBarProps) => {
   const [placeholderValue, setPlaceholderValue] = React.useState("1");
 
   return (

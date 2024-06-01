@@ -691,6 +691,74 @@ export async function getDeputes(legislature: string) {
   }
 }
 
+export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
+  try {
+    const rows = await db
+      .select("*")
+      .from("Paragraphe")
+      .whereIn("debatRefUid", compteRendus)
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as acteur_uid",
+            "slug as acteur_slug",
+            "prenom",
+            "nom",
+            "deputeGroupeParlementaireUid",
+          ])
+            .from("Acteur")
+            .as("acteur");
+        },
+        "Paragraphe.acteurRef",
+        "acteur.acteur_uid"
+      )
+      .leftJoin(
+        function () {
+          this.select([
+            "uid as organe_uid",
+            "codeType",
+            "libelle as group_libelle",
+            "libelleAbrege as group_libelle_short",
+            "couleurAssociee as group_color",
+          ])
+            .from("Organe")
+            .as("organe");
+        },
+        "acteur.deputeGroupeParlementaireUid",
+        "organe.organe_uid"
+      );
+    return rows;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getAgendas(reunionIds: string[]): Promise<any[]> {
+  try {
+    const rows = await db.select("*").from("Agenda").whereIn("uid", reunionIds);
+
+    return rows;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
+export async function getPtsOdj(reunionIds: string[]): Promise<any[]> {
+  try {
+    const rows = await db
+      .select("*")
+      .from("PointOdj")
+      .whereIn("agendaRefUid", reunionIds);
+
+    return rows;
+  } catch (error) {
+    console.error("Error fetching rows from Dossier:", error);
+    throw error;
+  }
+}
+
 export async function getTable(table: string, limit = 10): Promise<Dossier[]> {
   try {
     const rows = await db

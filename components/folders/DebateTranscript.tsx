@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import Accordion from "@mui/material/Accordion";
@@ -12,7 +14,13 @@ import { DebateTimeline } from "@/components/folders/DebateTimeline";
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 import { useTheme } from "@mui/material";
 
-export const DebateTranscript = () => {
+type DebateTranscriptProps = {
+  // TODO: Define type from prisma (to generate)
+  paragraphs: any[];
+};
+export const DebateTranscript = (props: DebateTranscriptProps) => {
+  const { paragraphs } = props;
+
   const theme = useTheme();
 
   return (
@@ -49,7 +57,7 @@ export const DebateTranscript = () => {
           <SpeakingTime />
         </AccordionDetails>
       </Accordion>
-      <DebateTimeline />
+      <DebateTimeline paragraphs={paragraphs} />
     </>
   );
 };
