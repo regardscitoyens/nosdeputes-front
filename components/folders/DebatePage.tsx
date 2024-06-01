@@ -16,20 +16,10 @@ interface DebatePageProps {
 }
 export function DebatePage(props: DebatePageProps) {
   const { paragraphs, debats } = props;
-
-  console.log({ paragraphs });
-
   const [debatIndex, setDebatIndex] = React.useState(0);
 
-  console.log("dfskljghldkj");
-  console.log(
-    paragraphs.filter(
-      (p) =>
-        p.debatRefUid === debats[debatIndex].compteRenduRef &&
-        Number.parseInt(p.valeurPtsOdj) === debats[debatIndex].ptIndex
-    )
-  );
-
+  const { compteRenduRef, ptIndex } = debats[debatIndex];
+  console.log({ compteRenduRef, ptIndex });
   return (
     <>
       <DebateFilterBar
