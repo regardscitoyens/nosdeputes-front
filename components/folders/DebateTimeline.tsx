@@ -2,14 +2,10 @@
 
 import React from "react";
 
-import Typography from "@mui/material/Typography";
 import Timeline from "@mui/lab/Timeline";
-import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import TimelineConnector from "@mui/lab/TimelineConnector";
-import TimelineContent from "@mui/lab/TimelineContent";
-import TimelineDot from "@mui/lab/TimelineDot";
-import Stack from "@mui/material/Stack";
+import ParoleItem from "./DebatTab/ParoleItem";
+import SectionItem from "./DebatTab/SectionItem";
+import { timelineItemClasses } from "@mui/lab/TimelineItem";
 
 // "ODJ_APPEL_DISCUSSION",
 // "PAROLE_GENERIQUE",
@@ -51,120 +47,76 @@ import Stack from "@mui/material/Stack";
 // "SCRUT_SOUS_AMEND_1_8",
 // "SCRUT_SOUS_AMEND_1_9",
 // "SORT_SS_ADT_1_50",
-export const DebateTimeline = ({ paragraphs }) => {
+
+type DebateTimelineProps = {
+  // TODO: Define type from prisma (to generate)
+  paragraphs: any[];
+};
+export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => {
   console.log(new Set(paragraphs.map((x) => x.codeGrammaire)));
   return (
-    <div>
+    <Timeline
+      sx={{
+        [`& .${timelineItemClasses.root}:before`]: {
+          flex: 0,
+          padding: 0,
+        },
+      }}
+    >
       {paragraphs
         .sort((a, b) => a.ordreAbsoluSeance - b.ordreAbsoluSeance)
-        .map(({ uid, texte, codeGrammaire, ...other }) => (
-          <div onClick={() => console.log(other)} style={{ marginTop: 30 }}>
-            {other.acteurRef && (
-              <p>
-                {other.prenom} {other.nom}{" "}
-                <span style={{ color: other.group_color }}>
-                  {other.group_libelle} ({other.group_libelle_short})
-                </span>
-                {other.roleDebat && (
-                  <>
-                    <br />
-                    {other.roleDebat}
-                  </>
-                )}
-              </p>
-            )}
-            {codeGrammaire === "PAROLE_GENERIQUE" ? (
-              <p key={uid} dangerouslySetInnerHTML={{ __html: texte }} />
-            ) : (
-              <div key={uid}>
-                <h5>{codeGrammaire}</h5>
-                <p dangerouslySetInnerHTML={{ __html: texte }} />
-              </div>
-            )}
-          </div>
-        ))}
-    </div>
-    // <Timeline
-    //   sx={{
-    //     [`& .${timelineItemClasses.root}:before`]: {
-    //       flex: 0,
-    //       padding: 0,
-    //     },
-    //   }}
-    // >
-    //   <TimelineItem>
-    //     <TimelineSeparator>
-    //       <TimelineDot />
-    //       <TimelineConnector />
-    //     </TimelineSeparator>
-    //     <TimelineContent>
-    //       <Stack direction="column" spacing={1}>
-    //         <Typography variant="body1" fontWeight="bold">
-    //           Titre 1
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="light">
-    //           Première partie
-    //         </Typography>
-    //       </Stack>
-    //     </TimelineContent>
-    //   </TimelineItem>
-    //   <TimelineItem>
-    //     <TimelineSeparator>
-    //       <TimelineDot />
-    //       <TimelineConnector />
-    //     </TimelineSeparator>
-    //     <TimelineContent>
-    //       <Stack direction="column" spacing={1}>
-    //         <Typography variant="body1" fontWeight="bold">
-    //           Titre 2
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="bold">
-    //           Voir séance
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="light">
-    //           Travaux en commission
-    //         </Typography>
-    //       </Stack>
-    //     </TimelineContent>
-    //   </TimelineItem>
-    //   <TimelineItem>
-    //     <TimelineSeparator>
-    //       <TimelineDot />
-    //       <TimelineConnector />
-    //     </TimelineSeparator>
-    //     <TimelineContent>
-    //       <Stack direction="column" spacing={1}>
-    //         <Typography variant="body1" fontWeight="bold">
-    //           Titre 3
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="bold">
-    //           Voir séance
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="light">
-    //           Travaux en commission
-    //         </Typography>
-    //       </Stack>
-    //     </TimelineContent>
-    //   </TimelineItem>
-    //   <TimelineItem>
-    //     <TimelineSeparator>
-    //       <TimelineDot />
-    //       <TimelineConnector />
-    //     </TimelineSeparator>
-    //     <TimelineContent>
-    //       <Stack direction="column" spacing={1}>
-    //         <Typography variant="body1" fontWeight="bold">
-    //           Titre 4
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="bold">
-    //           Voir séance
-    //         </Typography>
-    //         <Typography variant="caption" fontWeight="light">
-    //           Travaux en commission
-    //         </Typography>
-    //       </Stack>
-    //     </TimelineContent>
-    //   </TimelineItem>
-    // </Timeline>
+        .map(
+          ({
+            uid,
+            codeGrammaire,
+            acteurRef,
+            prenom,
+            nom,
+            acteur_slug,
+            group_color,
+            group_libelle,
+            group_libelle_short,
+            roleDebat,
+            texte,
+            ...other
+          }) => {
+            switch (codeGrammaire) {
+              case "PAROLE_GENERIQUE":
+              case "INTERRUPTION_1_10":
+                return (
+                  <ParoleItem
+                    key={uid}
+                    acteurRef={acteurRef}
+                    prenom={prenom}
+                    nom={nom}
+                    acteur_slug={acteur_slug}
+                    group_color={group_color}
+                    group_libelle={group_libelle}
+                    group_libelle_short={group_libelle_short}
+                    roleDebat={roleDebat}
+                    texte={texte}
+                  />
+                );
+
+              case "PRESENTATION_1_0":
+              case "DISC_GENERALE_1":
+                return <SectionItem title={texte} />;
+
+              default:
+                return (
+                  <div
+                    key={uid}
+                    onClick={() => {
+                      console.log(other);
+                    }}
+                  >
+                    <h5>{codeGrammaire}</h5>
+                    <p dangerouslySetInnerHTML={{ __html: texte }} />
+                  </div>
+                );
+            }
+          }
+        )}
+    </Timeline>
   );
 };

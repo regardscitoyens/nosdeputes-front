@@ -14,7 +14,11 @@ import { DebateTimeline } from "@/components/folders/DebateTimeline";
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 import { useTheme } from "@mui/material";
 
-export const DebateTranscript = (props) => {
+type DebateTranscriptProps = {
+  // TODO: Define type from prisma (to generate)
+  paragraphs: any[];
+};
+export const DebateTranscript = (props: DebateTranscriptProps) => {
   const { paragraphs } = props;
 
   const theme = useTheme();
