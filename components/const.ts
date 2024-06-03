@@ -138,3 +138,15 @@ export const THEMES = [
   "Anciens combattants",
   "Fonction publique",
 ];
+
+export const CODE_ACTS_AVEC_DEBAT = [
+  "AN1-DEBATS-SEANCE",
+  "AN2-DEBATS-SEANCE",
+  "AN21-DEBATS-SEANCE",
+  "AN3-DEBATS-SEANCE",
+  "ANLDEF-DEBATS-SEANCE",
+  "ANLUNI-DEBATS-SEANCE",
+  "ANNLEC-DEBATS-SEANCE",
+  "CMP-DEBATS-AN-SEANCE",
+  "CMP-DEBATS-SN-SEANCE",
+];

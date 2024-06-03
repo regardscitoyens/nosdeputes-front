@@ -17,7 +17,9 @@ import { ActeLegislatif, Document } from "@/repository/types";
 import { groupActs } from "@/repository/Acts";
 import { sortActDate } from "../utils";
 import Image from "next/image";
+import Link from "next/link";
 import getSortedActGroups from "@/domain/sortActeGroup";
+import { CODE_ACTS_AVEC_DEBAT } from "../const";
 
 function getLogoPathFromCode(code: string) {
   if (code.startsWith("AN")) {
@@ -225,6 +227,13 @@ export const TimelineCard = ({
                                     return lvl2Acts?.map((act) => {
                                       const date =
                                         act.dateActe ?? lvl2GroupDate;
+
+                                      const link =
+                                        CODE_ACTS_AVEC_DEBAT.includes(
+                                          act.codeActe
+                                        )
+                                          ? `/16/dossier/DLR5L16N46484/debat?compteRenduRef=${act.reunionRefUid}`
+                                          : "";
                                       const title = `${act.nomCanonique}${
                                         date
                                           ? ` du ${date.toLocaleDateString(
@@ -242,8 +251,9 @@ export const TimelineCard = ({
                                         <div key={act.uid}>
                                           <Typography
                                             variant="caption"
-                                            component="p"
+                                            component={link ? Link : "p"}
                                             fontWeight="light"
+                                            href={link}
                                             sx={{ my: 1.5 }}
                                           >
                                             {title}

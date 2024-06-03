@@ -17,18 +17,17 @@ type Debat = {
   libelleCourtLieu: string | null;
   libelleLongLieu: string | null;
   timestampDebut: Date;
+  compteRenduRef: string;
 };
+
 type DebateFilterBarProps = {
   debatIndex: number;
-  setDebatIndex: (newVal: number) => void;
+  setDebateRef: (newRef: string) => void;
   debats: Debat[];
 };
+
 export const DebateFilterBar = (props: DebateFilterBarProps) => {
-  const { debatIndex, setDebatIndex, debats } = props;
-
-  console.log(debatIndex);
-
-  console.log({ debats });
+  const { debatIndex, setDebateRef, debats } = props;
 
   return (
     <Box
@@ -56,8 +55,8 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           sx={{ width: "100%" }}
         >
           <Select
-            value={debatIndex}
-            onChange={(e) => setDebatIndex(e.target.value as number)}
+            value={debats[debatIndex].uid}
+            onChange={(e) => setDebateRef(e.target.value as string)}
             displayEmpty
             sx={{ flex: 1 }}
           >
@@ -67,7 +66,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
                 index
               ) => {
                 return (
-                  <MenuItem key={uid} value={index}>
+                  <MenuItem key={uid} value={uid}>
                     <Typography
                       variant="caption"
                       sx={{
@@ -106,14 +105,14 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           >
             <IconButton
               size="small"
-              onClick={() => setDebatIndex(debatIndex - 1)}
+              onClick={() => setDebateRef(debats[debatIndex - 1]?.uid)}
               disabled={debatIndex <= 0}
             >
               <ArrowLeftIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => setDebatIndex(debatIndex + 1)}
+              onClick={() => setDebateRef(debats[debatIndex + 1]?.uid)}
               disabled={debatIndex >= debats.length - 1}
             >
               <ArrowRightIcon fontSize="small" />

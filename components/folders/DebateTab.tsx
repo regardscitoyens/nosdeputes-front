@@ -2,18 +2,7 @@ import React from "react";
 import { ActeLegislatif } from "@/repository/types";
 import { getAgendas, getParagraphs, getPtsOdj } from "@/repository/database";
 import { DebatePage } from "./DebatePage";
-
-const CODE_ACTS_AVEC_DEBAT = [
-  "AN1-DEBATS-SEANCE",
-  "AN2-DEBATS-SEANCE",
-  "AN21-DEBATS-SEANCE",
-  "AN3-DEBATS-SEANCE",
-  "ANLDEF-DEBATS-SEANCE",
-  "ANLUNI-DEBATS-SEANCE",
-  "ANNLEC-DEBATS-SEANCE",
-  "CMP-DEBATS-AN-SEANCE",
-  "CMP-DEBATS-SN-SEANCE",
-];
+import { CODE_ACTS_AVEC_DEBAT } from "../const";
 
 interface DebatTableProps {
   actesLegislatifs: ActeLegislatif[];
