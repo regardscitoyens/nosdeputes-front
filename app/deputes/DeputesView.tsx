@@ -7,6 +7,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Input from "@mui/material/Input";
 
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SortOutlinedIcon from "@mui/icons-material/SortOutlined";
@@ -19,7 +20,6 @@ import CircleDiv from "@/icons/CircleDiv";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Acteur, Mandat } from "@/repository/types";
-import { Input, TextField } from "@mui/material";
 
 function GroupPolitiqueHeader({
   itemKey,

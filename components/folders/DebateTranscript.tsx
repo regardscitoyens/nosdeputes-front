@@ -13,14 +13,20 @@ import { DebateTimeline } from "@/components/folders/DebateTimeline";
 
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 import { useTheme } from "@mui/material";
+import { WORDS_PER_MINUTES } from "../const";
 
 type DebateTranscriptProps = {
   // TODO: Define type from prisma (to generate)
   paragraphs: any[];
+  wordsCounts: Record<string, number>;
 };
 export const DebateTranscript = (props: DebateTranscriptProps) => {
-  const { paragraphs } = props;
+  const { paragraphs, wordsCounts } = props;
 
+  const durationEstimation = Math.round(
+    Object.values(wordsCounts).reduce((acc, wordCount) => acc + wordCount, 0) /
+      WORDS_PER_MINUTES
+  );
   const theme = useTheme();
 
   return (
@@ -37,7 +43,8 @@ export const DebateTranscript = (props: DebateTranscriptProps) => {
             fontWeight="light"
             sx={{ color: theme.palette.grey[700] }}
           >
-            Temps de lecture : 18 minutes
+            Temps de lecture : {durationEstimation} minute
+            {durationEstimation > 1 ? "s" : ""}
           </Typography>
         </Stack>
       </Stack>

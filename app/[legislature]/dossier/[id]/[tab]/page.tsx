@@ -18,14 +18,12 @@ export async function generateStaticParams() {
 
 export default async function Page({
   params,
-}: // searchParams,
-{
+}: {
   params: {
     legislature: string;
     id: string;
     tab: string;
   };
-  // searchParams: Partial<AmendementsFilterState>;
 }) {
   const dossier = await getDossier(params.legislature, params.id);
   const amendements = await getDossierAmendements(
