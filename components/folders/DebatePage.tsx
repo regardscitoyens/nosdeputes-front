@@ -10,6 +10,7 @@ import { DebateSummary } from "./DebateSummary";
 import { DebateTranscript } from "./DebateTranscript";
 import { Agenda } from "@/repository/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { SUMMARY_CODES } from "./DebateTimeline";
 
 interface DebatePageProps {
   paragraphs: any[];
@@ -25,7 +26,6 @@ export function DebatePage(props: DebatePageProps) {
   const searchParams = useSearchParams();
 
   const debatIndex = React.useMemo(() => {
-    console.log(debats);
     const index = debats.findIndex(
       (debat) => debat.uid === searchParams.get("compteRenduRef")
     );
@@ -43,6 +43,40 @@ export function DebatePage(props: DebatePageProps) {
       router.replace(pathname + "?" + params.toString());
     },
     [pathname, router, searchParams]
+  );
+
+  const filteredParagraphes = paragraphs
+    .filter(
+      (p) =>
+        p.debatRefUid === debats[debatIndex].compteRenduRef &&
+        Number.parseInt(p.valeurPtsOdj) === debats[debatIndex].ptIndex
+    )
+    .sort((a, b) => a.ordreAbsoluSeance - b.ordreAbsoluSeance);
+
+  let lastHash = "init";
+
+  const wordsCounts: Record<string, number> = filteredParagraphes.reduce(
+    (acc, paragraphe) => {
+      if (SUMMARY_CODES.includes(paragraphe.codeGrammaire)) {
+        lastHash = paragraphe.hash;
+        return { ...acc, [lastHash]: 0 };
+      }
+
+      if (
+        ["PAROLE_GENERIQUE", "INTERRUPTION_1_10"].includes(
+          paragraphe.codeGrammaire
+        )
+      ) {
+        return {
+          ...acc,
+          [lastHash]: acc[lastHash] + paragraphe.texte.split(" ").length,
+        };
+      }
+      return acc;
+    },
+    {
+      init: 0,
+    }
   );
 
   return (
@@ -64,15 +98,17 @@ export function DebatePage(props: DebatePageProps) {
         }}
       >
         <Stack flex={2}>
-          <DebateSummary />
+          <DebateSummary
+            wordsCounts={wordsCounts}
+            sections={filteredParagraphes.filter((p) =>
+              SUMMARY_CODES.includes(p.codeGrammaire)
+            )}
+          />
         </Stack>
         <Stack spacing={3} flex={5} alignItems="flex-start">
           <DebateTranscript
-            paragraphs={paragraphs.filter(
-              (p) =>
-                p.debatRefUid === debats[debatIndex].compteRenduRef &&
-                Number.parseInt(p.valeurPtsOdj) === debats[debatIndex].ptIndex
-            )}
+            paragraphs={filteredParagraphes}
+            wordsCounts={wordsCounts}
           />
         </Stack>
       </Container>

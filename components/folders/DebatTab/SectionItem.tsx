@@ -7,6 +7,7 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { cleanText } from "./cleanText";
 
 function TimelineDot() {
   return (
@@ -38,13 +39,14 @@ function TimelineDot() {
 interface ParoleItemProps {
   title: string | null;
   subtitle?: string | null;
+  id?: string;
 }
 
 export default function SectionItem(props: ParoleItemProps) {
-  const { title, subtitle } = props;
+  const { title, subtitle, id } = props;
 
   return (
-    <TimelineItem sx={{ minHeight: 100 }}>
+    <TimelineItem sx={{ minHeight: 100 }} id={id}>
       <TimelineSeparator sx={{ minWidth: 50 }}>
         <TimelineConnector />
         <TimelineDot />
@@ -52,9 +54,12 @@ export default function SectionItem(props: ParoleItemProps) {
       </TimelineSeparator>
       <TimelineContent sx={{ my: "auto" }}>
         <Stack direction="column" spacing={1}>
-          <Typography variant="body1" fontWeight="bold">
-            {title}
-          </Typography>
+          <Typography
+            variant="body1"
+            fontWeight="bold"
+            component="h3"
+            dangerouslySetInnerHTML={{ __html: cleanText(title ?? "") }}
+          />
           {subtitle && (
             <Typography variant="caption" fontWeight="light">
               {subtitle}

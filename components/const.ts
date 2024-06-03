@@ -150,3 +150,5 @@ export const CODE_ACTS_AVEC_DEBAT = [
   "CMP-DEBATS-AN-SEANCE",
   "CMP-DEBATS-SN-SEANCE",
 ];
+
+export const WORDS_PER_MINUTES = 200;

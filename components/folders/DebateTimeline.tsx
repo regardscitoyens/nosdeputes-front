@@ -6,6 +6,14 @@ import Timeline from "@mui/lab/Timeline";
 import ParoleItem from "./DebatTab/ParoleItem";
 import SectionItem from "./DebatTab/SectionItem";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
+import SubSectionItem from "./DebatTab/SubSectionItem";
+
+export const SUMMARY_CODES = [
+  "PRESENTATION_1_0",
+  "DISC_GENERALE_1",
+  "MOTION_RP_1_1",
+  "DISC_ARTICLES_2_4",
+];
 
 // "ODJ_APPEL_DISCUSSION",
 // "PAROLE_GENERIQUE",
@@ -52,71 +60,70 @@ type DebateTimelineProps = {
   // TODO: Define type from prisma (to generate)
   paragraphs: any[];
 };
-export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => {
-  console.log(new Set(paragraphs.map((x) => x.codeGrammaire)));
-  return (
-    <Timeline
-      sx={{
-        [`& .${timelineItemClasses.root}:before`]: {
-          flex: 0,
-          padding: 0,
-        },
-      }}
-    >
-      {paragraphs
-        .sort((a, b) => a.ordreAbsoluSeance - b.ordreAbsoluSeance)
-        .map(
-          ({
-            uid,
-            codeGrammaire,
-            acteurRef,
-            prenom,
-            nom,
-            acteur_slug,
-            group_color,
-            group_libelle,
-            group_libelle_short,
-            roleDebat,
-            texte,
-            ...other
-          }) => {
-            switch (codeGrammaire) {
-              case "PAROLE_GENERIQUE":
-              case "INTERRUPTION_1_10":
-                return (
-                  <ParoleItem
-                    key={uid}
-                    acteurRef={acteurRef}
-                    prenom={prenom}
-                    nom={nom}
-                    acteur_slug={acteur_slug}
-                    group_color={group_color}
-                    group_libelle={group_libelle}
-                    group_libelle_short={group_libelle_short}
-                    roleDebat={roleDebat}
-                    texte={texte}
-                  />
-                );
+export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
+  <Timeline
+    sx={{
+      [`& .${timelineItemClasses.root}:before`]: {
+        flex: 0,
+        padding: 0,
+      },
+    }}
+  >
+    {paragraphs.map(
+      ({
+        hash,
+        codeGrammaire,
+        acteurRef,
+        prenom,
+        nom,
+        acteur_slug,
+        group_color,
+        group_libelle,
+        group_libelle_short,
+        roleDebat,
+        texte,
+        ...other
+      }) => {
+        switch (codeGrammaire) {
+          case "PAROLE_GENERIQUE":
+          case "INTERRUPTION_1_10":
+            // return <p>a</p>;
+            return (
+              <ParoleItem
+                key={hash}
+                acteurRef={acteurRef}
+                prenom={prenom}
+                nom={nom}
+                acteur_slug={acteur_slug}
+                group_color={group_color}
+                group_libelle={group_libelle}
+                group_libelle_short={group_libelle_short}
+                roleDebat={roleDebat}
+                texte={texte}
+              />
+            );
 
-              case "PRESENTATION_1_0":
-              case "DISC_GENERALE_1":
-                return <SectionItem title={texte} />;
+          case "PRESENTATION_1_0":
+          case "DISC_GENERALE_1":
+          case "MOTION_RP_1_1":
+          case "DISC_ARTICLES_2_4":
+            return <SectionItem id={hash} title={texte} />;
 
-              default:
-                return (
-                  <div
-                    key={uid}
-                    onClick={() => {
-                      console.log(other);
-                    }}
-                  >
-                    <h5>{codeGrammaire}</h5>
-                    <p dangerouslySetInnerHTML={{ __html: texte }} />
-                  </div>
-                );
-            }
-          }
-        )}
-    </Timeline>
-  );
-};
+          default:
+            return texte ? <SubSectionItem title={texte} /> : null;
+            return (
+              <div
+                key={hash}
+                onClick={() => {
+                  console.log(other);
+                }}
+              >
+                <h5>{codeGrammaire}</h5>
+                <p dangerouslySetInnerHTML={{ __html: texte }} />
+              </div>
+            );
+        }
+      }
+    )}
+  </Timeline>
+);
