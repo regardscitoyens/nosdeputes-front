@@ -79,6 +79,9 @@ export function DebatePage(props: DebatePageProps) {
     }
   );
 
+  if (debats.length === 0) {
+    return <p>Ce dossier n&aposa pas encore fait l&aposobjet de debats</p>;
+  }
   return (
     <>
       <DebateFilterBar

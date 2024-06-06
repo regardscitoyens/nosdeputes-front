@@ -35,6 +35,10 @@ function sortParty(a: string, b: string) {
 export const SpeakingTime = (props: SpeakingTimeCardProps) => {
   const { wordsPerGroup } = props;
 
+  if (!wordsPerGroup) {
+    return null;
+  }
+
   const totalWords = Object.values(wordsPerGroup).reduce((acc, val) => {
     return val.count + acc;
   }, 0);
