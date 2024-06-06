@@ -7,6 +7,8 @@ import ParoleItem from "./DebatTab/ParoleItem";
 import SectionItem from "./DebatTab/SectionItem";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
 import SubSectionItem from "./DebatTab/SubSectionItem";
+import { Typography } from "@mui/material";
+import { cleanText } from "./DebatTab/cleanText";
 
 export const SUMMARY_CODES = [
   "PRESENTATION_1_0",
@@ -14,47 +16,6 @@ export const SUMMARY_CODES = [
   "MOTION_RP_1_1",
   "DISC_ARTICLES_2_4",
 ];
-
-// "ODJ_APPEL_DISCUSSION",
-// "PAROLE_GENERIQUE",
-// "TITRE_TEXTE_DISCUSSION",
-// "SOUS_TITRE_TEXTE_DISCUSSION",
-// "PRESENTATION_1_0",
-// "DISC_GENERALE_1",
-// "DISC_ARTICLES_1_1",
-// "DISC_ARTICLES_2_4",
-// "DISC_ARTICLES_1_2",
-// "VOTE_ENS_PPR_S_1_10",
-// "INTERRUPTION_1_10",
-// "DISC_GENERALE_2_40",
-// "DISC_ARTICLES_2_1",
-// "DISC_ARTICLES_3_1",
-// "DISC_ARTICLES_3_9_1",
-// "DISC_ARTICLES_3_30",
-// "VOTE_ENS_PPR_S_2_20",
-// "VOTE_ENS_PPR_S_2_30",
-// "VOTE_ENS_PPR_S_2_40",
-// "VOTE_ENS_PPR_S_2_50",
-// "REJET_ADT",
-// "ADOP_ADTS",
-// "ADOP_ADT",
-// "SCRUT_PUB_ADT_1_6",
-// "SCRUT_PUB_ADT_1_7",
-// "SCRUT_PUB_ADT_1_8",
-// "SCRUT_PUB_ADT_1_9",
-// "DISC_ARTICLES_4_50",
-// "RETRAIT_ADT",
-// "SCRUT_PUB_ADT_1_2",
-// "SCRUT_PUB_ADT_1_3",
-// "SCRUT_PUB_ADT_1_4",
-// "SCRUT_PUB_ADT_1_5",
-// "SORT_ARTICLE_1_1",
-// "SORT_SS_ADT_1_70",
-// "SCRUT_SOUS_AMEND_1_6",
-// "SCRUT_SOUS_AMEND_1_7",
-// "SCRUT_SOUS_AMEND_1_8",
-// "SCRUT_SOUS_AMEND_1_9",
-// "SORT_SS_ADT_1_50",
 
 type DebateTimelineProps = {
   // TODO: Define type from prisma (to generate)
@@ -87,7 +48,6 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
         switch (codeGrammaire) {
           case "PAROLE_GENERIQUE":
           case "INTERRUPTION_1_10":
-            // return <p>a</p>;
             return (
               <ParoleItem
                 key={hash}
@@ -109,6 +69,29 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
           case "DISC_ARTICLES_2_4":
             return <SectionItem id={hash} title={texte} />;
 
+          case "TITRE_TEXTE_DISCUSSION":
+            return (
+              <Typography
+                variant="h1"
+                component="h2"
+                dangerouslySetInnerHTML={{ __html: cleanText(texte, true) }}
+              />
+            );
+          case "SOUS_TITRE_TEXTE_DISCUSSION":
+            return (
+              <Typography
+                variant="h3"
+                component="h3"
+                dangerouslySetInnerHTML={{ __html: cleanText(texte, true) }}
+              />
+            );
+          case "ODJ_APPEL_DISCUSSION":
+            return (
+              <Typography
+                component="p"
+                dangerouslySetInnerHTML={{ __html: cleanText(texte) }}
+              />
+            );
           default:
             return texte ? <SubSectionItem title={texte} /> : null;
             return (
