@@ -107,6 +107,7 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
                 }}
               >
                 <h5>{codeGrammaire}</h5>
+                <h6>{other.codeParole}</h6>
                 <p dangerouslySetInnerHTML={{ __html: texte }} />
               </div>
             );

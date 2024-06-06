@@ -2,48 +2,67 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
-import { PartisKeys, partis } from "@/components/const";
-
-// TODO: remove when we get access to real data
-const DEFAULT_SPEEAKING_TIME: SpeakingTimeCardProps["speakingTime"] = [
-  { parti: "LFI", time: 150 },
-  { parti: "GDR", time: 50 },
-  { parti: "SOC", time: 150 },
-  { parti: "ECO", time: 50 },
-  { parti: "LIOT", time: 150 },
-  { parti: "REN", time: 50 },
-  { parti: "MODEM", time: 250 },
-  { parti: "HOR", time: 50 },
-  { parti: "LR", time: 150 },
-  { parti: "RN", time: 50 },
-  { parti: "NI", time: 150 },
-];
-
 type SpeakingTimeCardProps = {
-  speakingTime?: { parti: PartisKeys; time: number }[];
+  wordsPerGroup: Record<
+    string,
+    {
+      count: number;
+      group_color: string;
+      group_libelle_short: string;
+    }
+  >;
 };
 
-export const SpeakingTime = (props: SpeakingTimeCardProps) => {
-  const { speakingTime = DEFAULT_SPEEAKING_TIME } = props;
+// TODO: Define a more robust order of political parties.
+const partyOrder = [
+  "LFI - NUPES",
+  "GDR - NUPES",
+  "Ecolo - NUPES",
+  "SOC",
+  "LIOT",
+  "RE",
+  "Dem",
+  "HOR",
+  "LR",
+  "RN",
+  "HOR",
+];
 
-  const totalTime = speakingTime.reduce((acc, val) => {
-    return val.time + acc;
+function sortParty(a: string, b: string) {
+  return partyOrder.indexOf(a) - partyOrder.indexOf(b);
+}
+
+export const SpeakingTime = (props: SpeakingTimeCardProps) => {
+  const { wordsPerGroup } = props;
+
+  const totalWords = Object.values(wordsPerGroup).reduce((acc, val) => {
+    return val.count + acc;
   }, 0);
+
+  const sortedKeys = Object.keys(wordsPerGroup).sort((a, b) =>
+    sortParty(
+      wordsPerGroup[a].group_libelle_short,
+      wordsPerGroup[b].group_libelle_short
+    )
+  );
 
   return (
     <React.Fragment>
       <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
-        {speakingTime.map(({ parti, time }) => (
-          <div
-            key={parti}
-            style={{
-              height: 8,
-              backgroundColor: partis[parti].color,
-              borderRadius: 4,
-              flex: time / totalTime,
-            }}
-          />
-        ))}
+        {sortedKeys.map((groupUid) => {
+          const { count, group_color } = wordsPerGroup[groupUid];
+          return (
+            <div
+              key={groupUid}
+              style={{
+                height: 8,
+                backgroundColor: group_color,
+                borderRadius: 4,
+                flex: count / totalWords,
+              }}
+            />
+          );
+        })}
       </Stack>
       <Stack
         direction="row"
@@ -51,13 +70,12 @@ export const SpeakingTime = (props: SpeakingTimeCardProps) => {
         flexWrap="wrap"
         justifyContent="center"
       >
-        {speakingTime.map(({ parti, time }) => {
-          const { fullName, color, group } = partis[parti];
+        {sortedKeys.map((groupUid) => {
+          const { count, group_libelle_short } = wordsPerGroup[groupUid];
           return (
-            <Typography key={parti} fontWeight="bold" variant="caption">
-              {parti}
-              {group ? ` - ${group}` : ""} :{" "}
-              {((100 * time) / totalTime).toFixed(1).replace(".0", "")}%
+            <Typography key={groupUid} fontWeight="bold" variant="caption">
+              {group_libelle_short} :{" "}
+              {((100 * count) / totalWords).toFixed(1).replace(".0", "")}%
             </Typography>
           );
         })}

@@ -15,6 +15,46 @@ import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 import { useTheme } from "@mui/material";
 import { WORDS_PER_MINUTES } from "../const";
 
+function getWordsPerGroup(paragraphs: any[]) {
+  const groups: Record<
+    string,
+    {
+      count: number;
+      group_color: string;
+      group_libelle_short: string;
+    }
+  > = {};
+  paragraphs.forEach(
+    ({
+      codeGrammaire,
+      deputeGroupeParlementaireUid,
+      group_color,
+      group_libelle_short,
+      texte,
+    }) => {
+      if (
+        codeGrammaire !== "PAROLE_GENERIQUE" ||
+        !deputeGroupeParlementaireUid
+      ) {
+        return;
+      }
+
+      const wordCount = texte.split(" ").length;
+      if (groups[deputeGroupeParlementaireUid]) {
+        groups[deputeGroupeParlementaireUid].count += wordCount;
+      } else {
+        groups[deputeGroupeParlementaireUid] = {
+          count: wordCount,
+          group_color,
+          group_libelle_short,
+        };
+      }
+    }
+  );
+
+  return groups;
+}
+
 type DebateTranscriptProps = {
   // TODO: Define type from prisma (to generate)
   paragraphs: any[];
@@ -22,6 +62,11 @@ type DebateTranscriptProps = {
 };
 export const DebateTranscript = (props: DebateTranscriptProps) => {
   const { paragraphs, wordsCounts } = props;
+
+  const wordsPerGroup = React.useMemo(
+    () => getWordsPerGroup(paragraphs),
+    [paragraphs]
+  );
 
   const durationEstimation = Math.round(
     Object.values(wordsCounts).reduce((acc, wordCount) => acc + wordCount, 0) /
@@ -61,7 +106,7 @@ export const DebateTranscript = (props: DebateTranscriptProps) => {
           <Typography>Temps de parole par groupe</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <SpeakingTime />
+          <SpeakingTime wordsPerGroup={wordsPerGroup} />
         </AccordionDetails>
       </Accordion>
       <DebateTimeline paragraphs={paragraphs} />

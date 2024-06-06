@@ -9,8 +9,8 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { ArrowLeftIcon } from "@/icons/ArrowLeftIcon";
-import { ArrowRightIcon } from "@/icons/ArrowRightIcon";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 type Debat = {
   uid: string;
@@ -108,14 +108,14 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
               onClick={() => setDebateRef(debats[debatIndex - 1]?.uid)}
               disabled={debatIndex <= 0}
             >
-              <ArrowLeftIcon fontSize="small" />
+              <ArrowBackIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
               onClick={() => setDebateRef(debats[debatIndex + 1]?.uid)}
               disabled={debatIndex >= debats.length - 1}
             >
-              <ArrowRightIcon fontSize="small" />
+              <ArrowForwardIcon fontSize="small" />
             </IconButton>
           </Stack>
         </Stack>
