@@ -59,9 +59,10 @@ type DebateTranscriptProps = {
   // TODO: Define type from prisma (to generate)
   paragraphs: any[];
   wordsCounts: Record<string, number>;
+  title: string;
 };
 export const DebateTranscript = (props: DebateTranscriptProps) => {
-  const { paragraphs, wordsCounts } = props;
+  const { paragraphs, wordsCounts, title } = props;
 
   const wordsPerGroup = React.useMemo(
     () => getWordsPerGroup(paragraphs),
@@ -77,10 +78,7 @@ export const DebateTranscript = (props: DebateTranscriptProps) => {
   return (
     <>
       <Stack spacing={1}>
-        <Typography variant="h4">
-          Retranscription écrite de la séance en hémicycle du Jeudi 22 Juin 2023
-          de 9h30.
-        </Typography>
+        <Typography variant="h4">{title}</Typography>
         <Stack direction="row" alignItems="center" spacing={1}>
           <ClockMovingIcon fontSize="inherit" fill={theme.palette.grey[900]} />
           <Typography

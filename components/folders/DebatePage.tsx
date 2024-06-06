@@ -107,6 +107,18 @@ export function DebatePage(props: DebatePageProps) {
         </Stack>
         <Stack spacing={3} flex={5} alignItems="flex-start">
           <DebateTranscript
+            title={`${
+              debats[debatIndex].libelleCourtLieu ??
+              debats[debatIndex].libelleLongLieu ??
+              ""
+            }, le ${debats[debatIndex].timestampDebut.toLocaleString("fr-FR", {
+              month: "long",
+              day: "numeric",
+              weekday: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+            })}`}
             paragraphs={filteredParagraphes}
             wordsCounts={wordsCounts}
           />

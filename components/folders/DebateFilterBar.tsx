@@ -26,6 +26,9 @@ type DebateFilterBarProps = {
   debats: Debat[];
 };
 
+// TODO: would be nice to introduce a pending state with some loading bar.
+// Something like https://mui.com/material-ui/react-progress/#linear
+// Coudl look a MUI docs to see how the did the transition between pages.
 export const DebateFilterBar = (props: DebateFilterBarProps) => {
   const { debatIndex, setDebateRef, debats } = props;
 
