@@ -93,7 +93,12 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
               />
             );
           default:
-            return texte ? <SubSectionItem title={texte} /> : null;
+            return texte ? (
+              <SubSectionItem
+                title={texte}
+                withoutConnector={codeGrammaire === "FIN_SEAN_1_0"}
+              />
+            ) : null;
             return (
               <div
                 key={hash}

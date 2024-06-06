@@ -11,16 +11,17 @@ import { cleanText } from "./cleanText";
 
 interface ParoleItemProps {
   title: string | null;
+  withoutConnector?: boolean;
 }
 
 export default function SubSectionItem(props: ParoleItemProps) {
-  const { title } = props;
+  const { title, withoutConnector } = props;
 
   return (
     <TimelineItem>
       <TimelineSeparator sx={{ minWidth: 50 }}>
         <TimelineDot />
-        <TimelineConnector />
+        {!withoutConnector && <TimelineConnector />}
       </TimelineSeparator>
       <TimelineContent>
         <Stack direction="column" spacing={1}>

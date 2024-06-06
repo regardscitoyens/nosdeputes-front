@@ -202,11 +202,12 @@ export const DebateSummary = (props: DebateSummaryProps) => {
             )
           )}
         </Stack>
-        <Typography variant="caption" fontWeight="light">
+        {/* TODO: Ajouter ce message quand on a ajouté la page pour afficher le debat entier d'une seance. */}
+        {/* <Typography variant="caption" fontWeight="light">
           Il s&apos;agit du sommaire concernant uniquement le dossier
           sélectionné ; pour accéder à l&apos;intégralité de la séance, veuillez
           cliquer ici
-        </Typography>
+        </Typography> */}
       </AccordionDetails>
     </Accordion>
   );
