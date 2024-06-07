@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { PreviewTab } from "@/components/folders/PreviewTab";
 import { AmendementTab } from "@/components/folders/AmendementTab";
@@ -46,15 +46,21 @@ export default async function Page({
         return null;
       }
       return (
-        <AmendementTab
-          amendements={amendements}
-          documents={dossier?.documents}
-          amendementCount={dossier?.amendementCount}
-        />
+        <Suspense fallback={<>Loading...</>}>
+          <AmendementTab
+            amendements={amendements}
+            documents={dossier?.documents}
+            amendementCount={dossier?.amendementCount}
+          />
+        </Suspense>
       );
 
     case "votes":
-      return <VotesTab votes={votes ?? []} acts={acts ?? []} />;
+      return (
+        <Suspense fallback={<>Loading...</>}>
+          <VotesTab votes={votes ?? []} acts={acts ?? []} />
+        </Suspense>
+      );
 
     default:
       return <PreviewTab dossier={dossier} />;
