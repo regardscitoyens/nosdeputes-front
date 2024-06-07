@@ -55,7 +55,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           sx={{ width: "100%" }}
         >
           <Select
-            value={debats[debatIndex].uid}
+            value={debats[debatIndex]?.uid}
             onChange={(e) => setDebateRef(e.target.value as string)}
             displayEmpty
             sx={{ flex: 1 }}

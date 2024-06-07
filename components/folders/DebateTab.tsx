@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { ActeLegislatif } from "@/repository/types";
 import { getAgendas, getParagraphs, getPtsOdj } from "@/repository/database";
 import { DebatePage } from "./DebatePage";
@@ -49,5 +49,9 @@ export async function DebateTab(props: DebatTableProps) {
 
   const paragraphs = await getParagraphs(debats.map((x) => x.compteRenduRef));
 
-  return <DebatePage debats={debats} paragraphs={paragraphs} />;
+  return (
+    <Suspense fallback={<>Loading...</>}>
+      <DebatePage debats={debats} paragraphs={paragraphs} />
+    </Suspense>
+  );
 }
