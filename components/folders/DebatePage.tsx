@@ -4,6 +4,8 @@ import * as React from "react";
 
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import { DebateFilterBar } from "./DebateFilterBar";
 import { DebateSummary } from "./DebateSummary";
@@ -25,6 +27,8 @@ export function DebatePage(props: DebatePageProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const [isPending, startTransition] = React.useTransition();
+
   const debatIndex = React.useMemo(() => {
     const index = debats.findIndex(
       (debat) => debat.uid === searchParams.get("compteRenduRef")
@@ -40,7 +44,9 @@ export function DebatePage(props: DebatePageProps) {
       const params = new URLSearchParams(searchParams.toString());
       params.set("compteRenduRef", ref);
 
-      router.replace(pathname + "?" + params.toString());
+      startTransition(() => {
+        router.replace(`${pathname}?${params.toString()}`);
+      });
     },
     [pathname, router, searchParams]
   );
@@ -89,6 +95,13 @@ export function DebatePage(props: DebatePageProps) {
         setDebateRef={setDebateRef}
         debats={debats}
       />
+      <Container>
+        {isPending ? (
+          <LinearProgress />
+        ) : (
+          <Box sx={{ height: 4, width: "100%" }} />
+        )}
+      </Container>
       <Container
         sx={{
           pt: 3,
