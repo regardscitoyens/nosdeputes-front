@@ -62,9 +62,9 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
         <LegislativeDocumentsCard documents={documents} />
       </Stack>
       <Stack spacing={3} flex={5}>
-        <CardLayout title="Temps de parole par groupe">
+        {/* <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
-        </CardLayout>
+        </CardLayout> */}
         <TimelineCard acts={acts} documents={documents} />
         <TextStructureCard />
       </Stack>
