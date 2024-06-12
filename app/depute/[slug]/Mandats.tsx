@@ -21,14 +21,29 @@ export default function Mandats({ mandats }: { mandats: any[] }) {
   > = mandats
     .filter((m) => !ignoredTypeOrgane.includes(m.typeOrgane))
     .reduce((acc, mandat) => {
-      const { typeOrgane, libelle, libQualiteSex } = mandat;
+      const { typeOrgane, codeQualite, libelle, libQualiteSex, organeRefUid } =
+        mandat;
+
+      const existingMandat = acc[typeOrgane]?.find(
+        (m: any) => m.organeRefUid === organeRefUid
+      );
+
+      if (existingMandat && codeQualite === "Membre") {
+        // Le mandat exist deja inutile d'ajouter qu'il/elle est membre du groupe
+        return acc;
+      }
+
       return {
         ...acc,
         [typeOrgane]: [
-          ...(acc[typeOrgane] ?? []),
+          ...(acc[typeOrgane]?.filter(
+            (m: any) => m.organeRefUid !== organeRefUid
+          ) ?? []),
           {
             libelle,
             libQualiteSex,
+            codeQualite,
+            organeRefUid,
           },
         ],
       };
