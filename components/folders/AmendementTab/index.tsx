@@ -18,12 +18,14 @@ export type AmendementTabProps = Pick<
   "amendementCount" | "documents"
 > & {
   amendements: (Amendement & Acteur)[];
+  dossierRefUid: string;
 };
 
 export const AmendementTab = ({
   amendements,
   documents,
   amendementCount,
+  dossierRefUid,
 }: AmendementTabProps) => {
   const [numero, handleNumero] = useFilterSearch("numero");
   const [document, handleDocument] = useFilterSearch("document");
@@ -65,6 +67,7 @@ export const AmendementTab = ({
         </Typography>
         <AmendementList
           amendements={amendements}
+          dossierRefUid={dossierRefUid}
           numero={numero}
           selectedDocument={document}
           depute={depute}

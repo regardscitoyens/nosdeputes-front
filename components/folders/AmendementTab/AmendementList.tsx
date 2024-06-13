@@ -7,14 +7,21 @@ import AmendementCard from "./AmendementCard";
 import { AmendementTabProps } from ".";
 
 export default function AmendementsList(
-  props: Pick<AmendementTabProps, "amendements"> & {
+  props: Pick<AmendementTabProps, "amendements" | "dossierRefUid"> & {
     numero: string;
     selectedDocument: string;
     depute: string;
     status: string;
   }
 ) {
-  const { amendements, numero, depute, status, selectedDocument } = props;
+  const {
+    amendements,
+    numero,
+    depute,
+    status,
+    selectedDocument,
+    dossierRefUid,
+  } = props;
 
   const filteredAmendements = amendements
     .filter((amendement) => {
@@ -50,7 +57,11 @@ export default function AmendementsList(
   return (
     <Stack>
       {filteredAmendements.map((amendement) => (
-        <AmendementCard {...amendement} key={amendement.uid} />
+        <AmendementCard
+          {...amendement}
+          key={amendement.uid}
+          dossierRefUid={dossierRefUid}
+        />
       ))}
     </Stack>
   );

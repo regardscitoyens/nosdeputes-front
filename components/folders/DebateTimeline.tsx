@@ -43,6 +43,7 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
         group_libelle_short,
         roleDebat,
         texte,
+        adt,
         ...other
       }) => {
         switch (codeGrammaire) {
@@ -70,6 +71,10 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
             return <SectionItem id={hash} title={texte} />;
 
           case "TITRE_TEXTE_DISCUSSION":
+            console.log(codeGrammaire);
+            console.log(texte);
+            console.log(other);
+
             return (
               <Typography
                 variant="h1"
@@ -78,6 +83,10 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
               />
             );
           case "SOUS_TITRE_TEXTE_DISCUSSION":
+            console.log(codeGrammaire);
+            console.log(texte);
+            console.log(other);
+
             return (
               <Typography
                 variant="h3"
@@ -86,6 +95,10 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
               />
             );
           case "ODJ_APPEL_DISCUSSION":
+            console.log(codeGrammaire);
+            console.log(texte);
+            console.log(other);
+
             return (
               <Typography
                 component="p"
@@ -93,9 +106,14 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
               />
             );
           default:
+            console.log(codeGrammaire);
+            console.log(texte);
+            console.log(other);
+
             return texte ? (
               <SubSectionItem
                 title={texte}
+                id={adt ? `adt-${adt}` : undefined}
                 withoutConnector={codeGrammaire === "FIN_SEAN_1_0"}
               />
             ) : null;

@@ -11,14 +11,15 @@ import { cleanText } from "./cleanText";
 
 interface ParoleItemProps {
   title: string | null;
+  id?: string;
   withoutConnector?: boolean;
 }
 
 export default function SubSectionItem(props: ParoleItemProps) {
-  const { title, withoutConnector } = props;
+  const { title, withoutConnector, id } = props;
 
   return (
-    <TimelineItem>
+    <TimelineItem id={id}>
       <TimelineSeparator sx={{ minWidth: 50 }}>
         <TimelineDot />
         {!withoutConnector && <TimelineConnector />}

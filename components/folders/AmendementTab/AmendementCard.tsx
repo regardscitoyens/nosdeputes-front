@@ -1,6 +1,8 @@
 "use client";
 import * as React from "react";
 
+import Link from "next/link";
+
 import { Amendement } from "@/repository/types";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -44,6 +46,9 @@ export default function AmendementCard(props: Amendement) {
     uid,
     group_color,
     group_libelle,
+    seanceRefUid,
+    dossierRefUid,
+    numeroOrdreDepot,
   } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
@@ -103,12 +108,18 @@ export default function AmendementCard(props: Amendement) {
             dangerouslySetInnerHTML={{ __html: dispositif }}
           />
 
-          <Typography fontWeight="light" variant="body2">
-            Examiné par:&nbsp;
-            <Typography component="a" variant="body2">
-              Le nom d&apos;une commission parlementaire
+          {seanceRefUid && (
+            // <Typography fontWeight="light" variant="body2">
+            //   Examiné par:&nbsp;
+            <Typography
+              component={Link}
+              href={`/16/dossier/${dossierRefUid}/debat?compteRenduRef=${seanceRefUid}#adt-${numeroOrdreDepot}`}
+              variant="body2"
+            >
+              Voire le debat associé
             </Typography>
-          </Typography>
+            // </Typography>
+          )}
           <Stack direction="row" justifyContent="space-between" flexBasis={0}>
             <Typography fontWeight="light" variant="body2">
               Déposé par:&nbsp;

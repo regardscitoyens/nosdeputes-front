@@ -51,6 +51,7 @@ export default async function Page({
             amendements={amendements}
             documents={dossier?.documents}
             amendementCount={dossier?.amendementCount}
+            dossierRefUid={params.id}
           />
         </Suspense>
       );
