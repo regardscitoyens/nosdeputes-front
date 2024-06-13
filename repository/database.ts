@@ -491,6 +491,15 @@ export async function getDeputeAmendement(slug: string) {
       .select("*")
       .from("Amendement")
       .where("acteurRefUid", "=", depute[0].uid)
+      .rightJoin(
+        function () {
+          this.select(["texteAssocieRefUid", "dossierRefUid"])
+            .from("ActeLegislatif")
+            .as("acte");
+        },
+        "Amendement.texteLegislatifRefUid",
+        "acte.texteAssocieRefUid"
+      )
       .options({ nestTables: true });
 
     return {

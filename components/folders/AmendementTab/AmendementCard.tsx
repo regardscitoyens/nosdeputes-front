@@ -108,7 +108,7 @@ export default function AmendementCard(props: Amendement) {
             dangerouslySetInnerHTML={{ __html: dispositif }}
           />
 
-          {seanceRefUid && (
+          {dossierRefUid && seanceRefUid && (
             // <Typography fontWeight="light" variant="body2">
             //   Examiné par:&nbsp;
             <Typography
