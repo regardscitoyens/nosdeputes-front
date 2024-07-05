@@ -239,8 +239,8 @@ export async function getDossier(
     });
 
     acteursData.forEach((acteur: Acteur) => {
-      if (acteur.deputeGroupeParlementaireUid) {
-        organesIds.add(acteur.deputeGroupeParlementaireUid);
+      if (acteur.groupeParlementaireUid) {
+        organesIds.add(acteur.groupeParlementaireUid);
       }
     });
 
@@ -327,7 +327,7 @@ export async function getDossierAmendements(
             "slug as acteur_slug",
             "prenom",
             "nom",
-            "deputeGroupeParlementaireUid",
+            "groupeParlementaireUid",
           ])
             .from("Acteur")
             .as("acteur");
@@ -347,7 +347,7 @@ export async function getDossierAmendements(
             .from("Organe")
             .as("organe");
         },
-        "acteur.deputeGroupeParlementaireUid",
+        "acteur.groupeParlementaireUid",
         "organe.organe_uid"
       );
 
@@ -664,7 +664,7 @@ export async function getDeputes(legislature: string) {
             .from("Organe")
             .as("organe");
         },
-        "Acteur.deputeGroupeParlementaireUid",
+        "Acteur.groupeParlementaireUid",
         "organe.organe_uid"
       );
 
