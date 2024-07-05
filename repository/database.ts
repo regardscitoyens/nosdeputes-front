@@ -1,3 +1,4 @@
+import * as React from "react";
 import knex from "knex";
 import config from "./knexfile";
 import { AN1_COM_FOND, AN1_COM_FOND_NOMIN } from "./Acts";
@@ -27,7 +28,7 @@ function registerService<T>(name: string, initFn: () => T): T {
 
 const db = registerService("database", () => knex(config.development));
 
-export async function listTables() {
+export async function listTablesUnCached() {
   try {
     const result = await db.raw(
       "SELECT table_name FROM information_schema.tables WHERE table_schema='public'"
@@ -39,8 +40,8 @@ export async function listTables() {
   }
 }
 
-export async function getDossiers(
-  { legislature = 16 },
+export async function getDossiersUnCached(
+  legislature = 16,
   limit = 10
 ): Promise<Dossier[]> {
   try {
@@ -48,15 +49,15 @@ export async function getDossiers(
       .select("*")
       .from("Dossier")
       .where("legislature", "=", legislature)
-      .leftJoin(
-        function () {
-          this.select(["labels as themes_labels", "dossierRefUid"])
-            .from("Theme")
-            .as("theme");
-        },
-        "Dossier.uid",
-        "theme.dossierRefUid"
-      )
+      // .leftJoin(
+      //   function () {
+      //     this.select(["labels as themes_labels", "dossierRefUid"])
+      //       .from("Theme")
+      //       .as("theme");
+      //   },
+      //   "Dossier.uid",
+      //   "theme.dossierRefUid"
+      // )
       .limit(limit);
 
     return rows;
@@ -66,7 +67,7 @@ export async function getDossiers(
   }
 }
 
-// export async function getThemes(): Promise<string[]> {
+// export async function getThemesUnCached(): Promise<string[]> {
 //   try {
 //     const rows = await db.select("labels").from("Theme").groupBy("labels");
 
@@ -118,7 +119,7 @@ export type DossierData = {
   acteurs: Record<string, Acteur>;
 };
 
-export async function getDossier(
+export async function getDossierUnCached(
   legislature: string,
   id: string
 ): Promise<DossierData | undefined> {
@@ -127,15 +128,15 @@ export async function getDossier(
       .select("*")
       .from("Dossier")
       .where("legislature", "=", legislature)
-      .leftJoin(
-        function () {
-          this.select(["labels as themes_labels", "dossierRefUid"])
-            .from("Theme")
-            .as("theme");
-        },
-        "Dossier.uid",
-        "theme.dossierRefUid"
-      )
+      // .leftJoin(
+      //   function () {
+      //     this.select(["labels as themes_labels", "dossierRefUid"])
+      //       .from("Theme")
+      //       .as("theme");
+      //   },
+      //   "Dossier.uid",
+      //   "theme.dossierRefUid"
+      // )
       .where("uid", "=", id);
 
     const dossier = dossiers[0];
@@ -278,7 +279,7 @@ export type DossierAmendementsData = {
   amendements: Amendement[];
 };
 
-export async function getDossierAmendements(
+export async function getDossierAmendementsUnCached(
   legislature: string,
   dossierId: string
 ): Promise<(Amendement & Pick<Acteur, "nom" | "prenom">)[] | undefined> {
@@ -358,7 +359,7 @@ export async function getDossierAmendements(
   }
 }
 
-export async function getDossierVotes(
+export async function getDossierVotesUnCached(
   legislature: string,
   dossierId: string
 ): Promise<{ votes: Vote[]; acts: ActeLegislatif[] } | undefined> {
@@ -436,7 +437,7 @@ export async function getDossierVotes(
   }
 }
 
-export async function getDepute(slug: string) {
+export async function getDeputeUnCached(slug: string) {
   try {
     const depute = await db.select("*").from("Acteur").where("slug", "=", slug);
     if (!depute) {
@@ -446,7 +447,7 @@ export async function getDepute(slug: string) {
     const group = await db
       .select("*")
       .from("Organe")
-      .where("uid", "=", depute[0].deputeGroupeParlementaireUid);
+      .where("uid", "=", depute[0].groupeParlementaireUid);
 
     const adressesElect = await db
       .select("*")
@@ -477,7 +478,7 @@ export async function getDepute(slug: string) {
   }
 }
 
-export async function getDeputeAmendement(slug: string) {
+export async function getDeputeAmendementUnCached(slug: string) {
   try {
     const depute = await db
       .select("uid", "prenom", "nom")
@@ -503,7 +504,7 @@ export async function getDeputeAmendement(slug: string) {
   }
 }
 
-export async function getDeputeVotes(slug: string) {
+export async function getDeputeVotesUnCached(slug: string) {
   try {
     const depute = await db
       .select("uid", "prenom", "nom")
@@ -573,7 +574,7 @@ export async function getDeputeVotes(slug: string) {
   }
 }
 
-export async function getDeputeDocuments(slug: string) {
+export async function getDeputeDocumentsUnCached(slug: string) {
   try {
     const depute = await db
       .select("uid", "prenom", "nom")
@@ -644,7 +645,7 @@ export async function getDeputeDocuments(slug: string) {
   }
 }
 
-export async function getDeputes(legislature: string) {
+export async function getDeputesUnCached(legislature: string) {
   try {
     const deputes = await db
       .select("*")
@@ -691,7 +692,9 @@ export async function getDeputes(legislature: string) {
   }
 }
 
-export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
+export async function getParagraphsUnCached(
+  compteRendus: string[]
+): Promise<any[]> {
   try {
     const rows = await db
       .select("*")
@@ -704,7 +707,7 @@ export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
             "slug as acteur_slug",
             "prenom",
             "nom",
-            "deputeGroupeParlementaireUid",
+            "groupeParlementaireUid",
           ])
             .from("Acteur")
             .as("acteur");
@@ -724,7 +727,7 @@ export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
             .from("Organe")
             .as("organe");
         },
-        "acteur.deputeGroupeParlementaireUid",
+        "acteur.groupeParlementaireUid",
         "organe.organe_uid"
       );
     return rows;
@@ -734,7 +737,7 @@ export async function getParagraphs(compteRendus: string[]): Promise<any[]> {
   }
 }
 
-export async function getAgendas(reunionIds: string[]): Promise<any[]> {
+export async function getAgendasUnCached(reunionIds: string[]): Promise<any[]> {
   try {
     const rows = await db.select("*").from("Agenda").whereIn("uid", reunionIds);
 
@@ -745,7 +748,7 @@ export async function getAgendas(reunionIds: string[]): Promise<any[]> {
   }
 }
 
-export async function getPtsOdj(reunionIds: string[]): Promise<any[]> {
+export async function getPtsOdjUnCached(reunionIds: string[]): Promise<any[]> {
   try {
     const rows = await db
       .select("*")
@@ -760,7 +763,10 @@ export async function getPtsOdj(reunionIds: string[]): Promise<any[]> {
   }
 }
 
-export async function getTable(table: string, limit = 10): Promise<Dossier[]> {
+export async function getTableUnCached(
+  table: string,
+  limit = 10
+): Promise<Dossier[]> {
   try {
     const rows = await db
       .select("*")
@@ -772,3 +778,19 @@ export async function getTable(table: string, limit = 10): Promise<Dossier[]> {
     throw error;
   }
 }
+
+export const listTables = listTablesUnCached; //React.cache();
+export const getDossiers = React.cache(getDossiersUnCached);
+// export const getThemes = getThemesUnCached;//React.cache();
+export const getDossier = getDossierUnCached; //React.cache();
+export const getDossierAmendements = getDossierAmendementsUnCached; //React.cache();
+export const getDossierVotes = getDossierVotesUnCached; //React.cache();
+export const getDepute = getDeputeUnCached; //React.cache();
+export const getDeputeAmendement = getDeputeAmendementUnCached; //React.cache();
+export const getDeputeVotes = getDeputeVotesUnCached; //React.cache();
+export const getDeputeDocuments = getDeputeDocumentsUnCached; //React.cache();
+export const getDeputes = getDeputesUnCached; //React.cache();
+export const getParagraphs = getParagraphsUnCached; //React.cache();
+export const getAgendas = getAgendasUnCached; //React.cache();
+export const getPtsOdj = getPtsOdjUnCached; //React.cache();
+export const getTable = getTableUnCached; //React.cache();
