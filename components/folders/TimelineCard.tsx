@@ -175,9 +175,13 @@ const TimelineItemLvl1 = ({
 export const TimelineCard = ({
   acts,
   documents,
+  dossierUid,
+  legislature,
 }: {
   acts: ActeLegislatif[];
   documents: Record<string, Document>;
+  dossierUid: string;
+  legislature: number;
 }) => {
   const { actsStructure, actsLookup } = groupActs(acts);
 
@@ -235,7 +239,7 @@ export const TimelineCard = ({
                                         CODE_ACTS_AVEC_DEBAT.includes(
                                           act.codeActe
                                         )
-                                          ? `/16/dossier/DLR5L16N46484/debat?compteRenduRef=${act.reunionRefUid}`
+                                          ? `/${legislature}/dossier/${dossierUid}/debat?compteRenduRef=${act.reunionRefUid}`
                                           : "";
                                       const title = `${act.nomCanonique}${
                                         date
