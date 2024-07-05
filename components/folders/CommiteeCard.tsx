@@ -77,9 +77,9 @@ export const CommiteeCard = ({
                 Rapporteur
               </Typography>
               {rapporteursFond.map((acteur) => {
-                const { prenom, nom, slug, deputeGroupeParlementaireUid } =
+                const { prenom, nom, slug, groupeParlementaireUid } =
                   acteur;
-                const group = organes[deputeGroupeParlementaireUid];
+                const group = organes[groupeParlementaireUid];
                 return (
                   <DeputeCard
                     key={acteur.uid}

@@ -89,10 +89,10 @@ export const AdditionalInfoCard = ({
                   if (!acteurs[id]) {
                     return null;
                   }
-                  const { prenom, nom, slug, deputeGroupeParlementaireUid } =
+                  const { prenom, nom, slug, groupeParlementaireUid } =
                     acteurs[id];
 
-                  const group = organes[deputeGroupeParlementaireUid];
+                  const group = organes[groupeParlementaireUid];
                   return (
                     <DeputeCard
                       key={id}

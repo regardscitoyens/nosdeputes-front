@@ -145,7 +145,10 @@ const TimelineItemLvl1 = ({
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
-        <Typography variant="body1">{title}</Typography>
+        <Typography variant="body1">
+          {title}
+          {/* ({act.uid}) */}
+        </Typography>
         <Typography
           variant="caption"
           component="p"
@@ -172,9 +175,13 @@ const TimelineItemLvl1 = ({
 export const TimelineCard = ({
   acts,
   documents,
+  dossierUid,
+  legislature,
 }: {
   acts: ActeLegislatif[];
   documents: Record<string, Document>;
+  dossierUid: string;
+  legislature: number;
 }) => {
   const { actsStructure, actsLookup } = groupActs(acts);
 
@@ -232,7 +239,7 @@ export const TimelineCard = ({
                                         CODE_ACTS_AVEC_DEBAT.includes(
                                           act.codeActe
                                         )
-                                          ? `/16/dossier/DLR5L16N46484/debat?compteRenduRef=${act.reunionRefUid}`
+                                          ? `/${legislature}/dossier/${dossierUid}/debat?compteRenduRef=${act.reunionRefUid}`
                                           : "";
                                       const title = `${act.nomCanonique}${
                                         date
@@ -257,14 +264,23 @@ export const TimelineCard = ({
                                             sx={{ my: 1.5 }}
                                           >
                                             {title}
+                                            {/* ({act.organeRefUid})(
+                                            {act.uid}) */}
                                           </Typography>
                                           {lvl3Group &&
                                             getSortedActGroups(
                                               lvl3Group,
                                               actsLookup
                                             )
-                                              .flatMap(
-                                                ({ acts: lvl3Acts }) => lvl3Acts
+                                              .flatMap(({ acts: lvl3Acts }) => {
+                                                console.log({ lvl3Acts });
+                                                return lvl3Acts;
+                                              })
+                                              // Certain dossier saissisent plusieurs commissions. Ils faut donc les distinguer par oregane
+                                              .filter(
+                                                (childrenAct) =>
+                                                  act.organeRefUid ===
+                                                  childrenAct.organeRefUid
                                               )
                                               ?.sort(sortActDate)
                                               ?.map((act) => {
@@ -293,7 +309,7 @@ export const TimelineCard = ({
                                                     sx={{ my: 0, ml: 4 }}
                                                   >
                                                     {title}
-                                                    {/* ({act.uid}) */}
+                                                    {/* ({act.organeRefUid})({act.uid}) */}
                                                   </Typography>
                                                 );
                                               })}

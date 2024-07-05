@@ -155,7 +155,7 @@ export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
               <StatusChip size="small" status="dropped" label="Non-soutenu" />
               <StatusChip size="small" status="review" label="1e lecture AN" />
               <StatusChip size="small" status="validated" label="Promulgué" /> */}
-              {dossier.themes_labels.map((label: string) => (
+              {dossier.themes_labels?.map((label: string) => (
                 <LabelChip
                   key={label}
                   size="small"

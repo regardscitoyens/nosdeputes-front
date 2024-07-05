@@ -27,23 +27,23 @@ function getWordsPerGroup(paragraphs: any[]) {
   paragraphs.forEach(
     ({
       codeGrammaire,
-      deputeGroupeParlementaireUid,
+      groupeParlementaireUid,
       group_color,
       group_libelle_short,
       texte,
     }) => {
       if (
         codeGrammaire !== "PAROLE_GENERIQUE" ||
-        !deputeGroupeParlementaireUid
+        !groupeParlementaireUid
       ) {
         return;
       }
 
       const wordCount = texte.split(" ").length;
-      if (groups[deputeGroupeParlementaireUid]) {
-        groups[deputeGroupeParlementaireUid].count += wordCount;
+      if (groups[groupeParlementaireUid]) {
+        groups[groupeParlementaireUid].count += wordCount;
       } else {
-        groups[deputeGroupeParlementaireUid] = {
+        groups[groupeParlementaireUid] = {
           count: wordCount,
           group_color,
           group_libelle_short,

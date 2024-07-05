@@ -31,7 +31,6 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
     documents = [],
     amendementCount = {},
   } = dossier ?? {};
-
   return (
     <Container
       sx={{
@@ -65,7 +64,12 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
         {/* <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
         </CardLayout> */}
-        <TimelineCard acts={acts} documents={documents} />
+        <TimelineCard
+          acts={acts}
+          documents={documents}
+          dossierUid={dossier?.dossier.uid}
+          legislature={dossier?.dossier.legislature}
+        />
         <TextStructureCard />
       </Stack>
     </Container>

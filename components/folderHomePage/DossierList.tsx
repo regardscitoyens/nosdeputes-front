@@ -20,7 +20,7 @@ type DossierListProps = {
 export default async function DossierList(props: DossierListProps) {
   const { theme, search } = props;
 
-  const dossiers = await getDossiers({ legislature: 16 }, 50);
+  const dossiers = await getDossiers(16);
 
   const dossierMensuels = [{ date: "2024-03-01", dossiers }];
   const dossierMensuelsFiltered = dossierMensuels
@@ -72,7 +72,7 @@ export default async function DossierList(props: DossierListProps) {
                     {titre}
                   </Typography>
 
-                  {themes_labels.map((theme: string) => (
+                  {themes_labels?.map((theme: string) => (
                     <LabelChip
                       key={theme}
                       label={theme}
