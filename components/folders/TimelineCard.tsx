@@ -145,7 +145,10 @@ const TimelineItemLvl1 = ({
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
-        <Typography variant="body1">{title}</Typography>
+        <Typography variant="body1">
+          {title}
+          {/* ({act.uid}) */}
+        </Typography>
         <Typography
           variant="caption"
           component="p"
@@ -257,14 +260,23 @@ export const TimelineCard = ({
                                             sx={{ my: 1.5 }}
                                           >
                                             {title}
+                                            {/* ({act.organeRefUid})(
+                                            {act.uid}) */}
                                           </Typography>
                                           {lvl3Group &&
                                             getSortedActGroups(
                                               lvl3Group,
                                               actsLookup
                                             )
-                                              .flatMap(
-                                                ({ acts: lvl3Acts }) => lvl3Acts
+                                              .flatMap(({ acts: lvl3Acts }) => {
+                                                console.log({ lvl3Acts });
+                                                return lvl3Acts;
+                                              })
+                                              // Certain dossier saissisent plusieurs commissions. Ils faut donc les distinguer par oregane
+                                              .filter(
+                                                (childrenAct) =>
+                                                  act.organeRefUid ===
+                                                  childrenAct.organeRefUid
                                               )
                                               ?.sort(sortActDate)
                                               ?.map((act) => {
@@ -293,7 +305,7 @@ export const TimelineCard = ({
                                                     sx={{ my: 0, ml: 4 }}
                                                   >
                                                     {title}
-                                                    {/* ({act.uid}) */}
+                                                    {/* ({act.organeRefUid})({act.uid}) */}
                                                   </Typography>
                                                 );
                                               })}
