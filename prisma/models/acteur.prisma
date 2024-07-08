@@ -1,0 +1,105 @@
+/// Personne physique ayant été élue ou nommée dans un organe.
+model Acteur {
+  /// Identifiant unique.
+  uid                      String                       @id
+  /// Hachage de l'objet.
+  hash                     String                       @unique
+  /// Prénom.
+  prenom                   String
+  /// Nom.
+  nom                      String
+  /// Civilité.                   
+  civ                      String
+  /// Date de naissance.
+  dateNais                 DateTime?
+  /// Date de décès.
+  dateDeces                DateTime?
+  /// Ville de naissance.
+  villeNais                String?
+  /// Département de naissance.
+  depNais                  String?
+  /// Pays de naissance.
+  paysNais                 String?
+  /// Profession.
+  profession               String?
+  /// Catégorie socio professionelle de l'INSEE.
+  catSocPro                String?
+  /// Famille socio professionelle de l'INSEE.
+  famSocPro                String?
+  slug                     String
+  /// URL de la déclaration d'intérêt de l'acteur sur le site de la Haute Autorité pour la Transparence dans la Vie Publique.
+  uriHatvp                 String?
+  /// Deputé en poste actuellement.
+  actif                    Boolean?                     @default(false)
+  /// Groupe parlementaire du député.
+  groupeParlementaireUid   String?
+  /// Mandat principal du député, c'est à dire s'il est actif ou non.
+  mandatPrincipalUid       String?
+  /// Organe de circonscription
+  circonscriptionUid       String?
+  /// Chambre du parlementaire (assemblée ou sénat)
+  chambre                  String?
+  compteTwitter            String?
+  groupParlementaire       Organe?                      @relation(fields: [groupeParlementaireUid], references: [uid])
+  auteurActeLegislatif     ActeLegislatif[]             @relation("ActeLegislatif_auteurMotion")
+  reunionsDemandees        ActeurDemandeur[]
+  adressesElectroniques    AdresseElectronique[]
+  adressesPostales         AdressePostale[]
+  amendements              Amendement[]
+  auteurs                  Auteur[]
+  auteursMotion            AuteurMotion[]
+  coSignataireDocument     CoSignataireDocument[]
+  dysfonctionnements       Dysfonctionnement[]
+  initiateurActeLegislatif InitiateurActeLegislatif[]
+  dossiers                 InitiateurDossier[]
+  mandats                  Mandat[]                     @relation("Mandat_Acteur")
+  misesAuPoint             MiseAuPoint[]
+  reunions                 ParticipantReunion[]
+  auditionsReunions        PersonneAuditionneeReunion[]
+  questions                Question[]
+  rapporteurs              Rapporteur[]
+  suppletions              Suppleant[]
+  vecteurRecherche         Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"prenom\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"nom\", ' '::text), ''::text))::character varying)))::character varying))"))
+
+  @@index([vecteurRecherche], type: Gin)
+  @@index([actif])
+  @@index([slug])
+}
+
+model AdresseElectronique {
+  /// Identifiant unique.
+  uid                   String  @id
+  /// Hachage de l'objet
+  hash                  String  @unique
+  type                  String
+  typeLibelle           String
+  poids                 String?
+  adresseDeRattachement String?
+  valElec               String?
+  xsiType               String?
+  acteurRefUid          String
+  acteurRef             Acteur  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+
+  @@index([acteurRefUid])
+}
+
+model AdressePostale {
+  /// Identifiant unique.
+  uid               String  @id
+  /// Hachage de l'objet
+  hash              String  @unique
+  type              String
+  typeLibelle       String
+  poids             String?
+  intitule          String?
+  numeroRue         String?
+  nomRue            String?
+  complementAdresse String?
+  codePostal        String?
+  ville             String?
+  xsiType           String?
+  acteurRefUid      String
+  acteurRef         Acteur  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+
+  @@index([acteurRefUid])
+}

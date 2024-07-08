@@ -15,6 +15,7 @@ import XIcon from "@mui/icons-material/X";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { AdresseElectronique, AdressePostale } from "@prisma/client";
 
 /**
  * Types d'adresses existantes mais non affichées:
@@ -40,16 +41,22 @@ const getHref = {
   Linkedin: (val: string) => `https://linkedin.com/${val}`,
 };
 
-export default function Contacts({ adresses }: { adresses: any[] }) {
-  const phoneAdresses = adresses.filter(
+export default function Contacts({
+  adressesElectroniques,
+  adressesPostales,
+}: {
+  adressesElectroniques: AdresseElectronique[];
+  adressesPostales: AdressePostale[];
+}) {
+  const phoneAdresses = adressesElectroniques.filter(
     ({ typeLibelle }) => typeLibelle === "Téléphone"
   );
 
-  const mailAdresses = adresses.filter(
+  const mailAdresses = adressesElectroniques.filter(
     ({ typeLibelle }) => typeLibelle === "Mèl"
   );
 
-  const postalAdresses = adresses.filter(({ typeLibelle }) =>
+  const postalAdresses = adressesPostales.filter(({ typeLibelle }) =>
     typeLibelle.startsWith("Adresse ")
   );
   return (
@@ -150,7 +157,7 @@ export default function Contacts({ adresses }: { adresses: any[] }) {
           </Typography>
           <List>
             {Object.keys(internetPlatformsIcons).flatMap((platform) =>
-              adresses
+              adressesElectroniques
                 .filter(({ typeLibelle }) => typeLibelle === platform)
                 .map(({ uid, valElec }) => {
                   const Icon =
@@ -158,9 +165,13 @@ export default function Contacts({ adresses }: { adresses: any[] }) {
                       platform as keyof typeof internetPlatformsIcons
                     ];
                   const href =
+                    valElec &&
                     getHref[platform as keyof typeof internetPlatformsIcons](
                       valElec
                     );
+                  if (!href) {
+                    return null;
+                  }
                   return (
                     <ListItem
                       key={uid}

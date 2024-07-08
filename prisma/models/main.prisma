@@ -1,0 +1,16 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "prismaSchemaFolder"]
+  engineType      = "binary"
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../swagger"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("TRICOTEUSES_ASSEMBLEE_API_DB_URL")
+  extensions = [unaccent]
+}

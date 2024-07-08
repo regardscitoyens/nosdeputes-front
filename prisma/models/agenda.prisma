@@ -1,0 +1,162 @@
+/// Toutes les réunions de commissions, les séances publiques, les groupes d'amitiés `etc <organe.html#code-du-type-d-organe>`__. Réunion qui a lieu dans une salle réservée dans le système informatique de l’assemblée nationale, y compris les séances publiques qui ont lieu dans l'hémicycle. Cela peut aussi être une réunion dite internationale qui a lieu hors de l'assemblée.
+model Agenda {
+  /// Identifiant unique.
+  uid                         String                       @id
+  /// Hachage de l'objet
+  hash                        String                       @unique
+  /// Type de la réunion
+  xsiType                     String?
+  /// Date et heure du début de la réunion.
+  timestampDebut              DateTime?
+  /// Date et heure de la fin de la réunion.
+  timestampFin                DateTime?
+  /// Date de fin.
+  cloture                     DateTime?
+  /// Date de création.
+  creation                    DateTime?
+  /// La réunion ou le point de l'ordre du est valide si le champ contient la valeur 'Eventuel' ou 'Confirmé'. Si la valeur est 'Annulé' ou 'Supprimé', aucun des champs de la réunion ou de l'ordre du jour n'a de signification définie. Par exemple, si une réunion est 'Annulé' et que le champ concernant l'ordre du jour est présent, il doit être ignoré car son contenu n'est pas nécessairement cohérent.
+  etat                        String?
+  /// Vrai si la réunion est enregistrée en vidéo.
+  captationVideo              Boolean?
+  /// Identifiant unique du compte rendu d'une séance publique. Uniquement si xsiType égal à 'seance_type'.
+  compteRenduRef              String?
+  /// Date à laquelle la séance publique a lieu.
+  dateSeance                  String?
+  /// Le contenu de ce champ n'est pas défini.
+  formatReunion               String?
+  /// Identifiant du journal officiel composé de l'année sur quatre chiffres et du numéro de séance (**numSeanceJo**) sur quatre chiffres (exemple: 20190053).
+  idJo                        String?
+  /// Numérotation de la séance selon l'ordre du journal officiel.
+  numSeanceJo                 String?
+  /// Numéro de la séance dans la journée.
+  quantieme                   String?
+  /// 'false' si la réunion ne concerne pas l'international, 'true' sinon.
+  estReunionInternationale    Boolean?
+  /// Contient parfois le nom de la personne qui organise la réunion.
+  informationsComplementaires String?
+  /// Code du lieu de la réunion: S pour sénat, AN pour assemblée nationale, CG pour congrès, SALREU* pour les salles de réunion.
+  codeLieu                    String?
+  /// Nom du lieu de la réunion.
+  libelleCourtLieu            String?
+  /// Nom du lieu de la réunion et une indication sur son addresse.
+  libelleLongLieu             String?
+  /// 'true' si la réunion est accessible à la presse, 'false' sinon
+  ouverturePresse             Boolean?
+  /// Description de la session parlementaire, incluant les dates de début et de fin.
+  labelSession                String?
+  /// Date du début de la session parlementaire.
+  debutSession                DateTime?
+  /// Date de la fin de la session parlementaire.
+  finSession                  DateTime?
+  /// Texte décrivant l'objet de la réunion.
+  convocationOdj              String[]
+  /// Texte court décrivant l'objet de la réunion.
+  resumeOdj                   String[]
+  organeReunionRefUid         String?
+  /// Organes à l'initiative de la réunion.
+  organeDemandeurRefUid       String?
+  vecteurRecherche            Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
+  actesLegislatif             ActeLegislatif[]
+  acteursDemandeurs           ActeurDemandeur[]
+  organeDemandeurRef          Organe?                      @relation("OrganeDemandeur", fields: [organeDemandeurRefUid], references: [uid])
+  organeReunionRef            Organe?                      @relation("OrganeReunion", fields: [organeReunionRefUid], references: [uid])
+  participantsInternes        ParticipantReunion[]
+  personnesAuditionnees       PersonneAuditionneeReunion[]
+  pointsOdj                   PointOdj[]
+  scrutins                    Scrutin[]
+
+  @@index([vecteurRecherche], type: Gin)
+  @@index([organeDemandeurRefUid])
+}
+
+/// Point de l'ordre du jour.
+model PointOdj {
+  /// Identifiant unique.
+  uid                String           @id
+  /// Hachage de l'objet
+  hash               String           @unique
+  agendaRefUid       String?
+  /// Le contenu de ce champ n'est pas défini.
+  comiteSecret       Boolean?
+  /// Date de fin.
+  cloture            DateTime?
+  /// Date de création.
+  creation           DateTime?
+  /// La réunion ou le point de l'ordre du est valide si le champ contient la valeur 'Eventuel' ou 'Confirmé'. Si la valeur est 'Annulé' ou 'Supprimé', aucun des champs de la réunion ou de l'ordre du jour n'a de signification définie. Par exemple, si une réunion est 'Annulé' et que le champ concernant l'ordre du jour est présent, il doit être ignoré car son contenu n'est pas nécessairement cohérent.
+  etat               String?
+  /// Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, date à laquelle la `conférence des présidents <https://fr.wikipedia.org/wiki/Conf%C3%A9rence_des_pr%C3%A9sidents_de_l%27Assembl%C3%A9e_nationale>`__ a ajouté ce point à l'ordre du jour.
+  dateConfPres       DateTime?
+  /// Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, date de la lettre du premier ministre qui demande l'inscription d'un texte à l'ordre du jour `au nom du gouvernement <http://www2.assemblee-nationale.fr/decouvrir-l-assemblee/role-et-pouvoirs-de-l-assemblee-nationale/l-organisation-des-travaux-de-l-assemblee-nationale/la-fixation-de-l-ordre-du-jour-et-la-conference-des-presidents>`__.
+  dateLettreMinistre DateTime?
+  /// Vaut ODJPR pour les ordre du jour prioritaires (quel que soit le lieu ou se tient la réunion) et ODJSN pour les ordre du jour des réunions qui se tiennent au Sénat.
+  natureTravauxOdj   String?
+  /// Description du point de l'ordre du jour en texte libre.
+  objet              String?
+  /// L'article du `règlement de l'assemblée nationale <http://www2.assemblee-nationale.fr/content/download/73698/754101/version/2/file/reglement.pdf>`__ qui justifie ce point de l'ordre du jour (par exemple: la `procédure d'examen simplifiée <http://www2.assemblee-nationale.fr/decouvrir-l-assemblee/textes-de-reference/reglement-de-l-assemblee-nationale/titre-ii/premiere-partie/chapitre-v>`__).
+  procedure          String?
+  /// Type de point de l'ordre du jour (par exemple: Discussion, Examen, Suite de la discussion, Amendements (Art. 88), etc.)
+  typePointOdj       String?
+  /// Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, chaque point de l'ordre du jour est fixé par la `conférence des présidents <https://fr.wikipedia.org/wiki/Conf%C3%A9rence_des_pr%C3%A9sidents_de_l%27Assembl%C3%A9e_nationale>`__ et a donc la valeur 'podjSeanceConfPres_type' pour le champ xsiType. Dans tout les autres cas la valeur est 'podjReunion_type'
+  xsiType            String
+  actesLegislatifs   ActeLegislatif[]
+  agendaRef          Agenda?          @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+}
+
+model ActeurDemandeur {
+  /// Clé primaire.
+  id           Int    @id @default(autoincrement())
+  /// Identifiant unique.
+  slug         String @unique
+  /// Acteur référent.
+  acteurRefUid String
+  /// Agenda référent.
+  agendaRefUid String
+  acteurRef    Acteur @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+  agendaRef    Agenda @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+}
+
+model ParticipantReunion {
+  /// Clé primaire.
+  id           Int     @id @default(autoincrement())
+  /// Identifiant unique.
+  slug         String  @unique
+  /// La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon.
+  presence     String?
+  /// Acteur référent.
+  acteurRefUid String
+  /// Agenda référent.
+  agendaRefUid String
+  acteurUid    String?
+  Acteur       Acteur? @relation(fields: [acteurUid], references: [uid])
+  agendaRef    Agenda  @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+}
+
+model PersonneAuditionneeReunion {
+  /// Clé primaire.
+  id           Int       @id @default(autoincrement())
+  /// Hachage de l'objet
+  hash         String    @unique
+  /// Identifiant unique de l'acteur ou bien, dans le cas ou il ne s'agit pas d'un acteur, un identifiant unique de personne externe débutant par PE qui est utilisé uniquement dans ce contexte.
+  uid          String
+  /// Acteur référent.
+  acteurRefUid String?
+  /// Agenda référent.
+  agendaRefUid String
+  /// Date de naissance.
+  dateNais     DateTime?
+  /// Civilité.
+  civilite     String?
+  /// Nom de famille.
+  nom          String?
+  /// Prénom.
+  prenom       String?
+  /// Type de l'objet
+  xsiType      String?
+  acteurRef    Acteur?   @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+  agendaRef    Agenda    @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+}
+
+model Seance {
+  uid        String       @id
+  Amendement Amendement[]
+}

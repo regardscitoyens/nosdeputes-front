@@ -1,12 +1,38 @@
 import React from "react";
-import { getDepute } from "@/repository/database";
 import { Avatar, Box, Container, Stack, Typography } from "@mui/material";
-
 import CircleDiv from "@/icons/CircleDiv";
+import { prisma } from "@/prisma";
 import Mandats from "./Mandats";
 import Contacts from "./Contacts";
 import Tabs from "./Tabs";
 import InfoPersonelles from "./InfoPersonelles";
+
+async function getDeputeUnCached(slug: string) {
+  try {
+    return prisma.acteur.findFirst({
+      where: { slug },
+      include: {
+        adressesElectroniques: true,
+        adressesPostales: true,
+        groupParlementaire: true,
+        mandats: {
+          include: {
+            organesMandats: {
+              include: {
+                organeRef: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching depute:", error);
+    throw error;
+  }
+}
+
+export const getDepute = React.cache(getDeputeUnCached);
 
 export default async function Page({
   children,
@@ -15,19 +41,21 @@ export default async function Page({
   params: { slug: string };
   children: React.ReactNode;
 }) {
-  const { depute, group, adresses, mandats } = await getDepute(params.slug);
+  const depute = await getDepute(params.slug);
 
-  if (depute === undefined) {
+  if (depute === null) {
     return <p>Deputé Not Found</p>;
   }
 
-  const circonscription = mandats
-    ?.filter((mandat) => mandat.codeType === "ASSEMBLEE")
+  const circonscription = depute.mandats
+    .filter((mandat) => mandat.typeOrgane === "ASSEMBLEE")
     .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1))[0];
 
   // A décider: Faut il afficher les mandats passé?
-  // Exemple: la partoissipation a des commission d'enquête
-  const mandasEnCours = mandats?.filter((mandat) => mandat.dateFin === null);
+  // Exemple: la partissipation à des commission d'enquête
+  const mandasEnCours = depute.mandats?.filter(
+    (mandat) => mandat.dateFin === null
+  );
 
   return (
     <Box sx={{ maxWidth: "1024px", mx: "auto", my: 5 }}>
@@ -60,7 +88,7 @@ export default async function Page({
               </Typography>
             )}
 
-            {group && (
+            {depute.groupParlementaire && (
               // Deputes sans mandat n'ont plus d'organe associé
               <Box
                 sx={{
@@ -70,9 +98,10 @@ export default async function Page({
                   mt: 1,
                 }}
               >
-                <CircleDiv color={group.couleurAssociee} />{" "}
+                <CircleDiv color={depute.groupParlementaire.couleurAssociee!} />{" "}
                 <Typography sx={{ ml: 1 }} variant="body1" fontWeight="light">
-                  {group.libelle} ({group.libelleAbrev})
+                  {depute.groupParlementaire.libelle} (
+                  {depute.groupParlementaire.libelleAbrev})
                 </Typography>
               </Box>
             )}
@@ -91,9 +120,12 @@ export default async function Page({
         }}
       >
         <Stack spacing={3} useFlexGap flex={2}>
-          <InfoPersonelles mandats={mandats ?? []} depute={depute} />
+          <InfoPersonelles mandats={depute.mandats ?? []} depute={depute} />
           <Mandats mandats={mandasEnCours ?? []} />
-          <Contacts adresses={adresses ?? []} />
+          <Contacts
+            adressesElectroniques={depute.adressesElectroniques}
+            adressesPostales={depute.adressesPostales}
+          />
         </Stack>
 
         <Stack spacing={3} flex={5} sx={{ minWidth: 0 }}>
@@ -101,11 +133,6 @@ export default async function Page({
           {children}
         </Stack>
       </Container>
-
-      {/* <pre>{JSON.stringify(depute, null, 2)}</pre>
-      <pre>{JSON.stringify(group, null, 2)}</pre>
-      <pre>{JSON.stringify(adresses, null, 2)}</pre> 
-      <pre>{JSON.stringify(mandasEnCours, null, 2)}</pre>*/}
     </Box>
   );
 }
