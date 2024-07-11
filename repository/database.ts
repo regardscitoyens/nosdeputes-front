@@ -437,73 +437,6 @@ export async function getDossierVotesUnCached(
   }
 }
 
-export async function getDeputeUnCached(slug: string) {
-  try {
-    const depute = await db.select("*").from("Acteur").where("slug", "=", slug);
-    if (!depute) {
-      return {};
-    }
-
-    const group = await db
-      .select("*")
-      .from("Organe")
-      .where("uid", "=", depute[0].groupeParlementaireUid);
-
-    const adressesElect = await db
-      .select("*")
-      .from("AdresseElectronique")
-      .where("acteurRefUid", "=", depute[0].uid);
-
-    const adressesPostal = await db
-      .select("*")
-      .from("AdressePostale")
-      .where("acteurRefUid", "=", depute[0].uid);
-
-    const mandats = await db
-      .select("*")
-      .from("Mandat")
-      .where("acteurRefUid", "=", depute[0].uid)
-      .leftJoin("OrganeMandat", "Mandat.uid", "OrganeMandat.mandatRefUid")
-      .leftJoin("Organe", "OrganeMandat.organeRefUid", "Organe.uid");
-
-    return {
-      depute: depute[0],
-      group: group[0],
-      adresses: [...adressesElect, ...adressesPostal],
-      mandats,
-    };
-  } catch (error) {
-    console.error("Error fetching depute:", error);
-    throw error;
-  }
-}
-
-export async function getDeputeAmendementUnCached(slug: string) {
-  try {
-    const depute = await db
-      .select("uid", "prenom", "nom")
-      .from("Acteur")
-      .where("slug", "=", slug);
-    if (!depute) {
-      return {};
-    }
-
-    const amendements = await db
-      .select("*")
-      .from("Amendement")
-      .where("acteurRefUid", "=", depute[0].uid)
-      .options({ nestTables: true });
-
-    return {
-      depute: depute[0],
-      amendements,
-    };
-  } catch (error) {
-    console.error(`Error fetching amendement from depute ${slug}:`, error);
-    throw error;
-  }
-}
-
 export async function getDeputeVotesUnCached(slug: string) {
   try {
     const depute = await db
@@ -785,8 +718,7 @@ export const getDossiers = React.cache(getDossiersUnCached);
 export const getDossier = getDossierUnCached; //React.cache();
 export const getDossierAmendements = getDossierAmendementsUnCached; //React.cache();
 export const getDossierVotes = getDossierVotesUnCached; //React.cache();
-export const getDepute = getDeputeUnCached; //React.cache();
-export const getDeputeAmendement = getDeputeAmendementUnCached; //React.cache();
+
 export const getDeputeVotes = getDeputeVotesUnCached; //React.cache();
 export const getDeputeDocuments = getDeputeDocumentsUnCached; //React.cache();
 export const getDeputes = getDeputesUnCached; //React.cache();

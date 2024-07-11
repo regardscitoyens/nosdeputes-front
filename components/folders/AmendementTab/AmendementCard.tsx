@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 
-import { Amendement } from "@/repository/types";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
@@ -11,8 +10,9 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StatusChip from "@/components/StatusChip";
 import DeputeCard from "../DeputeCard";
+import { Acteur, Amendement, Organe } from "@prisma/client";
 
-function getStatus(label: string) {
+function getStatus(label: string | null) {
   switch (label) {
     case "Adopté":
       return "validated";
@@ -28,27 +28,22 @@ function getStatus(label: string) {
       return "review";
   }
 }
+type AmendementCardProps = {
+  amendement: Amendement;
+  depute: Acteur & { groupParlementaire: Organe | null };
+};
 
-export default function AmendementCard(props: Amendement) {
-  const {
-    dateDepot,
-    dateSort,
-    sortAmendement,
-    etatLibelle,
-    dispositif,
-    signatairesLibelle,
-    numeroLong,
-    acteur_slug,
-    prenom,
-    nom,
-    uid,
-    group_color,
-    group_libelle,
-  } = props;
+export default function AmendementCard(props: AmendementCardProps) {
+  const { amendement, depute } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
-  const nbSignataires = signatairesLibelle.split("&#160;").length - 1;
+  const nbSignataires = amendement.signatairesLibelle
+    ? amendement.signatairesLibelle.split("&#160;").length - 1
+    : 1;
 
+  const etatAmendement = amendement.sortAmendement || amendement.etatLibelle;
+  const pannelId = `${amendement.uid}-pannel`;
+  const headerId = `${amendement.uid}-header`;
   return (
     <Accordion
       elevation={0}
@@ -59,8 +54,8 @@ export default function AmendementCard(props: Amendement) {
       })}
     >
       <AccordionSummary
-        aria-controls={`${uid}-pannel`}
-        id={`${uid}-header`}
+        aria-controls={pannelId}
+        id={headerId}
         expandIcon={<ExpandMoreIcon />}
       >
         <Stack
@@ -70,45 +65,49 @@ export default function AmendementCard(props: Amendement) {
           sx={{ width: "100%", mr: 2 }}
         >
           <DeputeCard
-            slug={acteur_slug}
-            prenom={prenom}
-            nom={nom}
-            group={{
-              fullName: group_libelle,
-              shortName: "",
-              color: group_color,
-            }}
+            slug={depute.slug}
+            prenom={depute.prenom}
+            nom={depute.nom}
+            group={
+              depute.groupParlementaire && {
+                fullName: depute.groupParlementaire.libelle,
+                shortName: "",
+                color: depute.groupParlementaire.couleurAssociee,
+              }
+            }
             smallGroupColor
             sx={{ flexGrow: 1 }}
           />
 
           <StatusChip
             size="small"
-            label={sortAmendement || etatLibelle}
-            status={getStatus(sortAmendement || etatLibelle)}
+            label={etatAmendement}
+            status={getStatus(etatAmendement)}
           />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
-          <Typography variant="caption">N°{numeroLong}</Typography>
-          <Typography
-            fontWeight="light"
-            variant="body2"
-            flexGrow={1}
-            flexShrink={1}
-            flexBasis={0}
-            component="div"
-            sx={{ bgcolor: "grey.50", p: 1 }}
-            dangerouslySetInnerHTML={{ __html: dispositif }}
-          />
+          <Typography variant="caption">N°{amendement.numeroLong}</Typography>
+          {amendement.dispositif && (
+            <Typography
+              fontWeight="light"
+              variant="body2"
+              flexGrow={1}
+              flexShrink={1}
+              flexBasis={0}
+              component="div"
+              sx={{ bgcolor: "grey.50", p: 1 }}
+              dangerouslySetInnerHTML={{ __html: amendement.dispositif }}
+            />
+          )}
 
-          <Typography fontWeight="light" variant="body2">
+          {/* <Typography fontWeight="light" variant="body2">
             Examiné par:&nbsp;
             <Typography component="a" variant="body2">
               Le nom d&apos;une commission parlementaire
             </Typography>
-          </Typography>
+          </Typography> */}
           <Stack direction="row" justifyContent="space-between" flexBasis={0}>
             <Typography fontWeight="light" variant="body2">
               Déposé par:&nbsp;
@@ -120,8 +119,8 @@ export default function AmendementCard(props: Amendement) {
             <Typography fontWeight="light" variant="body2">
               Date de dépôt:&nbsp;
               <Typography component="span" variant="body2">
-                {dateDepot
-                  ? new Date(dateDepot).toLocaleDateString("fr-FR", {
+                {amendement.dateDepot
+                  ? new Date(amendement.dateDepot).toLocaleDateString("fr-FR", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -133,8 +132,8 @@ export default function AmendementCard(props: Amendement) {
             <Typography fontWeight="light" variant="body2">
               Date d&apos;examen:&nbsp;
               <Typography component="span" variant="body2">
-                {dateSort
-                  ? new Date(dateSort).toLocaleDateString("fr-FR", {
+                {amendement.dateSort
+                  ? new Date(amendement.dateSort).toLocaleDateString("fr-FR", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",

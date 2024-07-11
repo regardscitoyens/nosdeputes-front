@@ -17,10 +17,10 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   slug: string;
   secondaryText?: string;
   group?: {
-    color: string;
+    color: string | null;
     fullName: string;
     shortName: string;
-  };
+  } | null;
   smallGroupColor?: boolean;
   showVote?: boolean;
   vote?: "pour" | "contre" | "nonVotant" | "abstention";
@@ -102,7 +102,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
             <Tooltip title={group.fullName}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <CircleDiv
-                  color={group.color}
+                  color={group.color || "gray"}
                   size={smallGroupColor ? 10 : 16}
                 />
                 <Typography
