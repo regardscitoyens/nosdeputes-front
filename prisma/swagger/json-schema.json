@@ -2700,7 +2700,7 @@
             "$ref": "#/definitions/TexteAssocie"
           }
         },
-        "voteRefs": {
+        "VoteActeLegislatif": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VoteActeLegislatif"
@@ -3042,15 +3042,11 @@
             }
           ]
         },
-        "Scrutin": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Scrutin"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "votes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vote"
+          }
         }
       }
     },
@@ -3954,12 +3950,6 @@
           "items": {
             "$ref": "#/definitions/Vote"
           }
-        },
-        "votesActesLegislatifs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/VoteActeLegislatif"
-          }
         }
       }
     },
@@ -4125,6 +4115,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "voteActe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/VoteActeLegislatif"
             },
             {
               "type": "null"

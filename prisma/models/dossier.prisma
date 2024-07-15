@@ -147,7 +147,7 @@ model ActeLegislatif {
   rapporteurs                         Rapporteur[]
   Scrutin                             Scrutin[]
   textesAssocies                      TexteAssocie[]
-  voteRefs                            VoteActeLegislatif[]
+  VoteActeLegislatif                  VoteActeLegislatif[]
 }
 
 /// Acteur à l'initiative d'un dossier.
@@ -252,14 +252,13 @@ model EtudePlf {
 
 model VoteActeLegislatif {
   /// Identifiant unique.
-  slug                 String
-  voteRefUid           String
+  slug                 String          @id
+  voteRefUid           String          @unique
   acteLegislatifRefUid String
-  scrutinUid           String
+  // scrutinUid           String
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
-  Scrutin              Scrutin?        @relation(fields: [scrutinUid], references: [uid])
-
-  @@id([scrutinUid, voteRefUid])
+  votes                Vote[]
+  // Scrutin              Scrutin?        @relation(fields: [scrutinUid], references: [uid])
 }
 
 model TexteAssocie {

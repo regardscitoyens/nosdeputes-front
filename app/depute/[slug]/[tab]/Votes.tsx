@@ -5,6 +5,18 @@ import { Typography } from "@mui/material";
 
 import { prisma } from "@/prisma";
 
+function colors(positionVote: string) {
+  switch (positionVote) {
+    case "pour":
+      return "green";
+    case "contre":
+      return "red";
+    case "abstention":
+      return "orange";
+    default:
+      "black";
+  }
+}
 async function getDeputeVotesUnCached(slug: string) {
   try {
     return await prisma.acteur.findFirst({
@@ -15,7 +27,11 @@ async function getDeputeVotesUnCached(slug: string) {
         votes: {
           include: {
             scrutinRef: true,
-            voteActe: true,
+            // voteActe: {
+            //   include: {
+            //     acteLegislatifRef: true,
+            //   },
+            // },
           },
         },
       },
@@ -28,75 +44,6 @@ async function getDeputeVotesUnCached(slug: string) {
 
 const getDeputeVotes = React.cache(getDeputeVotesUnCached);
 
-//   try {
-//     const depute = await db
-//       .select("uid", "prenom", "nom")
-//       .from("Acteur")
-//       .where("slug", "=", slug);
-//     if (!depute) {
-//       return {};
-//     }
-
-//     const votes = await db
-//       .select("*")
-//       .from("Vote")
-//       .where("acteurRefUid", "=", depute[0].uid)
-//       .rightJoin(
-//         // I don't know why this has to be a right join to work
-//         function () {
-//           this.select(["voteRefUid", "acteLegislatifRefUid"])
-//             .from("VoteActeLegislatif")
-//             .as("voteActe");
-//         },
-//         "voteActe.voteRefUid",
-//         "Vote.scrutinRefUid"
-//       )
-//       .leftJoin(
-//         function () {
-//           this.select([
-//             "uid as acte_uid",
-//             "codeActe",
-//             "nomCanonique",
-//             "libelleCourtActe",
-//           ])
-//             .from("ActeLegislatif")
-//             .as("acte");
-//         },
-//         "voteActe.acteLegislatifRefUid",
-//         "acte.acte_uid"
-//       )
-//       .rightJoin(
-//         // I don't know why this has to be a right join to work
-//         function () {
-//           this.select(["texteAssocieRefUid", "acteLegislatifRefUid"])
-//             .from("TexteAssocie")
-//             .as("texteAssocie");
-//         },
-//         "texteAssocie.acteLegislatifRefUid",
-//         "acte.acte_uid"
-//       )
-//       .leftJoin(
-//         // I don't know why this has to be a right join to work
-//         function () {
-//           this.select(["uid as docu_uid", "titrePrincipalCourt"])
-//             .from("Document")
-//             .as("docu");
-//         },
-//         "texteAssocie.texteAssocieRefUid",
-//         "docu.docu_uid"
-//       )
-//       .options({ nestTables: true });
-
-//     return {
-//       depute: depute[0],
-//       votes,
-//     };
-//   } catch (error) {
-//     console.error(`Error fetching amendement from depute ${slug}:`, error);
-//     throw error;
-//   }
-// }
-
 export default async function Votes(props: { deputeSlug: string }) {
   const deputeWithVote = await getDeputeVotes(props.deputeSlug);
 
@@ -106,27 +53,33 @@ export default async function Votes(props: { deputeSlug: string }) {
   const { votes = [] } = deputeWithVote;
 
   return (
-    <pre>
-      Travaux
-      <br />
-      {/* {votes?.map((vote) => {
-        const { id, positionVote, scrutinRef } = vote;
+    <div>
+      {votes?.map((vote) => {
+        const { id, positionVote, parDelegation, scrutinRef } = vote;
 
-        const titrePrincipalCourt =
-          scrutinRef?.acteLegislatifsRef?.textesAssocies[0].return(
-            <Stack
-              key={id}
-              direction="row"
-              justifyContent="space-between"
-              flexWrap="wrap"
-              sx={{ width: "100%", mb: 1 }}
-            >
-              <Typography fontWeight="light">{titrePrincipalCourt}</Typography>
-              <Typography>{positionVote}</Typography>
-            </Stack>
-          );
-      })} */}
-      {JSON.stringify(votes, null, 2)}
-    </pre>
+        const titrePrincipal = scrutinRef?.titre;
+
+        return (
+          <Stack
+            key={id}
+            direction="row"
+            justifyContent="space-between"
+            flexWrap="wrap"
+            sx={{ width: "100%", mb: 1 }}
+          >
+            <Typography fontWeight="light">{titrePrincipal}</Typography>
+            <Typography sx={{ color: colors(positionVote) }}>
+              {positionVote}{" "}
+              {parDelegation && (
+                <Typography fontWeight="light" component="span">
+                  par délégation
+                </Typography>
+              )}
+            </Typography>
+          </Stack>
+        );
+      })}
+      {/* <pre>{JSON.stringify(votes, null, 2)}</pre> */}
+    </div>
   );
 }

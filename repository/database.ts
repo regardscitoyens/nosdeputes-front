@@ -631,16 +631,24 @@ export async function getTableUnCached(
   limit = 10
 ): Promise<Dossier[]> {
   try {
-    // if (table === "VoteActeLegislatif") {
-    //   return await db
-    //     .select("voteRefUid")
-    //     .from(table)
-    //     .groupBy("voteRefUid")
-    //     .havingRaw("COUNT(*) = 1");
-    // }
+    if (table === "VoteActeLegislatif") {
+      //   return await db
+      //     .select("voteRefUid")
+      //     .from(table)
+      //     .groupBy("voteRefUid")
+      //     .havingRaw("COUNT(*) = 1");
+
+      return await db
+        .select("*")
+        .from(table)
+        // .where("voteRefUid", "=", "VTANR5L16V569")
+        .limit(limit);
+    }
+
     const rows = await db
       .select("*")
       .from(table || "Dossier")
+
       .limit(limit);
     return rows;
   } catch (error) {
