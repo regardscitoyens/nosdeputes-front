@@ -252,12 +252,14 @@ model EtudePlf {
 
 model VoteActeLegislatif {
   /// Identifiant unique.
-  slug                 String          @id
-  voteRefUid           String?
-  acteLegislatifRefUid String?
-  scrutinUid           String?
+  slug                 String
+  voteRefUid           String
+  acteLegislatifRefUid String
+  scrutinUid           String
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   Scrutin              Scrutin?        @relation(fields: [scrutinUid], references: [uid])
+
+  @@id([scrutinUid, voteRefUid])
 }
 
 model TexteAssocie {

@@ -1,9 +1,9 @@
 /// Les positions de vote (pour, contre ou abstention) de chaque député pour les `scrutins solennels <https://www.vie-publique.fr/fiches/19498-comment-votent-les-parlementaires>`__, les déclarations du Gouvernement, les motions de procédure et les autres scrutins publics.
 model Scrutin {
   /// Identifiant unique.
-  uid                     String               @id
+  uid                     String              @id
   /// Hachage de l'objet
-  hash                    String               @unique
+  hash                    String              @unique
   /// Date à laquelle le vote a eu lieu.
   dateScrutin             DateTime?
   /// L'acteur ou l'organe qui demande le vote.
@@ -57,9 +57,9 @@ model Scrutin {
   dysfonctionnements      Dysfonctionnement[]
   groupesVotants          GroupeVotant[]
   misesAuPoint            MiseAuPoint[]
-  acteLegislatifsRef      ActeLegislatif?      @relation(fields: [acteLegislatifsRefUid], references: [uid])
-  Agenda                  Agenda?              @relation(fields: [agendaUid], references: [uid])
-  organeRef               Organe?              @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  acteLegislatifsRef      ActeLegislatif?     @relation(fields: [acteLegislatifsRefUid], references: [uid])
+  Agenda                  Agenda?             @relation(fields: [agendaUid], references: [uid])
+  organeRef               Organe?             @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
   votes                   Vote[]
   votesActesLegislatifs   VoteActeLegislatif[]
 }
@@ -93,25 +93,26 @@ model GroupeVotant {
 
 model Vote {
   /// Identifiant unique.
-  id                Int           @id @default(autoincrement())
+  id                           Int                @id @default(autoincrement())
   /// Hachage de l'objet
-  hash              String        @unique
+  hash                         String             @unique
   /// Identifiant unique (uid) de l'acteur.
-  acteurRefUid      String
-  positionVote      String?
+  acteurRefUid                 String
+  positionVote                 String
   /// Raison pour laquelle un acteur n'as pas voté malgré sa présence. MG pour membre du gouvernement, PAN pour président de l'Assemblée nationale, PSE pour président de séance.
-  causePositionVote String?
+  causePositionVote            String?
   /// Identifiant unique (uid) du mandat qui donne à l'acteur le droit de vote.
-  mandatRefUid      String?
+  mandatRefUid                 String?
   /// 'true' si l'acteur a délégué son vote à un autre acteur, 'false' sinon.
-  parDelegation     Boolean?
-  groupeVotantRefId String?
-  scrutinRefUid     String?
-  dateVote          String?
-  codeTypeVote      String?
-  groupeVotantRef   GroupeVotant? @relation(fields: [groupeVotantRefId], references: [hash], onDelete: Cascade)
-  mandatRef         Mandat?       @relation(fields: [mandatRefUid], references: [uid])
-  scrutinRef        Scrutin?      @relation(fields: [scrutinRefUid], references: [uid])
+  parDelegation                Boolean?
+  groupeVotantRefId            String?
+  scrutinRefUid                String?
+  dateVote                     String?
+  codeTypeVote                 String?
+  groupeVotantRef              GroupeVotant?      @relation(fields: [groupeVotantRefId], references: [hash], onDelete: Cascade)
+  mandatRef                    Mandat?            @relation(fields: [mandatRefUid], references: [uid])
+  scrutinRef                   Scrutin?           @relation(fields: [scrutinRefUid], references: [uid])
+  acteur                       Acteur?            @relation(fields: [acteurRefUid], references: [uid])
 }
 
 model MiseAuPoint {

@@ -244,6 +244,12 @@
           "items": {
             "$ref": "#/definitions/Suppleant"
           }
+        },
+        "votes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vote"
+          }
         }
       }
     },
@@ -3024,10 +3030,7 @@
           "description": "Identifiant unique."
         },
         "voteRefUid": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "acteLegislatifRef": {
           "anyOf": [
@@ -4059,15 +4062,8 @@
           "type": "string",
           "description": "Hachage de l'objet"
         },
-        "acteurRefUid": {
-          "type": "string",
-          "description": "Identifiant unique (uid) de l'acteur."
-        },
         "positionVote": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "causePositionVote": {
           "type": [
@@ -4119,6 +4115,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Scrutin"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "acteur": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
             },
             {
               "type": "null"

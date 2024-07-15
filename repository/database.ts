@@ -437,76 +437,6 @@ export async function getDossierVotesUnCached(
   }
 }
 
-export async function getDeputeVotesUnCached(slug: string) {
-  try {
-    const depute = await db
-      .select("uid", "prenom", "nom")
-      .from("Acteur")
-      .where("slug", "=", slug);
-    if (!depute) {
-      return {};
-    }
-
-    const votes = await db
-      .select("*")
-      .from("Vote")
-      .where("acteurRefUid", "=", depute[0].uid)
-      .rightJoin(
-        // I don't know why this has to be a right join to work
-        function () {
-          this.select(["voteRefUid", "acteLegislatifRefUid"])
-            .from("VoteActeLegislatif")
-            .as("voteActe");
-        },
-        "voteActe.voteRefUid",
-        "Vote.scrutinRefUid"
-      )
-      .leftJoin(
-        function () {
-          this.select([
-            "uid as acte_uid",
-            "codeActe",
-            "nomCanonique",
-            "libelleCourtActe",
-          ])
-            .from("ActeLegislatif")
-            .as("acte");
-        },
-        "voteActe.acteLegislatifRefUid",
-        "acte.acte_uid"
-      )
-      .rightJoin(
-        // I don't know why this has to be a right join to work
-        function () {
-          this.select(["texteAssocieRefUid", "acteLegislatifRefUid"])
-            .from("TexteAssocie")
-            .as("texteAssocie");
-        },
-        "texteAssocie.acteLegislatifRefUid",
-        "acte.acte_uid"
-      )
-      .leftJoin(
-        // I don't know why this has to be a right join to work
-        function () {
-          this.select(["uid as docu_uid", "titrePrincipalCourt"])
-            .from("Document")
-            .as("docu");
-        },
-        "texteAssocie.texteAssocieRefUid",
-        "docu.docu_uid"
-      )
-      .options({ nestTables: true });
-
-    return {
-      depute: depute[0],
-      votes,
-    };
-  } catch (error) {
-    console.error(`Error fetching amendement from depute ${slug}:`, error);
-    throw error;
-  }
-}
-
 export async function getDeputeDocumentsUnCached(slug: string) {
   try {
     const depute = await db
@@ -701,6 +631,13 @@ export async function getTableUnCached(
   limit = 10
 ): Promise<Dossier[]> {
   try {
+    // if (table === "VoteActeLegislatif") {
+    //   return await db
+    //     .select("voteRefUid")
+    //     .from(table)
+    //     .groupBy("voteRefUid")
+    //     .havingRaw("COUNT(*) = 1");
+    // }
     const rows = await db
       .select("*")
       .from(table || "Dossier")
@@ -719,7 +656,6 @@ export const getDossier = getDossierUnCached; //React.cache();
 export const getDossierAmendements = getDossierAmendementsUnCached; //React.cache();
 export const getDossierVotes = getDossierVotesUnCached; //React.cache();
 
-export const getDeputeVotes = getDeputeVotesUnCached; //React.cache();
 export const getDeputeDocuments = getDeputeDocumentsUnCached; //React.cache();
 export const getDeputes = getDeputesUnCached; //React.cache();
 export const getParagraphs = getParagraphsUnCached; //React.cache();
