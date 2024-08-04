@@ -14,14 +14,10 @@ async function getDeputeUnCached(slug: string) {
       include: {
         adressesElectroniques: true,
         adressesPostales: true,
-        groupParlementaire: true,
+        groupeParlementaire: true,
         mandats: {
           include: {
-            organesMandats: {
-              include: {
-                organeRef: true,
-              },
-            },
+            organeRef: true,
           },
         },
       },
@@ -88,7 +84,7 @@ export default async function Page({
               </Typography>
             )}
 
-            {depute.groupParlementaire && (
+            {depute.groupeParlementaire && (
               // Deputes sans mandat n'ont plus d'organe associé
               <Box
                 sx={{
@@ -98,10 +94,12 @@ export default async function Page({
                   mt: 1,
                 }}
               >
-                <CircleDiv color={depute.groupParlementaire.couleurAssociee!} />{" "}
+                <CircleDiv
+                  color={depute.groupeParlementaire.couleurAssociee!}
+                />{" "}
                 <Typography sx={{ ml: 1 }} variant="body1" fontWeight="light">
-                  {depute.groupParlementaire.libelle} (
-                  {depute.groupParlementaire.libelleAbrev})
+                  {depute.groupeParlementaire.libelle} (
+                  {depute.groupeParlementaire.libelleAbrev})
                 </Typography>
               </Box>
             )}

@@ -26,18 +26,22 @@ model Dossier {
   dossierAbsorbantRefUid String?                  @unique
   /// Organe à l'initiative du dossier.
   organeRefUid           String?
-  organeUid              String?
   /// Numéro du dossier
   numero                 String?
   vecteurRecherche       Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
-  actesLegislatifs       ActeLegislatif[]
-  dossierAbsorbantRef    Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid])
+  dossierAbsorbantRef    Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   dossierAbsorbrant      Dossier?                 @relation("DossierAbsorbant")
-  Organe                 Organe?                  @relation(fields: [organeUid], references: [uid])
+  organeRef              Organe?                  @relation(fields: [organeRefUid], references: [uid])
   plf                    EtudePlf[]
   initiateurs            InitiateurDossier[]
+  actesLegislatifs       ActeLegislatif[]
+  documents              Document[]
+  amendements            Amendement[]
+  pointsOdj              PointOdj[]
 
   @@index([vecteurRecherche], type: Gin)
+  @@index([organeRefUid])
+  @@index([dossierAbsorbantRefUid])
 }
 
 model ActeLegislatif {
@@ -135,19 +139,23 @@ model ActeLegislatif {
   /// Signification du code du type de déclaration.
   libelleStatutTypeDeclaration        String?
   dossierRefUid                       String?
-  agendaUid                           String?
   pointOdjUid                         String?
-  Agenda                              Agenda?                    @relation(fields: [agendaUid], references: [uid])
+  agendaRef                           Agenda?                    @relation(fields: [reunionRefUid], references: [uid])
   auteurMotionRef                     Acteur?                    @relation("ActeLegislatif_auteurMotion", fields: [auteurMotionRefUid], references: [uid])
   dossierRef                          Dossier?                   @relation(fields: [dossierRefUid], references: [uid])
-  PointOdj                            PointOdj?                  @relation(fields: [pointOdjUid], references: [uid])
+  pointOdj                            PointOdj?                  @relation(fields: [pointOdjUid], references: [uid])
   auteursRefs                         AuteurMotion[]
   infoJoRect                          InfoJoRect[]
   initiateurActeLegislatif            InitiateurActeLegislatif[]
   rapporteurs                         Rapporteur[]
-  Scrutin                             Scrutin[]
+  scrutins                            Scrutin[]
   textesAssocies                      TexteAssocie[]
-  VoteActeLegislatif                  VoteActeLegislatif[]
+  voteRefs                            VoteActeLegislatif[]
+
+  @@index([reunionRefUid])
+  @@index([auteurMotionRefUid])
+  @@index([dossierRefUid])
+  @@index([pointOdjUid])
 }
 
 /// Acteur à l'initiative d'un dossier.
@@ -160,11 +168,13 @@ model InitiateurDossier {
   acteurRefUid  String?
   /// Mandat référent.
   mandatRefUid  String?
-  acteurUid     String?
-  mandatUid     String?
-  Acteur        Acteur?  @relation(fields: [acteurUid], references: [uid])
+  acteurRef     Acteur?  @relation(fields: [acteurRefUid], references: [uid])
   dossierRef    Dossier? @relation(fields: [dossierRefUid], references: [uid])
-  Mandat        Mandat?  @relation(fields: [mandatUid], references: [uid])
+  mandatRef     Mandat?  @relation(fields: [mandatRefUid], references: [uid])
+
+  @@index([dossierRefUid])
+  @@index([acteurRefUid])
+  @@index([mandatRefUid])
 }
 
 /// Acteur auteur de la motion de censure ou de la motion référendaire.
@@ -176,6 +186,9 @@ model AuteurMotion {
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   auteurMotionRef      Acteur?         @relation(fields: [auteurMotionRefUid], references: [uid])
+
+  @@index([acteLegislatifRefUid])
+  @@index([auteurMotionRefUid])
 }
 
 /// Informations relatives à la publication d'une lettre rectificative au journal officiel.
@@ -193,6 +206,8 @@ model InfoJoRect {
   urlLegifrance        String?
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
+
+  @@index([acteLegislatifRefUid])
 }
 
 model InitiateurActeLegislatif {
@@ -206,6 +221,10 @@ model InitiateurActeLegislatif {
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   acteurRef            Acteur?         @relation(fields: [acteurRefUid], references: [uid])
   mandatRef            Mandat?         @relation(fields: [mandatRefUid], references: [uid])
+
+  @@index([acteLegislatifRefUid])
+  @@index([acteurRefUid])
+  @@index([mandatRefUid])
 }
 
 model Rapporteur {
@@ -218,11 +237,13 @@ model Rapporteur {
   /// Un 'rapporteur spécial' produit un rapport (texteAssocie débute par RAPP) ou une étude (texteAssocie débute par ETDR) alors qu'un 'rapporteur pour avis' produit un avis (texteAssocie débute par AVIS).
   typeRapporteur       String
   acteLegislatifRefUid String?
-  acteurUid            String?
-  etudePlfUid          String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
-  Acteur               Acteur?         @relation(fields: [acteurUid], references: [uid])
-  EtudePlf             EtudePlf?       @relation(fields: [etudePlfUid], references: [uid])
+  acteurRef            Acteur?         @relation(fields: [acteurRefUid], references: [uid])
+  etudePlfRef          EtudePlf?       @relation(fields: [etudePlfRefUid], references: [uid])
+
+  @@index([acteLegislatifRefUid])
+  @@index([acteurRefUid])
+  @@index([etudePlfRefUid])
 }
 
 model EtudePlf {
@@ -242,23 +263,29 @@ model EtudePlf {
   texteAssocieRefUid  String?
   dossierRefUid       String?
   documentUid         String?
-  Document            Document?    @relation(fields: [documentUid], references: [uid])
+  document            Document?    @relation(fields: [documentUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   dossierRef          Dossier?     @relation(fields: [dossierRefUid], references: [uid])
-  missionParentRef    EtudePlf?    @relation("EtudePlf", fields: [missionParentRefUid], references: [uid])
+  missionParentRef    EtudePlf?    @relation("EtudePlf", fields: [missionParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   missionEnfantRef    EtudePlf[]   @relation("EtudePlf")
   organeRef           Organe?      @relation(fields: [organeRefUid], references: [uid])
   rapporteurs         Rapporteur[]
+
+  @@index([organeRefUid])
+  @@index([documentUid])
+  @@index([dossierRefUid])
+  @@index([missionParentRefUid])
 }
 
 model VoteActeLegislatif {
   /// Identifiant unique.
   slug                 String          @id
-  voteRefUid           String          @unique
-  acteLegislatifRefUid String
-  // scrutinUid           String
+  voteRefUid           String?
+  acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
-  votes                Vote[]
-  // Scrutin              Scrutin?        @relation(fields: [scrutinUid], references: [uid])
+  voteRef              Scrutin?        @relation(fields: [voteRefUid], references: [uid])
+
+  @@index([acteLegislatifRefUid])
+  @@index([voteRefUid])
 }
 
 model TexteAssocie {
@@ -270,5 +297,8 @@ model TexteAssocie {
   typeTexte            String?
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
-  texteAssocieRef      Document?       @relation(fields: [texteAssocieRefUid], references: [uid])
+  texteAssocieRef      Document?       @relation(fields: [texteAssocieRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([acteLegislatifRefUid])
+  @@index([texteAssocieRefUid])
 }

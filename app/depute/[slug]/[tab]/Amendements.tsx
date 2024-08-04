@@ -11,7 +11,7 @@ async function getDeputeAmendementUnCached(slug: string) {
       where: { slug },
 
       // Verifier que ca fonctionne quadn on aura les amendements dans la DB
-      include: { amendements: true, groupParlementaire: true },
+      include: { amendements: true, groupeParlementaire: true },
     });
   } catch (error) {
     console.error(`Error fetching amendement from depute ${slug}:`, error);

@@ -100,20 +100,6 @@
           "default": false,
           "description": "Deputé en poste actuellement."
         },
-        "mandatPrincipalUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Mandat principal du député, c'est à dire s'il est actif ou non."
-        },
-        "circonscriptionUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Organe de circonscription"
-        },
         "chambre": {
           "type": [
             "string",
@@ -127,7 +113,27 @@
             "null"
           ]
         },
-        "groupParlementaire": {
+        "groupeParlementaire": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mandatPrincipal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Mandat"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "circonscription": {
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
@@ -167,6 +173,12 @@
             "$ref": "#/definitions/Amendement"
           }
         },
+        "coSignataireAmendement": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoSignataireAmendement"
+          }
+        },
         "auteurs": {
           "type": "array",
           "items": {
@@ -183,6 +195,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/CoSignataireDocument"
+          }
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
           }
         },
         "dysfonctionnements": {
@@ -207,6 +225,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Mandat"
+          }
+        },
+        "votes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Vote"
           }
         },
         "misesAuPoint": {
@@ -243,12 +267,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Suppleant"
-          }
-        },
-        "votes": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Vote"
           }
         }
       }
@@ -433,6 +451,12 @@
           ],
           "description": "Vrai si la réunion est enregistrée en vidéo."
         },
+        "visioConference": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
         "compteRenduRef": {
           "type": [
             "string",
@@ -445,6 +469,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date à laquelle la séance publique a lieu."
         },
         "formatReunion": {
@@ -454,14 +479,14 @@
           ],
           "description": "Le contenu de ce champ n'est pas défini."
         },
-        "idJo": {
+        "idJO": {
           "type": [
             "string",
             "null"
           ],
           "description": "Identifiant du journal officiel composé de l'année sur quatre chiffres et du numéro de séance (**numSeanceJo**) sur quatre chiffres (exemple: 20190053)."
         },
-        "numSeanceJo": {
+        "numSeanceJO": {
           "type": [
             "string",
             "null"
@@ -609,6 +634,12 @@
           "items": {
             "$ref": "#/definitions/Scrutin"
           }
+        },
+        "amendements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amendement"
+          }
         }
       }
     },
@@ -707,6 +738,16 @@
             "$ref": "#/definitions/ActeLegislatif"
           }
         },
+        "dossierLegislatif": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "agendaRef": {
           "anyOf": [
             {
@@ -756,11 +797,7 @@
           ],
           "description": "La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon."
         },
-        "acteurRefUid": {
-          "type": "string",
-          "description": "Acteur référent."
-        },
-        "Acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -841,20 +878,6 @@
         }
       }
     },
-    "Seance": {
-      "type": "object",
-      "properties": {
-        "uid": {
-          "type": "string"
-        },
-        "Amendement": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Amendement"
-          }
-        }
-      }
-    },
     "Amendement": {
       "type": "object",
       "properties": {
@@ -910,13 +933,6 @@
             "null"
           ]
         },
-        "texteLegislatifRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique du texte législatif visé par l'amendement."
-        },
         "triAmendement": {
           "type": [
             "string",
@@ -937,13 +953,6 @@
             "null"
           ],
           "description": "'Depute' si l'auteur dépose l'amendement en sa qualité de député, 'Gouvernement' s'il le fait au nom du gouvernement, 'Rapporteur' s'il est le rapporteur de la commission désignée par organeRef."
-        },
-        "acteurRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'auteur de l'amendement."
         },
         "signatairesSufixe": {
           "type": [
@@ -1171,6 +1180,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date de dépôt."
         },
         "datePublication": {
@@ -1178,6 +1188,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date de publication."
         },
         "soumisArticle40": {
@@ -1214,7 +1225,8 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "format": "date-time"
         },
         "sortAmendement": {
           "type": [
@@ -1277,13 +1289,6 @@
           ],
           "description": "Chemin de l'amendement qui permet de composer son URL sur ce modèle: http://www.assemblee-nationale.fr/documentURI."
         },
-        "seanceRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de la séance durant laquelle l'amendement a été discuté."
-        },
         "article99": {
           "type": [
             "string",
@@ -1335,10 +1340,35 @@
           ],
           "description": "Description exhaustive des modifications apportées au texte original, au format HTML."
         },
-        "Acteur": {
+        "nombreCoSignataires": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de co-signataires"
+        },
+        "texteLegislatifRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scrutinRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Scrutin"
             },
             {
               "type": "null"
@@ -1371,7 +1401,7 @@
             }
           ]
         },
-        "Document": {
+        "document": {
           "anyOf": [
             {
               "$ref": "#/definitions/Document"
@@ -1401,17 +1431,17 @@
             }
           ]
         },
-        "Seance": {
+        "seanceRef": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Seance"
+              "$ref": "#/definitions/Agenda"
             },
             {
               "type": "null"
             }
           ]
         },
-        "CoSignataireAmendement": {
+        "coSignataires": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/CoSignataireAmendement"
@@ -1429,17 +1459,86 @@
         "slug": {
           "type": "string"
         },
-        "acteurRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiants uniques (uid) des acteurs."
+        "acteurRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "amendementRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Amendement"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Commune": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Identifiant unique."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hachage de l'objet"
+        },
+        "libelle": {
+          "type": "string",
+          "description": "Nom de la commune"
+        },
+        "codeRegion": {
+          "type": "integer",
+          "description": "Numéro de la région où se trouve la commune"
+        },
+        "libelleRegion": {
+          "type": "string",
+          "description": "Nom de la région où se trouve la commune"
+        },
+        "codeDepartement": {
+          "type": "integer",
+          "description": "Numéro du département où se trouve la commune"
+        },
+        "libelleDepartement": {
+          "type": "string",
+          "description": "Nom du département où se trouve la commune"
+        },
+        "codeInsee": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Code INSEE"
+        },
+        "codePostal": {
+          "type": "string",
+          "description": "Code postal"
+        },
+        "circoPartielle": {
+          "type": "boolean",
+          "default": false,
+          "description": "Vrai si la commune est sur plusieurs circonscriptions"
+        },
+        "numCirco": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Numéro de la cirsconscription"
+        },
+        "circonscription": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
             },
             {
               "type": "null"
@@ -1787,6 +1886,18 @@
           ],
           "description": "Signification du code."
         },
+        "typeCode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "typeLibelle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "sousTypeCode": {
           "type": [
             "string",
@@ -1828,6 +1939,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date de création du document."
         },
         "dateDepot": {
@@ -1835,6 +1947,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Toujours identique à la date de création."
         },
         "datePublication": {
@@ -1842,6 +1955,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Le contenu de ce champ n'est pas défini."
         },
         "datePublicationWeb": {
@@ -1849,6 +1963,7 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date de première publication sur http://assemblee-nationale.fr."
         },
         "denominationStructurelle": {
@@ -1925,17 +2040,44 @@
         "xsiType": {
           "type": "string"
         },
-        "auteurUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Uid de l'auteur du document"
+        "auteurPrincipal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "dossierRefUid": {
-          "type": [
-            "string",
-            "null"
+        "dossierRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "documentParentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sousDocuments": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "texteLegislatif": {
@@ -1962,26 +2104,6 @@
             "$ref": "#/definitions/CoSignataireDocument"
           }
         },
-        "documentParentRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Document"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "sousDocuments": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Document"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "etudesPlf": {
           "type": "array",
           "items": {
@@ -2007,20 +2129,6 @@
           "type": "string",
           "description": "Hachage de l'objet"
         },
-        "organeRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'organe correspondant au groupe politique."
-        },
-        "acteurRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'acteur."
-        },
         "qualite": {
           "type": [
             "string",
@@ -2028,7 +2136,7 @@
           ],
           "description": "Titre donné en raison du mandat, similaire à **libQualiteSex** dans le mandat de l'auteur."
         },
-        "Acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -2048,7 +2156,7 @@
             }
           ]
         },
-        "Organe": {
+        "organeRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
@@ -2071,18 +2179,12 @@
           "type": "string",
           "description": "Hachage de l'objet"
         },
-        "acteurRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'acteur."
-        },
         "dateCosignature": {
           "type": [
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date de la co-signature."
         },
         "dateRetraitCosignature": {
@@ -2090,18 +2192,12 @@
             "string",
             "null"
           ],
+          "format": "date-time",
           "description": "Date du retrait de la co-signature."
         },
         "edite": {
           "type": "boolean",
           "description": "Le contenu de ce champ n'est pas défini."
-        },
-        "organeRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'organe correspondant au groupe politique."
         },
         "etApparentes": {
           "type": [
@@ -2110,7 +2206,7 @@
           ],
           "description": "Le co-signataire engage aussi les députés apparentés au groupe politique au sein duquel il exerce son mandat."
         },
-        "Acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -2130,7 +2226,7 @@
             }
           ]
         },
-        "Organe": {
+        "organeRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
@@ -2247,25 +2343,12 @@
           ],
           "description": "Le dossier parlementaire est lié à un autre. Si la cause est un 'Examen commun', les deux dossiers continuent d'évoluer indépendament. Par exemple une mission d'information peut être liée au dossier parlementaire qui représente le rapport produit par cette mission. Si la cause est 'Dossier absorbé', il devient obsolete et le dossier absorbant prend la suite. Par exemple, lorsqu'une loi ordinaire devient une loi organique, un nouveau dossier parlementaire est constitué, l'intégralité du dossier absorbé est copié dans le nouveau dossier."
         },
-        "organeRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Organe à l'initiative du dossier."
-        },
         "numero": {
           "type": [
             "string",
             "null"
           ],
           "description": "Numéro du dossier"
-        },
-        "actesLegislatifs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActeLegislatif"
-          }
         },
         "dossierAbsorbantRef": {
           "anyOf": [
@@ -2287,7 +2370,7 @@
             }
           ]
         },
-        "Organe": {
+        "organeRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
@@ -2307,6 +2390,30 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/InitiateurDossier"
+          }
+        },
+        "actesLegislatifs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActeLegislatif"
+          }
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "amendements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amendement"
+          }
+        },
+        "pointsOdj": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PointOdj"
           }
         }
       }
@@ -2575,13 +2682,6 @@
           ],
           "description": "Identifiant unique de l'ordre du jour de la réunion dans l'agenda."
         },
-        "reunionRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique de la réunion dans l'agenda. "
-        },
         "famCodeStatutAdoption": {
           "type": [
             "string",
@@ -2624,7 +2724,7 @@
           ],
           "description": "Signification du code du type de déclaration."
         },
-        "Agenda": {
+        "agendaRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Agenda"
@@ -2654,7 +2754,7 @@
             }
           ]
         },
-        "PointOdj": {
+        "pointOdj": {
           "anyOf": [
             {
               "$ref": "#/definitions/PointOdj"
@@ -2688,7 +2788,7 @@
             "$ref": "#/definitions/Rapporteur"
           }
         },
-        "Scrutin": {
+        "scrutins": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Scrutin"
@@ -2700,7 +2800,7 @@
             "$ref": "#/definitions/TexteAssocie"
           }
         },
-        "VoteActeLegislatif": {
+        "voteRefs": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/VoteActeLegislatif"
@@ -2715,21 +2815,7 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "acteurRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Acteur référent."
-        },
-        "mandatRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Mandat référent."
-        },
-        "Acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -2749,7 +2835,7 @@
             }
           ]
         },
-        "Mandat": {
+        "mandatRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Mandat"
@@ -2889,17 +2975,6 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "acteurRefUid": {
-          "type": "string",
-          "description": "Identifiant unique (uid) du rapporteur."
-        },
-        "etudePlfRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'étude relative à un projet de loi de finance."
-        },
         "typeRapporteur": {
           "type": "string",
           "description": "Un 'rapporteur spécial' produit un rapport (texteAssocie débute par RAPP) ou une étude (texteAssocie débute par ETDR) alors qu'un 'rapporteur pour avis' produit un avis (texteAssocie débute par AVIS)."
@@ -2914,7 +2989,7 @@
             }
           ]
         },
-        "Acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -2924,7 +2999,7 @@
             }
           ]
         },
-        "EtudePlf": {
+        "etudePlfRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/EtudePlf"
@@ -2968,7 +3043,7 @@
           ],
           "description": "Identifiant unique (uid) du document."
         },
-        "Document": {
+        "document": {
           "anyOf": [
             {
               "$ref": "#/definitions/Document"
@@ -3029,9 +3104,6 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "voteRefUid": {
-          "type": "string"
-        },
         "acteLegislatifRef": {
           "anyOf": [
             {
@@ -3042,11 +3114,15 @@
             }
           ]
         },
-        "votes": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Vote"
-          }
+        "voteRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Scrutin"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -3226,6 +3302,16 @@
             "null"
           ]
         },
+        "organeRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "collaborateurs": {
           "type": "array",
           "items": {
@@ -3245,6 +3331,16 @@
           }
         },
         "acteurRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "acteurPrincipal": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -3294,12 +3390,6 @@
             }
           ]
         },
-        "organesMandats": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OrganeMandat"
-          }
-        },
         "question": {
           "type": "array",
           "items": {
@@ -3321,23 +3411,6 @@
           "items": {
             "$ref": "#/definitions/Vote"
           }
-        }
-      }
-    },
-    "OrganeMandat": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
-        "slug": {
-          "type": "string"
-        },
-        "mandatRef": {
-          "$ref": "#/definitions/Mandat"
-        },
-        "organeRef": {
-          "$ref": "#/definitions/Organe"
         }
       }
     },
@@ -3542,6 +3615,12 @@
             "$ref": "#/definitions/AmendementCommission"
           }
         },
+        "mandats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Mandat"
+          }
+        },
         "auteurs": {
           "type": "array",
           "items": {
@@ -3588,13 +3667,13 @@
             "$ref": "#/definitions/Organe"
           }
         },
-        "organesMandats": {
+        "questionsGroupe": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OrganeMandat"
+            "$ref": "#/definitions/Question"
           }
         },
-        "questionsGroupe": {
+        "questionsMinInt": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Question"
@@ -3606,10 +3685,22 @@
             "$ref": "#/definitions/Scrutin"
           }
         },
-        "Acteur": {
+        "membresGroupeParlementaire": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Acteur"
+          }
+        },
+        "parlementairesCirsconscription": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Acteur"
+          }
+        },
+        "communes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Commune"
           }
         }
       }
@@ -3648,12 +3739,6 @@
             "QOSD"
           ]
         },
-        "minIntRefUid": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "codeCloture": {
           "type": [
             "string",
@@ -3665,6 +3750,14 @@
             "string",
             "null"
           ]
+        },
+        "dateDepot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date de dépôt de la question"
         },
         "dateCloture": {
           "type": [
@@ -3721,6 +3814,16 @@
         },
         "mandatRef": {
           "$ref": "#/definitions/Mandat"
+        },
+        "minIntRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -3784,13 +3887,6 @@
             "null"
           ],
           "description": "Numéro de la séance dans la journée."
-        },
-        "seanceRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique (uid) de l'entrée de l'agenda correspondant au moment où le vote a lieu."
         },
         "code": {
           "type": [
@@ -3897,23 +3993,15 @@
           ],
           "description": "La signification de ce champ n'est pas définie."
         },
-        "dysfonctionnements": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Dysfonctionnement"
-          }
-        },
-        "groupesVotants": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/GroupeVotant"
-          }
-        },
-        "misesAuPoint": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MiseAuPoint"
-          }
+        "amendementRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Amendement"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "acteLegislatifsRef": {
           "anyOf": [
@@ -3925,7 +4013,7 @@
             }
           ]
         },
-        "Agenda": {
+        "agendaRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Agenda"
@@ -3945,10 +4033,34 @@
             }
           ]
         },
+        "dysfonctionnements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Dysfonctionnement"
+          }
+        },
+        "groupesVotants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupeVotant"
+          }
+        },
+        "misesAuPoint": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MiseAuPoint"
+          }
+        },
         "votes": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Vote"
+          }
+        },
+        "votesActesLegislatifs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VoteActeLegislatif"
           }
         }
       }
@@ -4053,7 +4165,10 @@
           "description": "Hachage de l'objet"
         },
         "positionVote": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "causePositionVote": {
           "type": [
@@ -4081,6 +4196,9 @@
             "null"
           ]
         },
+        "acteurRef": {
+          "$ref": "#/definitions/Acteur"
+        },
         "groupeVotantRef": {
           "anyOf": [
             {
@@ -4105,26 +4223,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Scrutin"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "acteur": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Acteur"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "voteActe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/VoteActeLegislatif"
             },
             {
               "type": "null"
@@ -4238,14 +4336,14 @@
     "personneAuditionneeReunion": {
       "$ref": "#/definitions/PersonneAuditionneeReunion"
     },
-    "seance": {
-      "$ref": "#/definitions/Seance"
-    },
     "amendement": {
       "$ref": "#/definitions/Amendement"
     },
     "coSignataireAmendement": {
       "$ref": "#/definitions/CoSignataireAmendement"
+    },
+    "commune": {
+      "$ref": "#/definitions/Commune"
     },
     "debat": {
       "$ref": "#/definitions/Debat"
@@ -4300,9 +4398,6 @@
     },
     "mandat": {
       "$ref": "#/definitions/Mandat"
-    },
-    "organeMandat": {
-      "$ref": "#/definitions/OrganeMandat"
     },
     "collaborateur": {
       "$ref": "#/definitions/Collaborateur"

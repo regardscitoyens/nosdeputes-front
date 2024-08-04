@@ -18,6 +18,8 @@ model Question {
   minIntRefUid     String?
   codeCloture      String?
   libelleCloture   String?
+  /// Date de dépôt de la question
+  dateDepot        DateTime?
   dateCloture      DateTime?
   dateDepotSignal  DateTime?
   /// Contenu texte de la question.
@@ -32,8 +34,13 @@ model Question {
   acteurRef        Acteur                   @relation(fields: [acteurRefUid], references: [uid])
   groupeRef        Organe                   @relation("Question_Groupe", fields: [groupeRefUid], references: [uid])
   mandatRef        Mandat                   @relation(fields: [mandatRefUid], references: [uid])
+  minIntRef        Organe?                  @relation("Question_MinInt", fields: [minIntRefUid], references: [uid])
 
   @@index([vecteurRecherche], type: Gin)
+  @@index([acteurRefUid])
+  @@index([groupeRefUid])
+  @@index([mandatRefUid])
+  @@index([minIntRefUid])
 }
 
 enum QuestionType {

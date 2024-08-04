@@ -21,6 +21,8 @@ model Document {
   especeCode               String?
   /// Signification du code.
   especeLibelle            String?
+  typeCode                 String?
+  typeLibelle              String?
   sousTypeCode             String?
   sousTypeLibelle          String?
   sousTypeLibelleEdition   String?
@@ -28,13 +30,13 @@ model Document {
   niveauCorrection         String?
   typeCorrection           String?
   /// Date de création du document.
-  dateCreation             String?
+  dateCreation             DateTime?
   /// Toujours identique à la date de création.
-  dateDepot                String?
+  dateDepot                DateTime?
   /// Le contenu de ce champ n'est pas défini.
-  datePublication          String?
+  datePublication          DateTime?
   /// Date de première publication sur http://assemblee-nationale.fr.
-  datePublicationWeb       String?
+  datePublicationWeb       DateTime?
   /// Le contenu de ce champ n'est pas défini.
   denominationStructurelle String
   /// Détermine si le texte est susceptible d'être amendé lors d'une séance publique. Vaut true si le texte peut être amendé, false sinon.
@@ -58,28 +60,33 @@ model Document {
   /// Le contenu de ce champ n'est pas défini.
   provenance               String?
   xsiType                  String
-  /// Uid de l'auteur du document
-  auteurUid                String?
+  /// Identifiant de l'auteur principal du document
+  auteurPrincipalUid       String?
   documentParentRefUid     String?                  @unique
   dossierRefUid            String?
   vecteurRecherche         Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"titrePrincipalCourt\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"numNotice\", ''::text))::character varying)))"))
+  auteurPrincipal          Acteur?                  @relation(fields: [auteurPrincipalUid], references: [uid])
+  dossierRef               Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
+  documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  sousDocuments            Document?                @relation("DocumentParentRef")
   texteLegislatif          Amendement[]
   amendementsCommission    AmendementCommission[]
   auteurs                  Auteur[]
   coSignataires            CoSignataireDocument[]
-  documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid])
-  sousDocuments            Document?                @relation("DocumentParentRef")
   etudesPlf                EtudePlf[]
   textesAssocies           TexteAssocie[]
 
   @@index([vecteurRecherche], type: Gin)
+  @@index([auteurPrincipalUid])
+  @@index([dossierRefUid])
+  @@index([documentParentRefUid])
 }
 
 model Auteur {
   /// Identifiant unique.
-  id             Int       @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   /// Hachage de l'objet
-  hash           String    @unique
+  hash           String  @unique
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
   organeRefUid   String?
   /// Identifiant unique (uid) de l'acteur.
@@ -88,24 +95,27 @@ model Auteur {
   qualite        String?
   /// Identifiant unique (uid) du document.
   documentRefUid String?
-  acteurUid      String?
-  organeUid      String?
-  Acteur         Acteur?   @relation(fields: [acteurUid], references: [uid])
-  documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
-  Organe         Organe?   @relation(fields: [organeUid], references: [uid])
+
+  acteurRef   Acteur?   @relation(fields: [acteurRefUid], references: [uid])
+  documentRef Document? @relation(fields: [documentRefUid], references: [uid])
+  organeRef   Organe?   @relation(fields: [organeRefUid], references: [uid])
+
+  @@index([organeRefUid])
+  @@index([acteurRefUid])
+  @@index([documentRefUid])
 }
 
 model CoSignataireDocument {
   /// Identifiant unique.
-  id                     Int       @id @default(autoincrement())
+  id                     Int      @id @default(autoincrement())
   /// Hachage de l'objet
-  hash                   String    @unique
+  hash                   String   @unique
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid           String?
   /// Date de la co-signature.
-  dateCosignature        String?
+  dateCosignature        DateTime?
   /// Date du retrait de la co-signature.
-  dateRetraitCosignature String?
+  dateRetraitCosignature DateTime?
   /// Le contenu de ce champ n'est pas défini.
   edite                  Boolean
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
@@ -114,11 +124,14 @@ model CoSignataireDocument {
   etApparentes           Boolean?
   /// Identifiant unique (uid) du document.
   documentRefUid         String?
-  acteurUid              String?
-  organeUid              String?
-  Acteur                 Acteur?   @relation(fields: [acteurUid], references: [uid])
-  documentRef            Document? @relation(fields: [documentRefUid], references: [uid])
-  Organe                 Organe?   @relation(fields: [organeUid], references: [uid])
+
+  acteurRef   Acteur?   @relation(fields: [acteurRefUid], references: [uid])
+  documentRef Document? @relation(fields: [documentRefUid], references: [uid])
+  organeRef   Organe?   @relation(fields: [organeRefUid], references: [uid])
+
+  @@index([organeRefUid])
+  @@index([acteurRefUid])
+  @@index([documentRefUid])
 }
 
 model AmendementCommission {
@@ -134,4 +147,7 @@ model AmendementCommission {
   documentRefUid String?
   documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
   organeRef      Organe?   @relation(fields: [organeRefUid], references: [uid])
+
+  @@index([organeRefUid])
+  @@index([documentRefUid])
 }

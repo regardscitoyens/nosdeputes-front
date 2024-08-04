@@ -19,7 +19,7 @@ export default function InfoPersonelles({
     (mandat) => mandat.typeOrgane === "ASSEMBLEE"
   )[0];
 
-  const dernerGroupParlementaire = sortedMandats.filter(
+  const dernergroupeParlementaire = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "GP"
   )[0];
 
@@ -71,9 +71,9 @@ export default function InfoPersonelles({
             Group politique <InfoOutlinedIcon fontSize="inherit" />
           </Typography>
           <Typography variant="body2">
-            {dernerGroupParlementaire &&
-            dernerGroupParlementaire.dateFin === null
-              ? dernerGroupParlementaire.libelle
+            {dernergroupeParlementaire &&
+            dernergroupeParlementaire.dateFin === null
+              ? dernergroupeParlementaire.libelle
               : "-"}
           </Typography>
         </div>

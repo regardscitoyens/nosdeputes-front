@@ -37,6 +37,8 @@ model SommaireDebat {
   idSyceron         String
   presidentSeance   String
   debatRef          Debat   @relation(fields: [debatRefUid], references: [uid])
+
+  @@index([debatRefUid])
 }
 
 model Paragraphe {
@@ -73,4 +75,5 @@ model Paragraphe {
   debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
 
   @@index([vecteurRecherche], type: Gin)
+  @@index([debatRefUid])
 }

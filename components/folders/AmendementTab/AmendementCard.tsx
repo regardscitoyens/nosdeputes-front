@@ -30,7 +30,7 @@ function getStatus(label: string | null) {
 }
 type AmendementCardProps = {
   amendement: Amendement;
-  depute: Acteur & { groupParlementaire: Organe | null };
+  depute: Acteur & { groupeParlementaire: Organe | null };
 };
 
 export default function AmendementCard(props: AmendementCardProps) {
@@ -69,10 +69,10 @@ export default function AmendementCard(props: AmendementCardProps) {
             prenom={depute.prenom}
             nom={depute.nom}
             group={
-              depute.groupParlementaire && {
-                fullName: depute.groupParlementaire.libelle,
+              depute.groupeParlementaire && {
+                fullName: depute.groupeParlementaire.libelle,
                 shortName: "",
-                color: depute.groupParlementaire.couleurAssociee,
+                color: depute.groupeParlementaire.couleurAssociee,
               }
             }
             smallGroupColor
