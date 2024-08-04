@@ -17,7 +17,7 @@ export type AmendementTabProps = Pick<
   DossierData,
   "amendementCount" | "documents"
 > & {
-  amendements: (Amendement & Acteur)[];
+  amendements: (Amendement & Partial<Acteur>)[];
 };
 
 export const AmendementTab = ({

@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 
-import { PreviewTab } from "@/components/folders/PreviewTab";
+import { PreviewTab } from "@/app/[legislature]/dossier/[id]/PreviewTab";
 import { AmendementTab } from "@/components/folders/AmendementTab";
 import { DebateTab } from "@/components/folders/DebateTab";
 import {

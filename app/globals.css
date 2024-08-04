@@ -17,3 +17,39 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+@media (min-width: 900px) {
+  .container.container {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+}
+@media (min-width: 1200px) {
+  .container.container {
+    max-width: 1200px;
+  }
+}
+@media (min-width: 600px) {
+  .container.container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  box-sizing: border-box;
+  margin-right: auto;
+  display: block;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 24px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 40px;
+}

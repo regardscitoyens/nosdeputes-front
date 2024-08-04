@@ -1,17 +1,16 @@
 import React from "react";
 
-import { PreviewTab } from "@/components/folders/PreviewTab";
-
-import { getDossier } from "@/repository/database";
+import { PreviewTab } from "@/app/[legislature]/dossier/[id]/PreviewTab";
+import { getDossier } from "./dataFunctions";
 
 export default async function Page({
   params,
 }: {
   params: { legislature: string; id: string };
 }) {
-  const dossier = await getDossier(params.legislature, params.id);
+  const dossier = await getDossier(params.id);
 
-  if (dossier === undefined) {
+  if (dossier === null) {
     return <p>Dossier Not Found</p>;
   }
   return <PreviewTab dossier={dossier} />;
