@@ -273,7 +273,6 @@ export const TimelineCard = ({
                                               actsLookup
                                             )
                                               .flatMap(({ acts: lvl3Acts }) => {
-                                                console.log({ lvl3Acts });
                                                 return lvl3Acts;
                                               })
                                               // Certain dossier saisissent plusieurs commissions. Ils faut donc ne garder que les elements de niveau 3 qui sone en lien avec le même organe.

@@ -76,8 +76,6 @@ export const CommissionsCard = async ({
     (rapporteur) => rapporteur !== null
   );
 
-  console.log({ fondIds, avisIds, fondNomination, avisNomination });
-  console.log(rapporteursFond);
   if (
     (!commissionFond || commissionFond.length === 0) &&
     (!commissionAvis || commissionAvis.length === 0) &&
