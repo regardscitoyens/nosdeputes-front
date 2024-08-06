@@ -1,8 +1,8 @@
 import { Status } from "@/components/StatusChip";
-import { ActeLegislatif, Document as DocumentData} from "../repository/types";
+import { Document } from "@prisma/client";
 
-export function getDocumentURL(document?: DocumentData) {
-  if (!document || !document?.legislature || !document.numNotice) {
+export function getDocumentURL(document: Document) {
+  if (!document.numNotice) {
     return undefined;
   }
   const suffix =

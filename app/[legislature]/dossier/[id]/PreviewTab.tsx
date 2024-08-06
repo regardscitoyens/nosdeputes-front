@@ -1,9 +1,9 @@
 import React from "react";
 
-import { AdditionalInfoCard } from "@/components/folders/AdditionalInfoCard";
+import { AdditionalInfoCard } from "@/app/[legislature]/dossier/[id]/AdditionalInfoCard";
 import { CommissionsCard } from "./CommissionsCard";
 import { CardLayout } from "@/components/folders/CardLayout";
-import { LegislativeDocumentsCard } from "@/components/folders/LegislativeDocumentsCard";
+import { LegislativeDocumentsCard } from "@/app/[legislature]/dossier/[id]/LegislativeDocumentsCard";
 import { TextStructureCard } from "@/components/folders/TextStructureCard";
 import { TimelineCard } from "@/components/folders/TimelineCard";
 import { SpeakingTime } from "@/components/folders/SpeakingTime";
@@ -23,18 +23,7 @@ type PreviewTabProps = {
 };
 
 export const PreviewTab = ({ dossier }: PreviewTabProps) => {
-  const {
-    // commissionFondId,
-    // commissionAvisId,
-    // organes = {},
-    // rapporteursFondIds,
-    // coSignatairesIds,
-    // acteurs = {},
-    // acts = [],
-    // documents = [],
-    // amendementCount = {},
-    actesLegislatifs,
-  } = dossier!;
+  const { actesLegislatifs } = dossier!;
 
   const commissionFondIds = getCommissionUids(actesLegislatifs, "FOND");
   const commissionAvisIds = getCommissionUids(actesLegislatifs, "AVIS");
@@ -45,6 +34,16 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
   const commissionAvisNomination = getCommissionNomination(
     actesLegislatifs,
     "AVIS"
+  );
+
+  const documentIds = Array.from(
+    new Set(
+      actesLegislatifs.flatMap((act) =>
+        [act.texteAdopteRefUid, act.texteAssocieRefUid].filter(
+          (id) => id !== null
+        )
+      )
+    )
   );
   return (
     <div className="container">
@@ -62,14 +61,12 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
           fondNomination={commissionFondNomination}
           avisNomination={commissionAvisNomination}
         />
-        {/* <AdditionalInfoCard
-          amendementCount={amendementCount}
-          documents={documents}
-          coSignatairesIds={coSignatairesIds}
-          acteurs={acteurs}
-          organes={organes}
+        <AdditionalInfoCard
+          documentIds={documentIds}
+          legislature={dossier!.legislature}
+          dossierUid={dossier!.uid}
         />
-        <LegislativeDocumentsCard documents={documents} /> */}
+        <LegislativeDocumentsCard documentIds={documentIds} />
       </div>
       <div
         style={{
@@ -82,12 +79,12 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
         {/* <CardLayout title="Temps de parole par groupe">
           <SpeakingTime />
           </CardLayout> */}
-        {/* <TimelineCard
-          acts={acts}
-          documents={documents}
-          dossierUid={dossier?.dossier.uid}
-          legislature={dossier?.dossier.legislature}
-          /> */}
+        <TimelineCard
+          actesLegislatifs={actesLegislatifs}
+          // documents={documents}
+          dossierUid={dossier!.uid}
+          legislature={dossier!.legislature}
+        />
         <TextStructureCard />
       </div>
     </div>

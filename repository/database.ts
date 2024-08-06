@@ -1,7 +1,6 @@
 import * as React from "react";
 import knex from "knex";
 import config from "./knexfile";
-import { AN1_COM_FOND, AN1_COM_FOND_NOMIN } from "./Acts";
 import {
   Dossier,
   ActeLegislatif,
@@ -174,7 +173,7 @@ export async function getDossierUnCached(
     });
 
     const commissionFondId = acts.filter(
-      (act): act is AN1_COM_FOND => act.codeActe === "AN1-COM-FOND"
+      (act) => act.codeActe === "AN1-COM-FOND"
     )[0]?.organeRefUid;
     const commissionAvisId = acts.filter(
       (act): act is any => act.codeActe === "AN1-COM-AVIS" // Type is not defined because I did not get any of those event in the 1000 rows fetched
@@ -182,7 +181,7 @@ export async function getDossierUnCached(
 
     // A utiliser pour trouver les rapporteurs dans la table Rapporteur (a par)
     const nominationRapporteursCommissionFondId = acts.filter(
-      (act): act is AN1_COM_FOND_NOMIN => act.codeActe === "AN1-COM-FOND-NOMIN"
+      (act) => act.codeActe === "AN1-COM-FOND-NOMIN"
     )[0]?.uid;
 
     const nominationRapporteursCommissionFond: any[] =

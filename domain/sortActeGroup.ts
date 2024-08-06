@@ -1,4 +1,4 @@
-import { ActsStructure } from "@/repository/Acts";
+import { ActeLegislatifWithDate, ActsStructure } from "@/repository/Acts";
 import { ActeLegislatif } from "@/repository/types";
 
 // Chaque list est un ordre d'éléments.
@@ -11,11 +11,11 @@ const ACTS_ORDERS = [
 
 export default function getSortedActGroups(
   group: ActsStructure,
-  actsLookup: Record<string, ActeLegislatif>
+  actsLookup: Record<string, ActeLegislatifWithDate>
 ): {
   children?: ActsStructure;
   groupDate?: Date;
-  acts?: ActeLegislatif[];
+  acts?: ActeLegislatifWithDate[];
 }[] {
   return Object.entries(group)
     .sort(([codeAct1, { date: date1 }], [codeAct2, { date: date2 }]) => {

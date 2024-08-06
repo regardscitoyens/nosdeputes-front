@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem from "@mui/lab/TimelineItem";
@@ -12,9 +14,9 @@ import Box from "@mui/material/Box";
 
 import { CardLayout } from "@/components/folders/CardLayout";
 
-import { ActeLegislatif, Document } from "@/repository/types";
+import { ActeLegislatif } from "@prisma/client";
 
-import { groupActs } from "@/repository/Acts";
+import { ActeLegislatifWithDate, groupActs } from "@/repository/Acts";
 import { sortActDate } from "../utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -173,17 +175,15 @@ const TimelineItemLvl1 = ({
 };
 
 export const TimelineCard = ({
-  acts,
-  documents,
+  actesLegislatifs,
   dossierUid,
   legislature,
 }: {
-  acts: ActeLegislatif[];
-  documents: Record<string, Document>;
+  actesLegislatifs: ActeLegislatif[];
   dossierUid: string;
-  legislature: number;
+  legislature: string;
 }) => {
-  const { actsStructure, actsLookup } = groupActs(acts);
+  const { actsStructure, actsLookup } = groupActs(actesLegislatifs);
 
   return (
     <CardLayout title="Chronologie du dossier">
@@ -276,11 +276,14 @@ export const TimelineCard = ({
                                                 console.log({ lvl3Acts });
                                                 return lvl3Acts;
                                               })
-                                              // Certain dossier saissisent plusieurs commissions. Ils faut donc les distinguer par oregane
+                                              // Certain dossier saisissent plusieurs commissions. Ils faut donc ne garder que les elements de niveau 3 qui sone en lien avec le même organe.
                                               .filter(
-                                                (childrenAct) =>
+                                                (
+                                                  childrenAct
+                                                ): childrenAct is ActeLegislatifWithDate =>
+                                                  childrenAct !== undefined &&
                                                   act.organeRefUid ===
-                                                  childrenAct.organeRefUid
+                                                    childrenAct.organeRefUid
                                               )
                                               ?.sort(sortActDate)
                                               ?.map((act) => {

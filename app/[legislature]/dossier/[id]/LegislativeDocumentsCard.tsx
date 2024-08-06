@@ -11,10 +11,32 @@ import LinkIcon from "@/icons/LinkIcon";
 import Link from "next/link";
 import { DossierData } from "@/repository/database";
 import { getDocumentURL } from "@/domain/dataTransform";
+import { prisma } from "@/prisma";
 
-export const LegislativeDocumentsCard = ({
-  documents,
-}: Pick<DossierData, "documents">) => {
+async function getDocumentsUnCached(ids: string[]) {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  try {
+    return prisma.document.findMany({
+      where: { uid: { in: ids } },
+    });
+  } catch (error) {
+    console.error("Error fetching commission:", error);
+    throw error;
+  }
+}
+
+const getDocuments = React.cache(getDocumentsUnCached);
+
+export const LegislativeDocumentsCard = async ({
+  documentIds,
+}: {
+  documentIds: string[];
+}) => {
+  const documents = await getDocuments(documentIds);
+
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
@@ -26,6 +48,9 @@ export const LegislativeDocumentsCard = ({
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
           {Object.values(documents).map((document) => {
+            if (!document) {
+              return null;
+            }
             const url = getDocumentURL(document);
 
             return (
