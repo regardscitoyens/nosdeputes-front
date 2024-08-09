@@ -70,9 +70,9 @@ model Scrutin {
 
 model GroupeVotant {
   /// Identifiant unique.
-  id                    Int      @id @default(autoincrement())
+  id                    Int     @id @default(autoincrement())
   /// Hachage de l'objet
-  hash                  String   @unique
+  hash                  String  @unique
   /// Le nombre total de membres du groupe politique et non pas le nombre de membres présents au moment du vote.
   nombreMembresGroupe   String?
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
@@ -90,10 +90,10 @@ model GroupeVotant {
   /// La position majoritaire du groupe politique est celle pour laquelle le plus grand nombre de membres ont voté. Si le nombre de pour est égale au nombre de contre, c'est le pour qui l'emporte. A moins que le nombre d'abstentions soit supérieur ou égal au nombre de pour, dans ce cas c'est l'abstention qui l'emporte.
   positionMajoritaire   String?
 
-  scrutinRefUid         String?
-  organeRef             Organe?  @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
-  scrutinRef            Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
-  votes                 Vote[]
+  scrutinRefUid String?
+  organeRef     Organe?  @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
+  votes         Vote[]
 
   @@index([organeRefUid])
   @@index([scrutinRefUid])

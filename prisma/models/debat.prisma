@@ -73,7 +73,9 @@ model Paragraphe {
   stime             String?
   vecteurRecherche  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
   debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
+  acteur            Acteur?                  @relation(fields: [acteurRef], references: [uid])
 
   @@index([vecteurRecherche], type: Gin)
   @@index([debatRefUid])
+  @@index([acteurRef])
 }

@@ -35,7 +35,7 @@
     "prisma": "^5.16.1",
     "prisma-json-schema-generator": "^5.1.5",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.4"
   },
   "prisma": {
     "schema": "prisma/models"

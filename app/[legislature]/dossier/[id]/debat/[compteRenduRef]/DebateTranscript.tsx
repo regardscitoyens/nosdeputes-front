@@ -9,55 +9,57 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import { SpeakingTime } from "@/components/folders/SpeakingTime";
-import { DebateTimeline } from "@/components/folders/DebateTimeline";
+import { DebateTimeline } from "@/app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateTimeline";
 
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 import { useTheme } from "@mui/material";
-import { WORDS_PER_MINUTES } from "../const";
+import { WORDS_PER_MINUTES } from "@/components/const";
+import { Acteur, Organe, Paragraphe } from "@prisma/client";
 
-function getWordsPerGroup(paragraphs: any[]) {
+export type ParagrapheWithActeur = Paragraphe & {
+  acteur: null | (Acteur & { groupeParlementaire: null | Organe });
+};
+
+function getWordsPerGroup(paragraphs: ParagrapheWithActeur[]) {
   const groups: Record<
     string,
     {
       count: number;
-      group_color: string;
-      group_libelle_short: string;
+      color: string;
+      libelleShort: string;
     }
   > = {};
-  paragraphs.forEach(
-    ({
-      codeGrammaire,
-      groupeParlementaireUid,
-      group_color,
-      group_libelle_short,
-      texte,
-    }) => {
-      if (
-        codeGrammaire !== "PAROLE_GENERIQUE" ||
-        !groupeParlementaireUid
-      ) {
-        return;
-      }
+  paragraphs.forEach((paragraphe) => {
+    const { codeGrammaire, acteur, texte } = paragraphe;
 
-      const wordCount = texte.split(" ").length;
-      if (groups[groupeParlementaireUid]) {
-        groups[groupeParlementaireUid].count += wordCount;
-      } else {
-        groups[groupeParlementaireUid] = {
-          count: wordCount,
-          group_color,
-          group_libelle_short,
-        };
-      }
+    if (
+      codeGrammaire !== "PAROLE_GENERIQUE" ||
+      !acteur ||
+      !acteur.groupeParlementaire ||
+      !acteur.groupeParlementaireUid ||
+      !texte
+    ) {
+      return;
     }
-  );
+    const groupeParlementaire = acteur.groupeParlementaire;
+
+    const wordCount = texte.split(" ").length;
+    if (groups[groupeParlementaire.uid]) {
+      groups[groupeParlementaire.uid].count += wordCount;
+    } else {
+      groups[groupeParlementaire.uid] = {
+        count: wordCount,
+        color: groupeParlementaire.couleurAssociee ?? "",
+        libelleShort: groupeParlementaire.libelleAbrege,
+      };
+    }
+  });
 
   return groups;
 }
 
 type DebateTranscriptProps = {
-  // TODO: Define type from prisma (to generate)
-  paragraphs: any[];
+  paragraphs: ParagrapheWithActeur[];
   wordsCounts: Record<string, number>;
   title: string;
 };

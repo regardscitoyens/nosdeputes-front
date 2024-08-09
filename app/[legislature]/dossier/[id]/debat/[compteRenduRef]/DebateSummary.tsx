@@ -13,15 +13,15 @@ import { useTheme } from "@mui/material/styles";
 import { ClockMovingIcon } from "@/icons/ClockMovingIcon";
 
 import throttle from "lodash/throttle";
-import { WORDS_PER_MINUTES } from "../const";
-import { cleanText } from "./DebatTab/cleanText";
+import { WORDS_PER_MINUTES } from "../../../../../../components/const";
+import { cleanText } from "../../../../../../components/folders/DebatTab/cleanText";
+import { Paragraphe } from "@prisma/client";
 
 const getDuration = (wordCount: number) =>
   Math.round(wordCount / WORDS_PER_MINUTES);
 
 type DebateSummaryProps = {
-  // TODO: Define type from prisma (to generate)
-  sections: any[];
+  sections: Paragraphe[];
   wordsCounts: Record<string, number>;
 };
 
@@ -176,7 +176,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                   color="white"
                   component="a"
                   href={`#${hash}`}
-                  dangerouslySetInnerHTML={{ __html: cleanText(texte) }}
+                  dangerouslySetInnerHTML={{ __html: cleanText(texte!) }}
                 />
                 <Stack direction="row" alignItems="center" spacing={0.5}>
                   <ClockMovingIcon sx={{ fontSize: "12px" }} fill="white" />
@@ -195,7 +195,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                 key={hash}
                 component="a"
                 href={`#${hash}`}
-                dangerouslySetInnerHTML={{ __html: cleanText(texte) }}
+                dangerouslySetInnerHTML={{ __html: cleanText(texte!) }}
                 variant="body2"
                 onClick={handleClick(hash)}
               />

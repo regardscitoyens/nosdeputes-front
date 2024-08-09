@@ -68,14 +68,16 @@ export default async function Votes(props: { deputeSlug: string }) {
             sx={{ width: "100%", mb: 1 }}
           >
             <Typography fontWeight="light">{titrePrincipal}</Typography>
-            <Typography sx={{ color: colors(positionVote) }}>
-              {positionVote}{" "}
-              {parDelegation && (
-                <Typography fontWeight="light" component="span">
-                  par délégation
-                </Typography>
-              )}
-            </Typography>
+            {positionVote && (
+              <Typography sx={{ color: colors(positionVote) }}>
+                {positionVote}{" "}
+                {parDelegation && (
+                  <Typography fontWeight="light" component="span">
+                    par délégation
+                  </Typography>
+                )}
+              </Typography>
+            )}
           </Stack>
         );
       })}

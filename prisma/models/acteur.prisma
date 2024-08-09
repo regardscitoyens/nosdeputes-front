@@ -65,6 +65,7 @@ model Acteur {
   rapporteurs              Rapporteur[]
   suppletions              Suppleant[]
   vecteurRecherche         Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
+  paroles                  Paragraphe[]
 
   @@index([vecteurRecherche], type: Gin)
   @@index([actif])

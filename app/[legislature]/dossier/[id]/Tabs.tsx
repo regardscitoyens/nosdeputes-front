@@ -7,11 +7,14 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Link from "next/link";
 
-export default function DossiersTabs() {
+export default function DossiersTabs(props: {
+  legislature: string;
+  dossierUid: string;
+}) {
+  const { legislature, dossierUid } = props;
   const segment = useSelectedLayoutSegment();
-  const pathname = usePathname();
 
-  const rootPathName = segment ? pathname.replace(`/${segment}`, "") : pathname;
+  const rootPathName = `/${legislature}/dossier/${dossierUid}/`;
 
   return (
     <Box

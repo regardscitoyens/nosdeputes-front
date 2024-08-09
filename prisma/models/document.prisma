@@ -107,9 +107,9 @@ model Auteur {
 
 model CoSignataireDocument {
   /// Identifiant unique.
-  id                     Int      @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   /// Hachage de l'objet
-  hash                   String   @unique
+  hash                   String    @unique
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid           String?
   /// Date de la co-signature.

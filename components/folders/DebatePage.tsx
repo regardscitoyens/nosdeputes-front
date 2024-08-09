@@ -8,11 +8,11 @@ import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 
 import { DebateFilterBar } from "./DebateFilterBar";
-import { DebateSummary } from "./DebateSummary";
-import { DebateTranscript } from "./DebateTranscript";
+import { DebateSummary } from "../../app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateSummary";
+import { DebateTranscript } from "../../app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateTranscript";
 import { Agenda } from "@/repository/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { SUMMARY_CODES } from "./DebateTimeline";
+import { SUMMARY_CODES } from "../../app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateTimeline";
 
 interface DebatePageProps {
   paragraphs: any[];

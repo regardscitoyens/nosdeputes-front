@@ -11,7 +11,8 @@ export default async function Dossier({
 }: React.PropsWithChildren<{
   params: { legislature: string; id: string };
 }>) {
-  const dossier = await getDossier(params.id);
+  const { legislature, id } = params;
+  const dossier = await getDossier(id);
 
   if (dossier === null) {
     return <p>Dossier not found</p>;
@@ -28,7 +29,7 @@ export default async function Dossier({
         theme={theme}
         status={status}
       />
-      <Tabs />
+      <Tabs legislature={legislature} dossierUid={id} />
       {children}
     </>
   );
