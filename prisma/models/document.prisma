@@ -69,7 +69,7 @@ model Document {
   dossierRef               Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
   documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousDocuments            Document?                @relation("DocumentParentRef")
-  texteLegislatif          Amendement[]
+  amendements              Amendement[]
   amendementsCommission    AmendementCommission[]
   auteurs                  Auteur[]
   coSignataires            CoSignataireDocument[]

@@ -1,8 +1,7 @@
 import * as React from "react";
-import { DossierData } from "@/repository/database";
 import { MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { AmendementTabProps } from ".";
+import { AmendementTabProps } from "./AmendementTab";
 
 const AVAILABLE_STATUS = [
   "Rejeté",
@@ -13,17 +12,16 @@ const AVAILABLE_STATUS = [
   "Irrecevable 40",
   "Adopté",
 ];
-type FilterProps = Pick<DossierData, "documents" | "amendementCount"> &
-  Pick<AmendementTabProps, "amendements"> & {
-    numero: string;
-    handleNumero: (numero: string) => void;
-    selectedDocument: string;
-    setSelectedDocument: (id: string) => void;
-    depute: string;
-    handleDepute: (id: string) => void;
-    status: string;
-    handleStatus: (id: string) => void;
-  };
+type FilterProps = AmendementTabProps & {
+  numero: string;
+  handleNumero: (numero: string) => void;
+  selectedDocument: string;
+  setSelectedDocument: (id: string) => void;
+  depute: string;
+  handleDepute: (id: string) => void;
+  status: string;
+  handleStatus: (id: string) => void;
+};
 
 export const Filter = (props: FilterProps) => {
   const {
@@ -31,28 +29,36 @@ export const Filter = (props: FilterProps) => {
     handleNumero,
     selectedDocument,
     setSelectedDocument,
-    documents,
-    amendementCount,
+    dossier,
     depute,
     handleDepute,
-    amendements,
     status,
     handleStatus,
   } = props;
 
   const deputes = React.useMemo(() => {
     const seenIds = new Set();
-    return amendements
-      .filter(({ acteur_uid, prenom, nom }) => {
-        const seen = seenIds.has(acteur_uid);
-
-        if (!seen) {
-          seenIds.add(acteur_uid);
+    return dossier.documents
+      ?.flatMap((document) => document.amendements)
+      .filter((amendement) => amendement != null)
+      .filter(({ acteurRef }) => {
+        if (!acteurRef) {
+          return false;
         }
+
+        const seen = seenIds.has(acteurRef.uid);
+        if (!seen) {
+          seenIds.add(acteurRef.uid);
+        }
+
         return !seen;
       })
-      .map(({ acteur_uid, prenom, nom }) => ({ acteur_uid, prenom, nom }));
-  }, [amendements]);
+
+      .map(({ acteurRef }) => {
+        const { uid, prenom, nom } = acteurRef!;
+        return { uid, prenom, nom };
+      });
+  }, [dossier]);
 
   return (
     <React.Fragment>
@@ -77,11 +83,13 @@ export const Filter = (props: FilterProps) => {
         }}
       >
         <MenuItem value="">Tout document</MenuItem>
-        {Object.keys(amendementCount).map((documentId) => (
-          <MenuItem key={documentId} value={documentId}>
-            {documents[documentId].depotLibelle} ({amendementCount[documentId]})
-          </MenuItem>
-        ))}
+        {dossier.documents
+          ?.filter((document) => document.amendements?.length)
+          .map((document) => (
+            <MenuItem key={document.uid} value={document.uid}>
+              {document.depotLibelle} ({document.amendements?.length})
+            </MenuItem>
+          ))}
       </TextField>
       <TextField
         select
@@ -94,8 +102,8 @@ export const Filter = (props: FilterProps) => {
         }}
       >
         <MenuItem value="">Auteur</MenuItem>
-        {deputes.map(({ acteur_uid, prenom, nom }) => (
-          <MenuItem key={acteur_uid} value={acteur_uid}>
+        {deputes?.map(({ uid, prenom, nom }) => (
+          <MenuItem key={uid} value={uid}>
             {prenom} {nom}
           </MenuItem>
         ))}

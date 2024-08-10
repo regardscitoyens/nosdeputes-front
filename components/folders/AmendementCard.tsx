@@ -9,8 +9,9 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StatusChip from "@/components/StatusChip";
-import DeputeCard from "../DeputeCard";
+
 import { Acteur, Amendement, Organe } from "@prisma/client";
+import DeputeCard from "@/components/folders/DeputeCard";
 
 function getStatus(label: string | null) {
   switch (label) {
@@ -30,7 +31,7 @@ function getStatus(label: string | null) {
 }
 type AmendementCardProps = {
   amendement: Amendement;
-  depute: Acteur & { groupeParlementaire: Organe | null };
+  depute: null | (Acteur & { groupeParlementaire: Organe | null });
 };
 
 export default function AmendementCard(props: AmendementCardProps) {
@@ -65,11 +66,11 @@ export default function AmendementCard(props: AmendementCardProps) {
           sx={{ width: "100%", mr: 2 }}
         >
           <DeputeCard
-            slug={depute.slug}
-            prenom={depute.prenom}
-            nom={depute.nom}
+            slug={depute?.slug ?? ""}
+            prenom={depute?.prenom ?? ""}
+            nom={depute?.nom ?? ""}
             group={
-              depute.groupeParlementaire && {
+              depute?.groupeParlementaire && {
                 fullName: depute.groupeParlementaire.libelle,
                 shortName: "",
                 color: depute.groupeParlementaire.couleurAssociee,

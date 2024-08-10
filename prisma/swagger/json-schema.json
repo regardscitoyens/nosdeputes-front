@@ -1332,6 +1332,12 @@
             "null"
           ]
         },
+        "documentUid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "exposeSommaireHtml": {
           "type": [
             "string",
@@ -1354,7 +1360,7 @@
         "texteLegislatifRef": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Dossier"
+              "$ref": "#/definitions/Document"
             },
             {
               "type": "null"
@@ -1401,16 +1407,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "document": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Document"
             },
             {
               "type": "null"
@@ -2090,7 +2086,7 @@
             }
           ]
         },
-        "texteLegislatif": {
+        "amendements": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Amendement"
@@ -2412,12 +2408,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Document"
-          }
-        },
-        "amendements": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Amendement"
           }
         },
         "pointsOdj": {

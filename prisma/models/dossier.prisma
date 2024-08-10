@@ -36,7 +36,6 @@ model Dossier {
   initiateurs            InitiateurDossier[]
   actesLegislatifs       ActeLegislatif[]
   documents              Document[]
-  amendements            Amendement[]
   pointsOdj              PointOdj[]
 
   @@index([vecteurRecherche], type: Gin)

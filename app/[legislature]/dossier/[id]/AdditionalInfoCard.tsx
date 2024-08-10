@@ -21,8 +21,8 @@ async function getDocumentsUnCached(ids: string[]) {
       where: { uid: { in: ids } },
       include: {
         _count: {
-          // TODO: Check with HEnry if the naming `texteLegislatif` make sens for amendements
-          select: { amendementsCommission: true, texteLegislatif: true },
+          // TODO: Check with HEnry if the naming `amendements` make sens for amendements
+          select: { amendementsCommission: true, amendements: true },
         },
         coSignataires: {
           include: { acteurRef: { include: { groupeParlementaire: true } } },
@@ -66,7 +66,7 @@ export const AdditionalInfoCard = async (props: {
                 {data.map(({ uid, titrePrincipalCourt, _count }) => (
                   <div key={uid}>
                     <Typography variant="body2" fontWeight="bold">
-                      {_count.amendementsCommission + _count.texteLegislatif}{" "}
+                      {_count.amendementsCommission + _count.amendements}{" "}
                       amendements
                     </Typography>
                     <MuiLink

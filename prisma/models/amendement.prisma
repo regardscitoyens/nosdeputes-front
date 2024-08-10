@@ -114,13 +114,12 @@ model Amendement {
 
   vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
 
-  texteLegislatifRef        Dossier?                 @relation(fields: [texteLegislatifRefUid], references: [uid])
+  texteLegislatifRef        Document?                @relation(fields: [texteLegislatifRefUid], references: [uid])
   acteurRef                 Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
   scrutinRef                Scrutin?                 @relation(fields: [scrutinRefUid], references: [uid])
   amendementParentRef       Amendement?              @relation("amendementParentRef", fields: [amendementParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousAmendements           Amendement[]             @relation("amendementParentRef")
   auteurRapporteurOrganeRef Organe?                  @relation("Amendement_Organe", fields: [auteurRapporteurOrganeRefUid], references: [uid])
-  document                  Document?                @relation(fields: [documentUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   gouvernementOrganeRef     Organe?                  @relation("Amendement_Gouvernement", fields: [gouvernementOrganeRefUid], references: [uid])
   groupePolitiqueRef        Organe?                  @relation("Amendement_GroupePolitique", fields: [groupePolitiqueRefUid], references: [uid])
   seanceRef                 Agenda?                  @relation(fields: [seanceRefUid], references: [uid])

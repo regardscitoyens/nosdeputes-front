@@ -10,21 +10,30 @@ import { FilterContainer } from "@/components/FilterContainer";
 import { Filter } from "./Filter";
 import { useFilterSearch } from "./useFilter";
 import AmendementList from "./AmendementList";
-import { Amendement, Acteur } from "@/repository/types";
 import { Typography } from "@mui/material";
+import { Amendement, Dossier, Document, Acteur, Organe } from "@prisma/client";
 
-export type AmendementTabProps = Pick<
-  DossierData,
-  "amendementCount" | "documents"
-> & {
-  amendements: (Amendement & Partial<Acteur>)[];
+export type AmendementTabProps = {
+  dossier: Dossier & {
+    documents:
+      | null
+      | (Document & {
+          amendements:
+            | null
+            | (Amendement & {
+                acteurRef:
+                  | null
+                  | (Acteur & { groupeParlementaire: Organe | null });
+              })[];
+        })[];
+  };
 };
 
-export const AmendementTab = ({
-  amendements,
-  documents,
-  amendementCount,
-}: AmendementTabProps) => {
+export const AmendementTab = ({ dossier }: AmendementTabProps) => {
+  const flattenAmendements = dossier.documents
+    ?.flatMap((document) => document.amendements)
+    .filter((amendement) => amendement !== null);
+
   const [numero, handleNumero] = useFilterSearch("numero");
   const [document, handleDocument] = useFilterSearch("document");
   const [depute, handleDepute] = useFilterSearch("depute");
@@ -49,22 +58,20 @@ export const AmendementTab = ({
             handleNumero={handleNumero}
             selectedDocument={document}
             setSelectedDocument={handleDocument}
-            documents={documents}
-            amendementCount={amendementCount}
+            dossier={dossier}
             depute={depute}
             handleDepute={handleDepute}
             status={status}
             handleStatus={handleStatus}
-            amendements={amendements}
           />
         </FilterContainer>
       </Stack>
       <Stack spacing={3} useFlexGap flex={8} sx={{ minWidth: 0 }}>
         <Typography variant="h2" fontWeight="bold" fontFamily="Raleway">
-          {amendements.length} Amendements
+          {flattenAmendements?.length ?? 0} Amendements
         </Typography>
         <AmendementList
-          amendements={amendements}
+          amendements={flattenAmendements ?? []}
           numero={numero}
           selectedDocument={document}
           depute={depute}

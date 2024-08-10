@@ -2,7 +2,7 @@ import React from "react";
 
 import Stack from "@mui/material/Stack";
 
-import AmendementCard from "@/components/folders/AmendementTab/AmendementCard";
+import AmendementCard from "@/components/folders/AmendementCard";
 import { prisma } from "@/prisma";
 
 async function getDeputeAmendementUnCached(slug: string) {
