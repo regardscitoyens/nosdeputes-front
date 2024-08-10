@@ -50,7 +50,7 @@ export default async function Page({
   // A décider: Faut il afficher les mandats passé?
   // Exemple: la partissipation à des commission d'enquête
   const mandasEnCours = depute.mandats?.filter(
-    (mandat) => mandat.dateFin === null
+    (mandat) => true //mandat.dateFin === null
   );
 
   return (
