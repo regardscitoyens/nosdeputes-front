@@ -4123,6 +4123,12 @@
             "string",
             "null"
           ],
+          "enum": [
+            "pour",
+            "contre",
+            "nonVotant",
+            "abstention"
+          ],
           "description": "La position majoritaire du groupe politique est celle pour laquelle le plus grand nombre de membres ont voté. Si le nombre de pour est égale au nombre de contre, c'est le pour qui l'emporte. A moins que le nombre d'abstentions soit supérieur ou égal au nombre de pour, dans ce cas c'est l'abstention qui l'emporte."
         },
         "organeRef": {
@@ -4165,9 +4171,12 @@
           "description": "Hachage de l'objet"
         },
         "positionVote": {
-          "type": [
-            "string",
-            "null"
+          "type": "string",
+          "enum": [
+            "pour",
+            "contre",
+            "nonVotant",
+            "abstention"
           ]
         },
         "causePositionVote": {

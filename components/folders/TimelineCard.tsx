@@ -16,7 +16,7 @@ import { CardLayout } from "@/components/folders/CardLayout";
 
 import { ActeLegislatif } from "@prisma/client";
 
-import { ActeLegislatifWithDate, groupActs } from "@/repository/Acts";
+import { groupActs } from "@/repository/Acts";
 import { sortActDate } from "../utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -279,7 +279,7 @@ export const TimelineCard = ({
                                               .filter(
                                                 (
                                                   childrenAct
-                                                ): childrenAct is ActeLegislatifWithDate =>
+                                                ): childrenAct is ActeLegislatif =>
                                                   childrenAct !== undefined &&
                                                   act.organeRefUid ===
                                                     childrenAct.organeRefUid

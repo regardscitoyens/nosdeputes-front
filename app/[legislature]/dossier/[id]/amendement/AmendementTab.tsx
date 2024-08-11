@@ -4,7 +4,6 @@ import React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 
-import { DossierData } from "@/repository/database";
 import { FilterContainer } from "@/components/FilterContainer";
 
 import { Filter } from "./Filter";

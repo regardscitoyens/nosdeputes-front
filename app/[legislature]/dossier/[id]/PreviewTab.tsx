@@ -2,16 +2,11 @@ import React from "react";
 
 import { AdditionalInfoCard } from "@/app/[legislature]/dossier/[id]/AdditionalInfoCard";
 import { CommissionsCard } from "./CommissionsCard";
-import { CardLayout } from "@/components/folders/CardLayout";
+
 import { LegislativeDocumentsCard } from "@/app/[legislature]/dossier/[id]/LegislativeDocumentsCard";
 import { TextStructureCard } from "@/components/folders/TextStructureCard";
 import { TimelineCard } from "@/components/folders/TimelineCard";
-import { SpeakingTime } from "@/components/folders/SpeakingTime";
 
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
-import { Acteur } from "@/repository/types";
-import { DossierData } from "@/repository/database";
 import {
   getCommissionNomination,
   getCommissionUids,

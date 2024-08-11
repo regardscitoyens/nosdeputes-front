@@ -1,9 +1,6 @@
-import { ActeLegislatifWithDate } from "@/repository/Acts";
+import { ActeLegislatif } from "@prisma/client";
 
-export function sortActDate(
-  act1: ActeLegislatifWithDate,
-  act2: ActeLegislatifWithDate
-) {
+export function sortActDate(act1: ActeLegislatif, act2: ActeLegislatif) {
   if (act1.dateActe && act2.dateActe) {
     if (act1.dateActe.getTime() > act2.dateActe.getTime()) return 1;
     if (act1.dateActe.getTime() < act2.dateActe.getTime()) return -1;

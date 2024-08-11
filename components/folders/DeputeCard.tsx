@@ -23,8 +23,8 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   } | null;
   smallGroupColor?: boolean;
   showVote?: boolean;
-  vote?: "pour" | "contre" | "nonVotant" | "abstention";
-  groupPosition?: "pour" | "contre" | "abstention";
+  vote?: "pour" | "contre" | "nonVotant" | "abstention" | null;
+  groupPosition?: "pour" | "contre" | "nonVotant" | "abstention";
 } & BoxProps<RootComponent>;
 
 export default function DeputeCard<RootComponent extends React.ElementType>(

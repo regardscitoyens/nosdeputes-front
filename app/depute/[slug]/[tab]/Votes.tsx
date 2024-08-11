@@ -81,7 +81,6 @@ export default async function Votes(props: { deputeSlug: string }) {
           </Stack>
         );
       })}
-      {/* <pre>{JSON.stringify(votes, null, 2)}</pre> */}
     </div>
   );
 }

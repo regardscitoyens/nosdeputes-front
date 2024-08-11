@@ -9,7 +9,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import LinkIcon from "@/icons/LinkIcon";
 
 import Link from "next/link";
-import { DossierData } from "@/repository/database";
 import { getDocumentURL } from "@/domain/dataTransform";
 import { prisma } from "@/prisma";
 
