@@ -49,10 +49,12 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
     (reunion) => reunion.compteRenduRef === sceanceUid
   );
   if (!sceanceUid || reunionIndex < 0) {
-    if (sceanceUid) {
-      permanentRedirect(`${reunions[0].compteRenduRef}`);
-    } else {
-      permanentRedirect(`debat/${reunions[0].compteRenduRef}`);
+    if (reunions.length > 0) {
+      if (sceanceUid) {
+        permanentRedirect(`${reunions[0].compteRenduRef}`);
+      } else {
+        permanentRedirect(`debat/${reunions[0].compteRenduRef}`);
+      }
     }
   }
 

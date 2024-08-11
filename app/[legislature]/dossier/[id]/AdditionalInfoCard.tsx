@@ -44,6 +44,10 @@ export const AdditionalInfoCard = async (props: {
 }) => {
   const data = await getDocuments(props.documentIds);
 
+  const documentsWithAmendements = data.filter(
+    (document) =>
+      document._count.amendements + document._count.amendementsCommission > 0
+  );
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
@@ -54,7 +58,7 @@ export const AdditionalInfoCard = async (props: {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
-          {data.length > 0 && (
+          {documentsWithAmendements.length > 0 && (
             <React.Fragment>
               <Stack direction="row" spacing={0.5} alignItems="center">
                 <Typography variant="body2" fontWeight="light">
@@ -63,7 +67,7 @@ export const AdditionalInfoCard = async (props: {
                 <InfoIcon sx={{ fontSize: "14px" }} />
               </Stack>
               <Stack direction="column" spacing={1}>
-                {data.map(({ uid, titrePrincipalCourt, _count }) => (
+                {documentsWithAmendements.map(({ uid, titrePrincipalCourt, _count }) => (
                   <div key={uid}>
                     <Typography variant="body2" fontWeight="bold">
                       {_count.amendementsCommission + _count.amendements}{" "}
