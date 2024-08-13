@@ -1,5 +1,5 @@
 import { ActsStructure } from "@/repository/Acts";
-import { ActeLegislatif } from "@/repository/types";
+import { ActeLegislatif } from "@prisma/client";
 
 // Chaque list est un ordre d'éléments.
 // Par exemple le retrait d'une initiative arrive apres sont depot (enfin on peut avoir des surprises)
@@ -51,9 +51,9 @@ export default function getSortedActGroups(
             // - Réunion de commission du 16 nov. 2022
             // - Réunion de commission du 28 nov. 2022
             // - Dépôt de rapport du 15 nov. 2022
-            if (act1.date && act2.date) {
-              if (act1.date.getTime() > act2.date.getTime()) return 1;
-              if (act1.date.getTime() < act2.date.getTime()) return -1;
+            if (act1.dateActe && act2.dateActe) {
+              if (act1.dateActe.getTime() > act2.dateActe.getTime()) return 1;
+              if (act1.dateActe.getTime() < act2.dateActe.getTime()) return -1;
             }
             return 0;
           }),

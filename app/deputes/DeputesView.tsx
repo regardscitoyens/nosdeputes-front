@@ -19,7 +19,8 @@ import { groupDeputes } from "./groupDeputes";
 import CircleDiv from "@/icons/CircleDiv";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { Acteur, Mandat } from "@/repository/types";
+import { Acteur } from "@prisma/client";
+import { getDeputes } from "./getDeputes";
 
 function GroupPolitiqueHeader({
   itemKey,
@@ -75,7 +76,7 @@ function Deputes({
   deputes,
   grouping,
 }: {
-  deputes: DeputesType[];
+  deputes: Awaited<ReturnType<typeof getDeputes>>;
   grouping: "groupPolitique" | "alphabetique";
 }) {
   return (
@@ -98,12 +99,8 @@ function Deputes({
             nom,
             prenom,
             slug,
-            dateFin,
-            group_color,
-            group_libelle,
-            group_libelle_short,
-            numCirco,
-            departement,
+            groupeParlementaire,
+            mandatPrincipal,
           } = depute;
           return (
             <DeputeCard
@@ -113,23 +110,24 @@ function Deputes({
               nom={nom}
               secondaryText={
                 grouping === "groupPolitique"
-                  ? `${numCirco}e Circ ${departement}`
+                  ? `${mandatPrincipal?.numCirco}e Circ ${mandatPrincipal?.departement}`
                   : undefined
               }
               group={
                 grouping === "groupPolitique"
                   ? undefined
-                  : dateFin !== null
+                  : !mandatPrincipal || mandatPrincipal.dateFin !== null
                   ? {
                       color: "black",
                       fullName: "mandat terminé",
                       shortName: "",
                     }
-                  : group_color !== null
+                  : groupeParlementaire &&
+                    groupeParlementaire.couleurAssociee !== null
                   ? {
-                      color: group_color,
-                      fullName: group_libelle,
-                      shortName: group_libelle_short,
+                      color: groupeParlementaire.couleurAssociee,
+                      fullName: groupeParlementaire.libelle,
+                      shortName: groupeParlementaire.libelleAbrege,
                     }
                   : undefined
               }
@@ -145,13 +143,14 @@ function Deputes({
   );
 }
 
-type DeputesType = Acteur & Mandat;
 export default function DeputesView({
   deputes,
   indexesPerGroup,
   indexesPerNom,
   groups,
-}: { deputes: DeputesType[] } & ReturnType<typeof groupDeputes>) {
+}: { deputes: Awaited<ReturnType<typeof getDeputes>> } & ReturnType<
+  typeof groupDeputes
+>) {
   const [grouping, setGrouping] = React.useState<
     "groupPolitique" | "alphabetique"
   >("groupPolitique");
@@ -164,10 +163,12 @@ export default function DeputesView({
     grouping === "groupPolitique" ? GroupPolitiqueHeader : NameHeader;
 
   const deputesActifs = deputes.filter(
-    (depute) => depute.dateFin === null
+    (depute) =>
+      depute.mandatPrincipal && depute.mandatPrincipal.dateFin === null
   ).length;
   const deputesMandatFinit = deputes.filter(
-    (depute) => depute.dateFin !== null
+    (depute) =>
+      !depute.mandatPrincipal || depute.mandatPrincipal.dateFin !== null
   ).length;
 
   return (
@@ -206,10 +207,10 @@ export default function DeputesView({
           const deputesIndex = indexGroup[key];
           const filteredDeputes = deputesIndex
             .map((i) => deputes[i])
-            .filter(({ nom, prenom, departement }) => {
+            .filter(({ nom, prenom, mandatPrincipal }) => {
               return (
                 !search ||
-                `${nom} ${prenom} ${departement}`
+                `${nom} ${prenom} ${mandatPrincipal?.departement ?? ""}`
                   .toLowerCase()
                   .includes(search.toLowerCase())
               );
@@ -222,6 +223,7 @@ export default function DeputesView({
                 group={groups[key]}
                 nbDeputes={filteredDeputes.length}
               />
+              <p>{key}</p>
               <AccordionDetails>
                 <Deputes deputes={filteredDeputes} grouping={grouping} />
               </AccordionDetails>

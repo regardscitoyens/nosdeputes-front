@@ -14,8 +14,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import EnergyIcon from "@/icons/EnergyIcon";
 import LabelChip from "@/components/LabelChip";
 import StatusChip from "@/components/StatusChip";
-import { getCurrentStatus, statusInfo } from "@/domain/dataTransform";
-import { DossierData } from "@/repository/database";
+import { statusInfo } from "@/app/[legislature]/dossier/[id]/dataFunctions";
 
 const breadcrumbs = [
   <Link key="1" href="/">
@@ -31,12 +30,21 @@ const breadcrumbs = [
   </Link>,
 ];
 
-type HeroSectionProps = Partial<Pick<DossierData, "dossier" | "acts">>;
+type HeroSectionProps = {
+  libelleProcedure: string;
+  titre: string | null;
+  theme: string | null;
+  status?: string;
+};
 
-export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
+export const HeroSection = ({
+  libelleProcedure,
+  titre,
+  theme: dossierTheme,
+  status,
+}: HeroSectionProps) => {
   const theme = useTheme();
 
-  const status = getCurrentStatus(acts);
   return (
     <>
       <Breadcrumbs
@@ -117,7 +125,7 @@ export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
                   },
                 }}
               >
-                {dossier.libelleProcedure}
+                {libelleProcedure}
                 {/* TODO: info tick */}
               </Typography>
               <Typography
@@ -132,7 +140,7 @@ export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
                   },
                 }}
               >
-                {dossier.titre}
+                {titre}
               </Typography>
             </Stack>
             <Stack
@@ -155,15 +163,21 @@ export const HeroSection = ({ dossier, acts = [] }: HeroSectionProps) => {
               <StatusChip size="small" status="dropped" label="Non-soutenu" />
               <StatusChip size="small" status="review" label="1e lecture AN" />
               <StatusChip size="small" status="validated" label="Promulgué" /> */}
-              {dossier.themes_labels?.map((label: string) => (
+              {/* {themes_labels?.map((label: string) => (
                 <LabelChip
                   key={label}
                   size="small"
                   label={label}
                   icon={<EnergyIcon />}
                 />
-              ))}
-
+              ))} */}
+              {dossierTheme && (
+                <LabelChip
+                  size="small"
+                  label={dossierTheme}
+                  icon={<EnergyIcon />}
+                />
+              )}
               {/* <LabelChip size="small" label="Label" />
               <LabelChip size="small" label="Label" onDelete={() => {}} />
               <LabelChip size="small" label="Label" onDelete={() => {}} /> */}

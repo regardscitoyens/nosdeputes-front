@@ -1,0 +1,81 @@
+/// Compte rendu des débats en séance.
+model Debat {
+  /// Identifiant unique.
+  uid               String          @id
+  /// Hachage de l'obejt.
+  hash              String          @unique
+  typeAssemblee     String
+  legislature       String
+  seanceRef         String
+  sessionRef        String
+  dateSeance        String
+  dateSeanceJour    String
+  numSeance         String
+  numSeanceJour     String
+  diffusion         String
+  environnement     String
+  etat              String
+  version           String
+  heureGeneration   DateTime
+  nomFichierJo      String
+  session           String
+  validite          String
+  quantiemesJournee String
+  quantiemesSession String
+  paragraphes       Paragraphe[]
+  sommaires         SommaireDebat[]
+}
+
+/// Sommaire d'une séance de débat.
+model SommaireDebat {
+  id                String  @id
+  debatRefUid       String
+  valeurPtsOdj      String
+  typeDebat         String
+  titreIntitule     String?
+  titreSousIntitule String?
+  idSyceron         String
+  presidentSeance   String
+  debatRef          Debat   @relation(fields: [debatRefUid], references: [uid])
+
+  @@index([debatRefUid])
+}
+
+model Paragraphe {
+  /// Hachage de l'obejt.
+  hash              String                   @unique
+  debatRefUid       String
+  adt               String?
+  art               String?
+  bibard            String?
+  codeGrammaire     String?
+  codeParole        String?
+  codeStyle         String?
+  decision          String?
+  acteurRef         String?
+  mandatRef         String?
+  idNominationOe    String?
+  idNominationOp    String?
+  idPreparation     String?
+  idSyceron         String?
+  nivPoint          String?
+  orateur           String?
+  ordinalPrise      Int?
+  ordreAbsoluSeance Int?
+  roleDebat         String?
+  sommaire          String?
+  ssadt             String?
+  structure         String?
+  typeDebat         String?
+  valeur            String?
+  valeurPtsOdj      String?
+  texte             String?
+  stime             String?
+  vecteurRecherche  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
+  debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
+  acteur            Acteur?                  @relation(fields: [acteurRef], references: [uid])
+
+  @@index([vecteurRecherche], type: Gin)
+  @@index([debatRefUid])
+  @@index([acteurRef])
+}

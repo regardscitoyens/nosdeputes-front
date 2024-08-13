@@ -3,13 +3,12 @@ import * as React from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 
-import { getDeputes } from "@/repository/database";
-import { DeputeData, groupDeputes } from "./groupDeputes";
+import { groupDeputes } from "./groupDeputes";
 import DeputesView from "./DeputesView";
-import { FilterContainer } from "@/components/FilterContainer";
+import { getDeputes } from "./getDeputes";
 
 export default async function DeputesList() {
-  const deputes: DeputeData[] = (await getDeputes("16")) ?? [];
+  const deputes = await getDeputes("16");
 
   const { indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
     groupDeputes(deputes);

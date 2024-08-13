@@ -1,4 +1,4 @@
-import { ActeLegislatif } from "@/repository/types";
+import { ActeLegislatif } from "@prisma/client";
 
 export function sortActDate(act1: ActeLegislatif, act2: ActeLegislatif) {
   if (act1.dateActe && act2.dateActe) {

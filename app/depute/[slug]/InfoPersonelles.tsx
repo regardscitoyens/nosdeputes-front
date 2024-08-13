@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Paper, Stack, Typography } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { Acteur, Mandat } from "@/repository/types";
+import { Acteur, Mandat } from "@prisma/client";
 
 export default function InfoPersonelles({
   mandats,
@@ -19,7 +19,7 @@ export default function InfoPersonelles({
     (mandat) => mandat.typeOrgane === "ASSEMBLEE"
   )[0];
 
-  const dernerGroupParlementaire = sortedMandats.filter(
+  const dernergroupeParlementaire = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "GP"
   )[0];
 
@@ -29,6 +29,7 @@ export default function InfoPersonelles({
 
   const { dateNais, villeNais, profession } = depute;
   const age =
+    dateNais &&
     new Date(
       new Date().valueOf() - new Date(dateNais).valueOf()
     ).getFullYear() - 1970;
@@ -70,9 +71,9 @@ export default function InfoPersonelles({
             Group politique <InfoOutlinedIcon fontSize="inherit" />
           </Typography>
           <Typography variant="body2">
-            {dernerGroupParlementaire &&
-            dernerGroupParlementaire.dateFin === null
-              ? dernerGroupParlementaire.libelle
+            {dernergroupeParlementaire &&
+            dernergroupeParlementaire.dateFin === null
+              ? dernergroupeParlementaire.libelle
               : "-"}
           </Typography>
         </div>
@@ -93,8 +94,8 @@ export default function InfoPersonelles({
             Date de naissance <InfoOutlinedIcon fontSize="inherit" />
           </Typography>
           <Typography variant="body2">
-            Le {new Date(dateNais).toLocaleDateString("fr-FR")} ({age} ans) à{" "}
-            {villeNais}
+            Le {dateNais && new Date(dateNais).toLocaleDateString("fr-FR")} (
+            {age} ans) à {villeNais}
           </Typography>
         </div>
 

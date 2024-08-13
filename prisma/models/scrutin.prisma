@@ -1,0 +1,167 @@
+/// Les positions de vote (pour, contre ou abstention) de chaque député pour les `scrutins solennels <https://www.vie-publique.fr/fiches/19498-comment-votent-les-parlementaires>`__, les déclarations du Gouvernement, les motions de procédure et les autres scrutins publics.
+model Scrutin {
+  /// Identifiant unique.
+  uid                     String               @id
+  /// Hachage de l'objet
+  hash                    String               @unique
+  /// Date à laquelle le vote a eu lieu.
+  dateScrutin             DateTime?
+  /// L'acteur ou l'organe qui demande le vote.
+  demandeur               String?
+  /// Numéro de la législature.
+  legislature             String?
+  /// Mode de publication des votes.
+  modePublicationDesVotes String?
+  /// Numéro unique du vote, relativement à la législature, débutant par 1 et par incrément de 1. On le retrouve aussi à la fin de l'identifiant unique du vote (uid).
+  numero                  String?
+  /// Objet du vote, toujours identique au champ titre.
+  objet                   String?
+  /// L'identifiant unique (uid) de l'organe au sein duquel se déroule le vote. Il s'agit toujours de l'Assemblée Nationale mais son uid varie en fonction de la législature.
+  organeRefUid            String?
+  /// Numéro de la séance dans la journée.
+  quantiemeJourSeance     String?
+  /// Identifiant unique (uid) de l'entrée de l'agenda correspondant au moment où le vote a lieu.
+  seanceRefUid            String?
+  /// Résultat du vote (adopté ou non).
+  code                    String?
+  /// Libellé complet du résultat du vote (adopté ou non).
+  libelle                 String?
+  /// Annonce du résultat du vote (adopté ou non).
+  annonce                 String?
+  /// Nombre total d'abstentions.
+  abstentions             String?
+  /// Nombre total de votes contre.
+  contre                  String?
+  /// Nombre total de non votants
+  nonVotants              String?
+  /// Nombre total de non votants volontaires.
+  nonVotantsVolontaires   String?
+  /// Nombre total de votes pour.
+  pour                    String?
+  /// Nombre de suffrages requis.
+  nbrSuffragesRequis      String?
+  /// Nombre de votants, c'est à dire de sièges occupés dans l'hémicycle.
+  nombreVotants           String?
+  /// Nombre de suffrages exprimés.
+  suffragesExprimes       String?
+  /// Objet du vote.
+  titre                   String?
+  /// Type de vote: MOC pour motion de censure, SAT pour scrutin à la tribune, SPO pour scrutin public ordinaire et SPS pour scrutin public solennel.
+  codeTypeVote            String?
+  /// Libellé complet du type de vote.
+  libelleTypeVote         String?
+  /// La signification de ce champ n'est pas définie.
+  typeMajorite            String?
+  acteLegislatifsRefUid   String?
+  amendementRef           Amendement?
+  acteLegislatifsRef      ActeLegislatif?      @relation(fields: [acteLegislatifsRefUid], references: [uid])
+  agendaRef               Agenda?              @relation(fields: [seanceRefUid], references: [uid])
+  organeRef               Organe?              @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  dysfonctionnements      Dysfonctionnement[]
+  groupesVotants          GroupeVotant[]
+  misesAuPoint            MiseAuPoint[]
+  votes                   Vote[]
+  votesActesLegislatifs   VoteActeLegislatif[]
+
+  @@index([organeRefUid])
+  @@index([seanceRefUid])
+  @@index([acteLegislatifsRefUid])
+}
+
+model GroupeVotant {
+  /// Identifiant unique.
+  id                    Int           @id @default(autoincrement())
+  /// Hachage de l'objet
+  hash                  String        @unique
+  /// Le nombre total de membres du groupe politique et non pas le nombre de membres présents au moment du vote.
+  nombreMembresGroupe   String?
+  /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
+  organeRefUid          String?
+  /// Liste des acteurs s'étant abstenus.
+  abstentions           String?
+  /// Liste des acteurs ayant voté contre.
+  contre                String?
+  /// Liste des acteurs ne pouvant participer à ce vote en raison de leur position (Président de séance etc.).
+  nonVotants            String?
+  /// Nombre total de non votants volontaires.
+  nonVotantsVolontaires String?
+  /// Liste des acteurs ayant voté pour.
+  pour                  String?
+  /// La position majoritaire du groupe politique est celle pour laquelle le plus grand nombre de membres ont voté. Si le nombre de pour est égale au nombre de contre, c'est le pour qui l'emporte. A moins que le nombre d'abstentions soit supérieur ou égal au nombre de pour, dans ce cas c'est l'abstention qui l'emporte.
+  positionMajoritaire   PositionVote?
+
+  scrutinRefUid String?
+  organeRef     Organe?  @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
+  votes         Vote[]
+
+  @@index([organeRefUid])
+  @@index([scrutinRefUid])
+}
+
+enum PositionVote {
+  pour
+  contre
+  nonVotant
+  abstention
+}
+
+model Vote {
+  /// Identifiant unique.
+  id                Int          @id @default(autoincrement())
+  /// Hachage de l'objet
+  hash              String       @unique
+  /// Identifiant unique (uid) de l'acteur.
+  acteurRefUid      String
+  positionVote      PositionVote
+  /// Raison pour laquelle un acteur n'as pas voté malgré sa présence. MG pour membre du gouvernement, PAN pour président de l'Assemblée nationale, PSE pour président de séance.
+  causePositionVote String?
+  /// Identifiant unique (uid) du mandat qui donne à l'acteur le droit de vote.
+  mandatRefUid      String?
+  /// 'true' si l'acteur a délégué son vote à un autre acteur, 'false' sinon.
+  parDelegation     Boolean?
+  groupeVotantRefId String?
+  scrutinRefUid     String?
+  dateVote          String?
+  codeTypeVote      String?
+
+  acteurRef       Acteur        @relation(fields: [acteurRefUid], references: [uid])
+  groupeVotantRef GroupeVotant? @relation(fields: [groupeVotantRefId], references: [hash], onDelete: Cascade)
+  mandatRef       Mandat?       @relation(fields: [mandatRefUid], references: [uid])
+  scrutinRef      Scrutin?      @relation(fields: [scrutinRefUid], references: [uid])
+
+  @@index([acteurRefUid])
+  @@index([groupeVotantRefId])
+  @@index([mandatRefUid])
+  @@index([scrutinRefUid])
+}
+
+model MiseAuPoint {
+  /// Identifiant unique.
+  id            Int      @id @default(autoincrement())
+  /// Hachage de l'objet
+  hash          String   @unique
+  acteurRefUid  String?
+  position      String?
+  scrutinRefUid String?
+  acteurRef     Acteur?  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+  scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
+
+  @@index([acteurRefUid])
+  @@index([scrutinRefUid])
+}
+
+model Dysfonctionnement {
+  /// Identifiant unique.
+  id            Int      @id @default(autoincrement())
+  /// Hachage de l'objet
+  hash          String   @unique
+  acteurRefUid  String?
+  position      String?
+  scrutinRefUid String?
+  acteurRef     Acteur?  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+  scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
+
+  @@index([acteurRefUid])
+  @@index([scrutinRefUid])
+}

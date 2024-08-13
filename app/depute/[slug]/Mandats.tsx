@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { List, ListItem, Box, Paper, Stack, Typography } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { Mandat, Organe } from "@prisma/client";
+import { getDepute } from "./layout";
 // Mandat de depute, et mandat d'appartenance au group parlementaire
 const ignoredTypeOrgane = ["ASSEMBLEE", "GP", "PARPOL"];
 
@@ -14,25 +16,37 @@ const translations: Record<string, string> = {
 
 const order = ["COMPER", "COMNL", "GE", "GA"];
 
-export default function Mandats({ mandats }: { mandats: any[] }) {
-  const mandatsPerType: Record<
-    string,
-    { libelle: string; libQualiteSex?: string }[]
-  > = mandats
+type MandatsPerType = Record<
+  string,
+  (Pick<Organe, "libelle"> & Pick<Mandat, "libQualiteSex">)[]
+>;
+
+export default function Mandats({
+  mandats,
+}: {
+  mandats: (Mandat & { organeRef: null | Organe })[];
+}) {
+  const mandatsPerType = mandats
     .filter((m) => !ignoredTypeOrgane.includes(m.typeOrgane))
     .reduce((acc, mandat) => {
-      const { typeOrgane, libelle, libQualiteSex } = mandat;
+      const organe = mandat.organeRef;
+
+      if (!organe) {
+        return acc;
+      }
+      const { libQualiteSex, typeOrgane } = mandat;
+
       return {
         ...acc,
         [typeOrgane]: [
           ...(acc[typeOrgane] ?? []),
           {
-            libelle,
+            libelle: organe?.libelle,
             libQualiteSex,
           },
         ],
       };
-    }, {});
+    }, {} as MandatsPerType);
 
   const types = Object.keys(mandatsPerType).sort(
     (a, b) => order.indexOf(a) - order.indexOf(b)

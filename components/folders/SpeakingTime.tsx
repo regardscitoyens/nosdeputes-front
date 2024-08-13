@@ -7,8 +7,8 @@ type SpeakingTimeCardProps = {
     string,
     {
       count: number;
-      group_color: string;
-      group_libelle_short: string;
+      color: string;
+      libelleShort: string;
     }
   >;
 };
@@ -44,23 +44,20 @@ export const SpeakingTime = (props: SpeakingTimeCardProps) => {
   }, 0);
 
   const sortedKeys = Object.keys(wordsPerGroup).sort((a, b) =>
-    sortParty(
-      wordsPerGroup[a].group_libelle_short,
-      wordsPerGroup[b].group_libelle_short
-    )
+    sortParty(wordsPerGroup[a].libelleShort, wordsPerGroup[b].libelleShort)
   );
 
   return (
     <React.Fragment>
       <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
         {sortedKeys.map((groupUid) => {
-          const { count, group_color } = wordsPerGroup[groupUid];
+          const { count, color } = wordsPerGroup[groupUid];
           return (
             <div
               key={groupUid}
               style={{
                 height: 8,
-                backgroundColor: group_color,
+                backgroundColor: color,
                 borderRadius: 4,
                 flex: count / totalWords,
               }}
@@ -75,10 +72,10 @@ export const SpeakingTime = (props: SpeakingTimeCardProps) => {
         justifyContent="center"
       >
         {sortedKeys.map((groupUid) => {
-          const { count, group_libelle_short } = wordsPerGroup[groupUid];
+          const { count, libelleShort } = wordsPerGroup[groupUid];
           return (
             <Typography key={groupUid} fontWeight="bold" variant="caption">
-              {group_libelle_short} :{" "}
+              {libelleShort} :{" "}
               {((100 * count) / totalWords).toFixed(1).replace(".0", "")}%
             </Typography>
           );

@@ -1,3 +1,5 @@
+import { Acteur, Mandat, Organe } from "@prisma/client";
+
 export type DeputeData = {
   nom: string;
   prenom: string;
@@ -20,7 +22,12 @@ export type DeputeData = {
     }
 );
 
-export function groupDeputes(deputes: DeputeData[]) {
+export function groupDeputes(
+  deputes: (Acteur & {
+    groupeParlementaire: null | Organe;
+    mandatPrincipal: null | Mandat;
+  })[]
+) {
   const indexesPerNom: Record<string, number[]> = {};
   const indexesPerGroup: Record<string, number[]> = {};
   const indexesPerCirco: Record<string, number[]> = {};
@@ -34,14 +41,9 @@ export function groupDeputes(deputes: DeputeData[]) {
   > = {};
 
   deputes.forEach((depute, deputeIndex) => {
-    const {
-      nom,
-      numDepartement,
-      organe_uid,
-      group_color,
-      group_libelle,
-      group_libelle_short,
-    } = depute;
+    const { nom, mandatPrincipal, groupeParlementaire } = depute;
+
+    const numDepartement = mandatPrincipal?.numDepartement ?? "";
 
     // Prend la premiere majuscule du nom pour eviter de trier par particule ("de Courson" renvoit "C" et pas "d")
     const initial = nom[nom.match(/[A-Z]/)!.index ?? 0];
@@ -56,18 +58,18 @@ export function groupDeputes(deputes: DeputeData[]) {
     indexesPerNom[initial].push(deputeIndex);
     indexesPerCirco[numDepartement].push(deputeIndex);
 
-    if (organe_uid && group_color) {
-      if (!groups[organe_uid]) {
-        groups[organe_uid] = {
-          color: group_color,
-          libelle: group_libelle,
-          libelle_short: group_libelle_short,
+    if (groupeParlementaire?.uid) {
+      if (!groups[groupeParlementaire.uid]) {
+        groups[groupeParlementaire.uid] = {
+          color: groupeParlementaire.couleurAssociee ?? "",
+          libelle: groupeParlementaire.libelle,
+          libelle_short: groupeParlementaire.libelleAbrev,
         };
       }
-      if (!indexesPerGroup[organe_uid]) {
-        indexesPerGroup[organe_uid] = [];
+      if (!indexesPerGroup[groupeParlementaire.uid]) {
+        indexesPerGroup[groupeParlementaire.uid] = [];
       }
-      indexesPerGroup[organe_uid].push(deputeIndex);
+      indexesPerGroup[groupeParlementaire.uid].push(deputeIndex);
     }
   });
 

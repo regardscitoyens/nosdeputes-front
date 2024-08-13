@@ -1,484 +1,484 @@
-import { ActeLegislatif } from "./types";
+import { ActeLegislatif } from "@prisma/client";
 
-export type SN1_DEPOT = {
-  codeActe: "SN1-DEPOT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-  organeProvenanceRefUid: null | string;
-};
-export type AN1 = {
-  codeActe: "AN1";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM = {
-  codeActe: "SN1-COM";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_DEBATS = {
-  codeActe: "SN1-DEBATS";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_DEPOT = {
-  codeActe: "AN1-DEPOT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  organeProvenanceRefUid: null | string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_COM = {
-  codeActe: "AN1-COM";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_FOND = {
-  codeActe: "SN1-COM-FOND";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_DEBATS_DEC = {
-  codeActe: "SN1-DEBATS-DEC";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  famCodeStatutConclusion: string;
-  libelleStatutConclusion: string;
-  dossierRefUid: string;
-  reunionRefUid: null | string;
-};
-export type AN1_COM_FOND = {
-  codeActe: "AN1-COM-FOND";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_FOND_SAISIE = {
-  codeActe: "SN1-COM-FOND-SAISIE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_FOND_NOMIN = {
-  codeActe: "SN1-COM-FOND-NOMIN";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_FOND_RAPPORT = {
-  codeActe: "SN1-COM-FOND-RAPPORT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-  texteAdopteRefUid: null | string;
-};
-export type AN1_COM_FOND_SAISIE = {
-  codeActe: "AN1-COM-FOND-SAISIE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1 = {
-  codeActe: "SN1";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN2 = {
-  codeActe: "AN2";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_DEBATS = {
-  codeActe: "AN1-DEBATS";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN2_DEPOT = {
-  codeActe: "AN2-DEPOT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  organeProvenanceRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-};
-export type AN2_COM = {
-  codeActe: "AN2-COM";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_DEBATS_SEANCE = {
-  codeActe: "AN1-DEBATS-SEANCE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  odjRefUid: string;
-  reunionRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_DEBATS_MOTION = {
-  codeActe: "AN1-DEBATS-MOTION";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  famCodeTypeMotion: string;
-  libelleTypeMotion: string;
-  dossierRefUid: string;
-  auteurMotionRefUid: null | string;
-};
-export type AN1_DEBATS_MOTION_VOTE = {
-  codeActe: "AN1-DEBATS-MOTION-VOTE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  famCodeStatutConclusion: string;
-  libelleStatutConclusion: string;
-  reunionRefUid: null | string;
-  dossierRefUid: string;
-};
-export type SN1_DEBATS_SEANCE = {
-  codeActe: "SN1-DEBATS-SEANCE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  odjRefUid: string;
-  reunionRefUid: string;
-  dossierRefUid: string;
-};
-export type AN2_COM_FOND = {
-  codeActe: "AN2-COM-FOND";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_COM_FOND_NOMIN = {
-  codeActe: "AN1-COM-FOND-NOMIN";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_COM_FOND_REUNION = {
-  codeActe: "AN1-COM-FOND-REUNION";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  odjRefUid: string;
-  reunionRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_COM_FOND_RAPPORT = {
-  codeActe: "AN1-COM-FOND-RAPPORT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-  texteAdopteRefUid: null | string;
-};
-export type AN2_COM_FOND_SAISIE = {
-  codeActe: "AN2-COM-FOND-SAISIE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type AN1_DEBATS_DEC = {
-  codeActe: "AN1-DEBATS-DEC";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  famCodeStatutConclusion: string;
-  libelleStatutConclusion: string;
-  reunionRefUid: string;
-  dossierRefUid: string;
-};
-export type ANLUNI = {
-  codeActe: "ANLUNI";
-  uid: string;
-  nomCanonique: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_AVIS = {
-  codeActe: "SN1-COM-AVIS";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_AVIS_SAISIE = {
-  codeActe: "SN1-COM-AVIS-SAISIE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_AVIS_NOMIN = {
-  codeActe: "SN1-COM-AVIS-NOMIN";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_COM_AVIS_RAPPORT = {
-  codeActe: "SN1-COM-AVIS-RAPPORT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-};
-export type ANLUNI_DEPOT = {
-  codeActe: "ANLUNI-DEPOT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-};
-export type CMP = {
-  codeActe: "CMP";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type SN1_PROCACC = {
-  codeActe: "SN1-PROCACC";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type CMP_DEPOT = {
-  codeActe: "CMP-DEPOT";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  organeProvenanceRefUid: string;
-  texteAssocieRefUid: string;
-  dossierRefUid: string;
-};
-export type CMP_SAISIE = {
-  codeActe: "CMP-SAISIE";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  dateActe: Date;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type CMP_COM = {
-  codeActe: "CMP-COM";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
-export type ANLUNI_COM = {
-  codeActe: "ANLUNI-COM";
-  uid: string;
-  nomCanonique: string;
-  libelleCourtActe: string;
-  xsiType: string;
-  organeRefUid: string;
-  dossierRefUid: string;
-};
+// export type SN1_DEPOT = {
+//   codeActe: "SN1-DEPOT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+//   organeProvenanceRefUid: null | string;
+// };
+// export type AN1 = {
+//   codeActe: "AN1";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM = {
+//   codeActe: "SN1-COM";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_DEBATS = {
+//   codeActe: "SN1-DEBATS";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_DEPOT = {
+//   codeActe: "AN1-DEPOT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   organeProvenanceRefUid: null | string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_COM = {
+//   codeActe: "AN1-COM";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_FOND = {
+//   codeActe: "SN1-COM-FOND";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_DEBATS_DEC = {
+//   codeActe: "SN1-DEBATS-DEC";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   famCodeStatutConclusion: string;
+//   libelleStatutConclusion: string;
+//   dossierRefUid: string;
+//   reunionRefUid: null | string;
+// };
+// export type AN1_COM_FOND = {
+//   codeActe: "AN1-COM-FOND";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_FOND_SAISIE = {
+//   codeActe: "SN1-COM-FOND-SAISIE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_FOND_NOMIN = {
+//   codeActe: "SN1-COM-FOND-NOMIN";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_FOND_RAPPORT = {
+//   codeActe: "SN1-COM-FOND-RAPPORT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+//   texteAdopteRefUid: null | string;
+// };
+// export type AN1_COM_FOND_SAISIE = {
+//   codeActe: "AN1-COM-FOND-SAISIE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1 = {
+//   codeActe: "SN1";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN2 = {
+//   codeActe: "AN2";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_DEBATS = {
+//   codeActe: "AN1-DEBATS";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN2_DEPOT = {
+//   codeActe: "AN2-DEPOT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   organeProvenanceRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN2_COM = {
+//   codeActe: "AN2-COM";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_DEBATS_SEANCE = {
+//   codeActe: "AN1-DEBATS-SEANCE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   odjRefUid: string;
+//   reunionRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_DEBATS_MOTION = {
+//   codeActe: "AN1-DEBATS-MOTION";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   famCodeTypeMotion: string;
+//   libelleTypeMotion: string;
+//   dossierRefUid: string;
+//   auteurMotionRefUid: null | string;
+// };
+// export type AN1_DEBATS_MOTION_VOTE = {
+//   codeActe: "AN1-DEBATS-MOTION-VOTE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   famCodeStatutConclusion: string;
+//   libelleStatutConclusion: string;
+//   reunionRefUid: null | string;
+//   dossierRefUid: string;
+// };
+// export type SN1_DEBATS_SEANCE = {
+//   codeActe: "SN1-DEBATS-SEANCE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   odjRefUid: string;
+//   reunionRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN2_COM_FOND = {
+//   codeActe: "AN2-COM-FOND";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_COM_FOND_NOMIN = {
+//   codeActe: "AN1-COM-FOND-NOMIN";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_COM_FOND_REUNION = {
+//   codeActe: "AN1-COM-FOND-REUNION";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   odjRefUid: string;
+//   reunionRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_COM_FOND_RAPPORT = {
+//   codeActe: "AN1-COM-FOND-RAPPORT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+//   texteAdopteRefUid: null | string;
+// };
+// export type AN2_COM_FOND_SAISIE = {
+//   codeActe: "AN2-COM-FOND-SAISIE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type AN1_DEBATS_DEC = {
+//   codeActe: "AN1-DEBATS-DEC";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   famCodeStatutConclusion: string;
+//   libelleStatutConclusion: string;
+//   reunionRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type ANLUNI = {
+//   codeActe: "ANLUNI";
+//   uid: string;
+//   nomCanonique: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_AVIS = {
+//   codeActe: "SN1-COM-AVIS";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_AVIS_SAISIE = {
+//   codeActe: "SN1-COM-AVIS-SAISIE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_AVIS_NOMIN = {
+//   codeActe: "SN1-COM-AVIS-NOMIN";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_COM_AVIS_RAPPORT = {
+//   codeActe: "SN1-COM-AVIS-RAPPORT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type ANLUNI_DEPOT = {
+//   codeActe: "ANLUNI-DEPOT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type CMP = {
+//   codeActe: "CMP";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type SN1_PROCACC = {
+//   codeActe: "SN1-PROCACC";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type CMP_DEPOT = {
+//   codeActe: "CMP-DEPOT";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   organeProvenanceRefUid: string;
+//   texteAssocieRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type CMP_SAISIE = {
+//   codeActe: "CMP-SAISIE";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   dateActe: Date;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type CMP_COM = {
+//   codeActe: "CMP-COM";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
+// export type ANLUNI_COM = {
+//   codeActe: "ANLUNI-COM";
+//   uid: string;
+//   nomCanonique: string;
+//   libelleCourtActe: string;
+//   xsiType: string;
+//   organeRefUid: string;
+//   dossierRefUid: string;
+// };
 
-export type ActLegislatif =
-  | SN1_DEPOT
-  | AN1
-  | SN1_COM
-  | SN1_DEBATS
-  | AN1_DEPOT
-  | AN1_COM
-  | SN1_COM_FOND
-  | SN1_DEBATS_DEC
-  | AN1_COM_FOND
-  | SN1_COM_FOND_SAISIE
-  | SN1_COM_FOND_NOMIN
-  | SN1_COM_FOND_RAPPORT
-  | AN1_COM_FOND_SAISIE
-  | SN1
-  | AN2
-  | AN1_DEBATS
-  | AN2_DEPOT
-  | AN2_COM
-  | AN1_DEBATS_SEANCE
-  | AN1_DEBATS_MOTION
-  | AN1_DEBATS_MOTION_VOTE
-  | SN1_DEBATS_SEANCE
-  | AN2_COM_FOND
-  | AN1_COM_FOND_NOMIN
-  | AN1_COM_FOND_REUNION
-  | AN1_COM_FOND_RAPPORT
-  | AN2_COM_FOND_SAISIE
-  | AN1_DEBATS_DEC
-  | ANLUNI
-  | SN1_COM_AVIS
-  | SN1_COM_AVIS_SAISIE
-  | SN1_COM_AVIS_NOMIN
-  | SN1_COM_AVIS_RAPPORT
-  | ANLUNI_DEPOT
-  | CMP
-  | SN1_PROCACC
-  | CMP_DEPOT
-  | CMP_SAISIE
-  | CMP_COM
-  | ANLUNI_COM;
+// export type ActLegislatif =
+//   | SN1_DEPOT
+//   | AN1
+//   | SN1_COM
+//   | SN1_DEBATS
+//   | AN1_DEPOT
+//   | AN1_COM
+//   | SN1_COM_FOND
+//   | SN1_DEBATS_DEC
+//   | AN1_COM_FOND
+//   | SN1_COM_FOND_SAISIE
+//   | SN1_COM_FOND_NOMIN
+//   | SN1_COM_FOND_RAPPORT
+//   | AN1_COM_FOND_SAISIE
+//   | SN1
+//   | AN2
+//   | AN1_DEBATS
+//   | AN2_DEPOT
+//   | AN2_COM
+//   | AN1_DEBATS_SEANCE
+//   | AN1_DEBATS_MOTION
+//   | AN1_DEBATS_MOTION_VOTE
+//   | SN1_DEBATS_SEANCE
+//   | AN2_COM_FOND
+//   | AN1_COM_FOND_NOMIN
+//   | AN1_COM_FOND_REUNION
+//   | AN1_COM_FOND_RAPPORT
+//   | AN2_COM_FOND_SAISIE
+//   | AN1_DEBATS_DEC
+//   | ANLUNI
+//   | SN1_COM_AVIS
+//   | SN1_COM_AVIS_SAISIE
+//   | SN1_COM_AVIS_NOMIN
+//   | SN1_COM_AVIS_RAPPORT
+//   | ANLUNI_DEPOT
+//   | CMP
+//   | SN1_PROCACC
+//   | CMP_DEPOT
+//   | CMP_SAISIE
+//   | CMP_COM
+//   | ANLUNI_COM;
 
-export type ActWithDate =
-  | AN1_DEPOT
-  | SN1_DEPOT
-  | AN2_DEPOT
-  | CMP_DEPOT
-  | AN1_DEBATS_DEC
-  | SN1_DEBATS_DEC
-  | AN1_COM_FOND_SAISIE
-  | SN1_COM_FOND_SAISIE
-  | AN1_COM_FOND_RAPPORT
-  | SN1_COM_FOND_RAPPORT
-  | AN1_DEBATS_SEANCE
-  | AN1_DEBATS_MOTION
-  | AN1_DEBATS_MOTION_VOTE
-  | SN1_DEBATS_SEANCE
-  | AN1_COM_FOND_NOMIN
-  | AN1_COM_FOND_REUNION
-  | AN2_COM_FOND_SAISIE
-  | SN1_COM_AVIS_SAISIE
-  | SN1_COM_AVIS_RAPPORT
-  | ANLUNI_DEPOT
-  | SN1_PROCACC
-  | CMP_SAISIE;
+// export type ActWithDate =
+//   | AN1_DEPOT
+//   | SN1_DEPOT
+//   | AN2_DEPOT
+//   | CMP_DEPOT
+//   | AN1_DEBATS_DEC
+//   | SN1_DEBATS_DEC
+//   | AN1_COM_FOND_SAISIE
+//   | SN1_COM_FOND_SAISIE
+//   | AN1_COM_FOND_RAPPORT
+//   | SN1_COM_FOND_RAPPORT
+//   | AN1_DEBATS_SEANCE
+//   | AN1_DEBATS_MOTION
+//   | AN1_DEBATS_MOTION_VOTE
+//   | SN1_DEBATS_SEANCE
+//   | AN1_COM_FOND_NOMIN
+//   | AN1_COM_FOND_REUNION
+//   | AN2_COM_FOND_SAISIE
+//   | SN1_COM_AVIS_SAISIE
+//   | SN1_COM_AVIS_RAPPORT
+//   | ANLUNI_DEPOT
+//   | SN1_PROCACC
+//   | CMP_SAISIE;
 
 const CONTEXT = {
   "AN-APPLI": { lvl: 0, display: true, parents: [] },
@@ -1082,8 +1082,6 @@ function addDatesHelper(
   },
   lookup: Record<string, ActeLegislatif>
 ) {
-  const rep = {};
-
   const idsDates =
     item.ids?.map((id) => lookup[id].dateActe).filter((date) => date != null) ??
     ([] as Date[]);
@@ -1115,16 +1113,21 @@ function addDatesHelper(
 
 function addDates(
   structure: ActsStructure,
-  lookup: Record<string, ActLegislatif>
+  lookup: Record<string, ActeLegislatif>
 ) {
   Object.keys(structure).forEach((key) => {
     addDatesHelper(structure[key], lookup);
   });
 }
 
-export function groupActs(acts: ActeLegislatif[]) {
+export type ActeLegislatifWithDate = ActeLegislatif & { date: Date };
+
+export function groupActs(acts: ActeLegislatif[]): {
+  actsStructure: ActsStructure;
+  actsLookup: Record<string, ActeLegislatifWithDate>;
+} {
   const actsStructure: ActsStructure = {};
-  const actsLookup: Record<string, ActeLegislatif> = {};
+  const actsLookup: Record<string, ActeLegislatif & { date?: Date }> = {};
 
   acts.forEach((act) => {
     const { codeActe, uid } = act;
@@ -1151,6 +1154,6 @@ export function groupActs(acts: ActeLegislatif[]) {
 
   return {
     actsStructure,
-    actsLookup,
+    actsLookup: actsLookup as Record<string, ActeLegislatifWithDate>,
   };
 }

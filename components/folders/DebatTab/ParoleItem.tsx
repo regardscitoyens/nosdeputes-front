@@ -9,29 +9,15 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import CircleDiv from "@/icons/CircleDiv";
+import { ParagrapheWithActeur } from "@/app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateTranscript";
 
 interface ParoleItemProps {
-  acteurRef: string | null;
-  prenom: string | null;
-  nom: string | null;
-  group_color: string | null;
-  group_libelle: string | null;
-  group_libelle_short: string | null;
+  acteur: ParagrapheWithActeur["acteur"];
   roleDebat: string | null;
-  acteur_slug: string | null;
   texte: string | null;
 }
 export default function ParoleItem(props: ParoleItemProps) {
-  const {
-    prenom,
-    nom,
-    acteur_slug,
-    group_color,
-    group_libelle,
-    group_libelle_short,
-    roleDebat,
-    texte,
-  } = props;
+  const { acteur, roleDebat, texte } = props;
 
   return (
     <TimelineItem>
@@ -53,11 +39,15 @@ export default function ParoleItem(props: ParoleItemProps) {
         >
           <Avatar
             sx={{ height: 40, width: 40 }}
-            alt={`${prenom ?? ""} ${nom ?? ""}`}
-            src={`https://www.nosdeputes.fr/depute/photo/${acteur_slug}/${52}`}
+            alt={`${acteur?.prenom ?? ""} ${acteur?.nom ?? ""}`}
+            src={
+              acteur?.slug
+                ? `https://www.nosdeputes.fr/depute/photo/${acteur.slug}/${52}`
+                : ""
+            }
           >
-            {prenom?.[0]?.toUpperCase()}
-            {nom?.[0]?.toUpperCase()}
+            {acteur?.prenom?.[0]?.toUpperCase()}
+            {acteur?.nom?.[0]?.toUpperCase()}
           </Avatar>
         </Box>
 
@@ -67,18 +57,23 @@ export default function ParoleItem(props: ParoleItemProps) {
         <Stack direction="column" spacing={1}>
           <div>
             <Typography variant="body1" fontWeight="bold">
-              {prenom ?? ""} {nom ?? ""}
+              {acteur?.prenom ?? ""} {acteur?.nom ?? ""}
             </Typography>
-            {group_libelle && (
+            {acteur?.groupeParlementaire?.libelle && (
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                 }}
               >
-                {group_color && <CircleDiv color={group_color} />}{" "}
+                {acteur?.groupeParlementaire?.couleurAssociee && (
+                  <CircleDiv
+                    color={acteur?.groupeParlementaire?.couleurAssociee}
+                  />
+                )}{" "}
                 <Typography sx={{ ml: 1 }} variant="body2" fontWeight="light">
-                  {group_libelle} ({group_libelle_short})
+                  {acteur?.groupeParlementaire?.libelle} (
+                  {acteur?.groupeParlementaire?.libelleAbrev})
                 </Typography>
               </Box>
             )}
