@@ -18,7 +18,8 @@ const order = ["COMPER", "COMNL", "GE", "GA"];
 
 type MandatsPerType = Record<
   string,
-  (Pick<Organe, "libelle"> & Pick<Mandat, "libQualiteSex" | "organeRefUid">)[]
+  (Pick<Organe, "libelle"> &
+    Pick<Mandat, "libQualiteSex" | "organeRefUid" | "dateFin">)[]
 >;
 
 export default function Mandats({
@@ -34,7 +35,7 @@ export default function Mandats({
       if (!organe) {
         return acc;
       }
-      const { libQualiteSex, typeOrgane, organeRefUid } = mandat;
+      const { libQualiteSex, typeOrgane, organeRefUid, dateFin } = mandat;
 
       return {
         ...acc,
@@ -44,6 +45,7 @@ export default function Mandats({
             organeRefUid,
             libelle: organe?.libelle,
             libQualiteSex,
+            dateFin,
           },
         ],
       };
