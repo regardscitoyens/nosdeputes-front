@@ -38,6 +38,6 @@
     "typescript": "^5.5.4"
   },
   "prisma": {
-    "schema": "prisma/models"
+    "schema": "../tricoteuses-api-assemblee-orm/prisma/models"
   }
 }
