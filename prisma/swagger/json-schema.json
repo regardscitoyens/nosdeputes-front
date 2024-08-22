@@ -269,11 +269,32 @@
             "$ref": "#/definitions/Suppleant"
           }
         },
-        "paroles": {
+        "interventions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Paragraphe"
           }
+        },
+        "loisPortees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TexteLoi"
+          },
+          "description": "Lois présentées au nom de cet acteur (e.g. un premier ministre)."
+        },
+        "loisPresentees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TexteLoi"
+          },
+          "description": "Lois présentées par cet acteur."
+        },
+        "loisSignees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TexteLoi"
+          },
+          "description": "Lois signées par cet acteur."
         }
       }
     },
@@ -585,6 +606,14 @@
           },
           "description": "Texte court décrivant l'objet de la réunion."
         },
+        "nombreParticipants": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0,
+          "description": "Nombre de participants à la réunion"
+        },
         "actesLegislatif": {
           "type": "array",
           "items": {
@@ -645,6 +674,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Amendement"
+          }
+        },
+        "debats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Debat"
           }
         }
       }
@@ -1332,12 +1367,6 @@
             "null"
           ]
         },
-        "documentUid": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "exposeSommaireHtml": {
           "type": [
             "string",
@@ -1361,6 +1390,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossierRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
             },
             {
               "type": "null"
@@ -1566,14 +1605,15 @@
         "legislature": {
           "type": "string"
         },
-        "seanceRef": {
-          "type": "string"
-        },
         "sessionRef": {
           "type": "string"
         },
         "dateSeance": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         },
         "dateSeanceJour": {
           "type": "string"
@@ -1614,6 +1654,16 @@
         },
         "quantiemesSession": {
           "type": "string"
+        },
+        "reunionRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Agenda"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "paragraphes": {
           "type": "array",
@@ -1669,7 +1719,7 @@
       "properties": {
         "hash": {
           "type": "string",
-          "description": "Hachage de l'obejt."
+          "description": "Hachage de l'objet."
         },
         "adt": {
           "type": [
@@ -1708,12 +1758,6 @@
           ]
         },
         "decision": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "mandatRef": {
           "type": [
             "string",
             "null"
@@ -1821,10 +1865,7 @@
             "null"
           ]
         },
-        "debatRef": {
-          "$ref": "#/definitions/Debat"
-        },
-        "acteur": {
+        "acteurRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Acteur"
@@ -1833,6 +1874,19 @@
               "type": "null"
             }
           ]
+        },
+        "mandatRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Mandat"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "debatRef": {
+          "$ref": "#/definitions/Debat"
         }
       }
     },
@@ -1857,13 +1911,25 @@
         },
         "classeCode": {
           "type": "string",
+          "enum": [
+            "PRJLOI",
+            "PIONLOI",
+            "PIONRES",
+            "AVIS",
+            "MOTION",
+            "ALLOCUTION",
+            "DECLARATION",
+            "RAPPORT",
+            "RAPINF",
+            "RES"
+          ],
           "description": "Code unique pour traitement automatisé."
         },
         "classeLibelle": {
           "type": "string",
           "description": "Signification du code."
         },
-        "texteDeLoi": {
+        "texteLoi": {
           "type": [
             "boolean",
             "null"
@@ -2306,6 +2372,29 @@
           "type": "string",
           "description": "Numéro de la législature."
         },
+        "dateDepot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date de dépôt du texte"
+        },
+        "dateDernierActe": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date du dernier acte législatif lié au texte"
+        },
+        "codeDernierActe": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Code du dernier acte législatif"
+        },
         "senatChemin": {
           "type": [
             "string",
@@ -2402,6 +2491,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ActeLegislatif"
+          }
+        },
+        "amendements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amendement"
           }
         },
         "documents": {
@@ -3181,6 +3276,13 @@
         "typeOrgane": {
           "type": "string"
         },
+        "actif": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Vrai si le mandat est en cours"
+        },
         "dateDebut": {
           "type": "string",
           "format": "date-time"
@@ -3390,10 +3492,16 @@
             }
           ]
         },
-        "question": {
+        "questions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Question"
+          }
+        },
+        "interventions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Paragraphe"
           }
         },
         "suppleantRef": {
@@ -3530,9 +3638,16 @@
         },
         "nombreReunionsAnnuelles": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
+        },
+        "nombreMembres": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0
         },
         "positionPolitique": {
           "type": [
@@ -3701,6 +3816,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Commune"
+          }
+        },
+        "textesLoi": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TexteLoi"
           }
         }
       }
@@ -4171,7 +4292,10 @@
           "description": "Hachage de l'objet"
         },
         "positionVote": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "enum": [
             "pour",
             "contre",
@@ -4317,6 +4441,237 @@
           ]
         }
       }
+    },
+    "TexteLoi": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Identifiant unique."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hachage de l'objet"
+        },
+        "titre": {
+          "type": "string",
+          "description": "Titre du texte de loi"
+        },
+        "chambre": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Chambre du parlementaire (assemblée ou sénat)"
+        },
+        "legislature": {
+          "type": "string",
+          "description": "Numéro de législature."
+        },
+        "procedureAcceleree": {
+          "type": "boolean",
+          "default": false,
+          "description": "`true` si la procédure est accélérée ; `false` sinon."
+        },
+        "dateConstitution": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date de la constitution associée."
+        },
+        "dateDepot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "Date de dépôt à l'Assemblée Nationale"
+        },
+        "numero": {
+          "type": "string",
+          "description": "Numéro du texte"
+        },
+        "commission": {
+          "$ref": "#/definitions/Organe"
+        },
+        "presenteeAuNomDe": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Acteur"
+          },
+          "description": "Texte de loi présenté au nom de... (e.g. nom du Premier ministre)"
+        },
+        "presenteePar": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Acteur"
+          },
+          "description": "Texte de loi présenté par un ensemble de députés."
+        },
+        "signataires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Acteur"
+          },
+          "description": "Signataires de cette loi."
+        },
+        "sommaire": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SommaireLoi"
+          },
+          "description": "Sommaire du texte de loi."
+        },
+        "exposeMotifsCitation": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Citation de l'exposé des motifs, si elle existe."
+        },
+        "exposeMotifsDescriptionArticles": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Description des articles de l'exposé des motifs, si elle existe."
+        },
+        "exposeMotifsContenu": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Contenu de l'exposé des motifs comprenant la description des articles."
+        },
+        "articles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Article"
+          },
+          "description": "Liste des articles du texte de loi."
+        }
+      }
+    },
+    "SommaireLoi": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Identifiant unique d'un sommaire."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hachage de l'objet."
+        },
+        "division": {
+          "type": "string",
+          "enum": [
+            "Titre",
+            "Chapitre",
+            "Section",
+            "SousSection"
+          ]
+        },
+        "numeroDivision": {
+          "type": "integer",
+          "description": "Numéro de la division."
+        },
+        "sequence": {
+          "type": "string",
+          "description": "Ordre de la division dans le document."
+        },
+        "titre": {
+          "type": "string",
+          "description": "Titre de la division."
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant de la division parente."
+        },
+        "texteLoiRef": {
+          "$ref": "#/definitions/TexteLoi"
+        }
+      }
+    },
+    "Article": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Identifiant unique d'un article."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hachage de l'objet."
+        },
+        "numero": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Numéro de l'article."
+        },
+        "numeros": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Numéro des articles (dans de rare cas, il y a un groupement d'articles)."
+        },
+        "cardinal": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cardinal de l'article (e.g. er, bis)."
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Section parente (e.g. Chapitre Ier BIS)."
+        },
+        "titre": {
+          "type": "string",
+          "description": "Titre de l'article"
+        },
+        "alineas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alinea"
+          },
+          "description": "Liste des alinéas composant l'article."
+        },
+        "texteLoiRef": {
+          "$ref": "#/definitions/TexteLoi"
+        }
+      }
+    },
+    "Alinea": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Numéro de l'alinéa."
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hachage de l'objet."
+        },
+        "contenu": {
+          "type": "string",
+          "description": "Contenu de l'alinéa."
+        },
+        "articleRef": {
+          "$ref": "#/definitions/Article"
+        }
+      }
     }
   },
   "type": "object",
@@ -4434,6 +4789,18 @@
     },
     "dysfonctionnement": {
       "$ref": "#/definitions/Dysfonctionnement"
+    },
+    "texteLoi": {
+      "$ref": "#/definitions/TexteLoi"
+    },
+    "sommaireLoi": {
+      "$ref": "#/definitions/SommaireLoi"
+    },
+    "article": {
+      "$ref": "#/definitions/Article"
+    },
+    "alinea": {
+      "$ref": "#/definitions/Alinea"
     }
   }
 }

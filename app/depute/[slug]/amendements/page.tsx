@@ -21,7 +21,7 @@ async function getDeputeAmendementUnCached(slug: string) {
   }
 }
 
-export const getDeputeAmendement = React.cache(getDeputeAmendementUnCached);
+const getDeputeAmendement = React.cache(getDeputeAmendementUnCached);
 
 export default async function Amendements({
   params,

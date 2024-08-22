@@ -1,0 +1,148 @@
+/// Texte de loi rédigé par des acteurs.
+model TexteLoi {
+  /// Identifiant unique.
+  uid  String @id
+  /// Hachage de l'objet
+  hash String @unique
+
+  /// Titre du texte de loi
+  titre   String
+  /// Chambre du parlementaire (assemblée ou sénat)
+  chambre String?
+
+  /// Numéro de législature.
+  legislature String
+
+  /// Identifiant de la commission associée à ce texte.
+  commissionRefUid   String
+  /// `true` si la procédure est accélérée ; `false` sinon.
+  procedureAcceleree Boolean @default(false)
+
+  /// Date de la constitution associée.
+  dateConstitution DateTime?
+  /// Date de dépôt à l'Assemblée Nationale
+  dateDepot        DateTime?
+
+  /// Numéro du texte
+  numero String
+
+  /// Commission chargée du texte de loi.
+  commission Organe @relation(fields: [commissionRefUid], references: [uid])
+
+  /// Texte de loi présenté au nom de... (e.g. nom du Premier ministre)
+  presenteeAuNomDe Acteur[] @relation("loisPortees")
+
+  /// Texte de loi présenté par un ensemble de députés.
+  presenteePar Acteur[] @relation("loisPresentees")
+
+  /// Signataires de cette loi.
+  signataires Acteur[] @relation("loisSignees")
+
+  /// Sommaire du texte de loi.
+  sommaire SommaireLoi[]
+
+  /// Citation de l'exposé des motifs, si elle existe.
+  exposeMotifsCitation String?
+
+  /// Description des articles de l'exposé des motifs, si elle existe.
+  exposeMotifsDescriptionArticles String?
+
+  /// Contenu de l'exposé des motifs comprenant la description des articles.
+  exposeMotifsContenu String?
+
+  /// Liste des articles du texte de loi.
+  articles Article[]
+
+  @@index([commissionRefUid])
+}
+
+/// Sommaire d'un texte de loi.
+model SommaireLoi {
+  /// Identifiant unique d'un sommaire.
+  uid  String @id
+  /// Hachage de l'objet.
+  hash String @unique
+
+  division DivisionType
+
+  /// Numéro de la division.
+  numeroDivision Int
+
+  /// Ordre de la division dans le document.
+  sequence String
+
+  /// Titre de la division.
+  titre String
+
+  /// Identifiant de la division parente.
+  parent String?
+
+  /// Identifiant unique de référence du texte de loi associé.
+  texteLoiRefUid String
+
+  /// Référence du texte de loi associé.
+  texteLoiRef TexteLoi @relation(fields: [texteLoiRefUid], references: [uid])
+
+  @@index([texteLoiRefUid])
+}
+
+enum DivisionType {
+  Titre
+  Chapitre
+  Section
+  SousSection
+}
+
+/// Article d'un texte de loi.
+model Article {
+  /// Identifiant unique d'un article.
+  uid String @id
+
+  /// Hachage de l'objet.
+  hash String @unique
+
+  /// Numéro de l'article.
+  numero Int?
+
+  /// Numéro des articles (dans de rare cas, il y a un groupement d'articles).
+  numeros Int[]
+
+  /// Cardinal de l'article (e.g. er, bis).
+  cardinal String?
+
+  /// Section parente (e.g. Chapitre Ier BIS).
+  parent String?
+
+  /// Titre de l'article
+  titre String
+
+  /// Liste des alinéas composant l'article.
+  alineas Alinea[]
+
+  /// Identifiant unique de référence du texte de loi associé à cet article.
+  texteLoiRefUid String
+  /// Rréférence du texte de loi associé à cet article.
+  texteLoiRef    TexteLoi @relation(fields: [texteLoiRefUid], references: [uid])
+
+  @@index([texteLoiRefUid])
+}
+
+/// Alinéa d'un texte de loi.
+model Alinea {
+  /// Numéro de l'alinéa.
+  id Int @id
+
+  /// Hachage de l'objet.
+  hash String @unique
+
+  /// Contenu de l'alinéa.
+  contenu String
+
+  /// Identifiant de référence de l'article parent.
+  articleRefUid String
+
+  /// Référence de l'article parent.
+  articleRef Article @relation(fields: [articleRefUid], references: [uid])
+
+  @@index([articleRefUid])
+}

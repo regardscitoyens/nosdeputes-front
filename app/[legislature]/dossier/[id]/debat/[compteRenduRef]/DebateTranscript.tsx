@@ -17,7 +17,7 @@ import { WORDS_PER_MINUTES } from "@/components/const";
 import { Acteur, Organe, Paragraphe } from "@prisma/client";
 
 export type ParagrapheWithActeur = Paragraphe & {
-  acteur: null | (Acteur & { groupeParlementaire: null | Organe });
+  acteurRef: null | (Acteur & { groupeParlementaire: null | Organe });
 };
 
 function getWordsPerGroup(paragraphs: ParagrapheWithActeur[]) {
@@ -30,18 +30,18 @@ function getWordsPerGroup(paragraphs: ParagrapheWithActeur[]) {
     }
   > = {};
   paragraphs.forEach((paragraphe) => {
-    const { codeGrammaire, acteur, texte } = paragraphe;
+    const { codeGrammaire, acteurRef, texte } = paragraphe;
 
     if (
       codeGrammaire !== "PAROLE_GENERIQUE" ||
-      !acteur ||
-      !acteur.groupeParlementaire ||
-      !acteur.groupeParlementaireUid ||
+      !acteurRef ||
+      !acteurRef.groupeParlementaire ||
+      !acteurRef.groupeParlementaireUid ||
       !texte
     ) {
       return;
     }
-    const groupeParlementaire = acteur.groupeParlementaire;
+    const groupeParlementaire = acteurRef.groupeParlementaire;
 
     const wordCount = texte.split(" ").length;
     if (groups[groupeParlementaire.uid]) {
