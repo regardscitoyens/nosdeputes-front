@@ -78,7 +78,7 @@ export default async function Page({
                   <>
                     <br />
                     Fin de mandat le{" "}
-                    {new Date(circonscription.dateFin).toLocaleDateString()}
+                    {new Date(circonscription.dateFin).toLocaleDateString("fr-FR")}
                   </>
                 )}
               </Typography>

@@ -35,6 +35,12 @@ export default function DeputeTabs({ slug }: { slug: string }) {
         component={Link}
         href={`/depute/${slug}/votes`}
       />
+      <Tab
+        value="qag"
+        label="Questions"
+        component={Link}
+        href={`/depute/${slug}/qag`}
+      />
     </Tabs>
   );
 }
