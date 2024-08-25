@@ -9,6 +9,8 @@ model Mandat {
   organeRefUid             String?
   legislature              String?
   typeOrgane               String
+  /// Vrai si le mandat est en cours
+  actif                    Boolean?
   dateDebut                DateTime
   datePublication          DateTime?
   dateFin                  DateTime?
@@ -43,7 +45,8 @@ model Mandat {
   mandatRemplacementRef    Mandat?                    @relation("MandatRemplace")
   missionPrecedenteRef     Mandat?                    @relation("MissionSequence", fields: [missionPrecedenteRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   missionSuivanteRef       Mandat?                    @relation("MissionSequence")
-  question                 Question[]
+  questions                Question[]
+  interventions            Paragraphe[]
   suppleantRef             Suppleant?
   votes                    Vote[]
 

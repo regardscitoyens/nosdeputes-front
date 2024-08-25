@@ -32,10 +32,11 @@ function getStatus(label: string | null) {
 type AmendementCardProps = {
   amendement: Amendement;
   depute: null | (Acteur & { groupeParlementaire: Organe | null });
+  titre?: string;
 };
 
 export default function AmendementCard(props: AmendementCardProps) {
-  const { amendement, depute } = props;
+  const { amendement, depute, titre } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
   const nbSignataires = amendement.signatairesLibelle
@@ -65,20 +66,23 @@ export default function AmendementCard(props: AmendementCardProps) {
           spacing={1}
           sx={{ width: "100%", mr: 2 }}
         >
-          <DeputeCard
-            slug={depute?.slug ?? ""}
-            prenom={depute?.prenom ?? ""}
-            nom={depute?.nom ?? ""}
-            group={
-              depute?.groupeParlementaire && {
-                fullName: depute.groupeParlementaire.libelle,
-                shortName: "",
-                color: depute.groupeParlementaire.couleurAssociee,
+          {depute && (
+            <DeputeCard
+              slug={depute.slug ?? ""}
+              prenom={depute.prenom ?? ""}
+              nom={depute.nom ?? ""}
+              group={
+                depute.groupeParlementaire && {
+                  fullName: depute.groupeParlementaire.libelle,
+                  shortName: "",
+                  color: depute.groupeParlementaire.couleurAssociee,
+                }
               }
-            }
-            smallGroupColor
-            sx={{ flexGrow: 1 }}
-          />
+              smallGroupColor
+              sx={{ flexGrow: 1 }}
+            />
+          )}
+          {titre && <Typography>{titre}</Typography>}
 
           <StatusChip
             size="small"
@@ -93,13 +97,24 @@ export default function AmendementCard(props: AmendementCardProps) {
           {amendement.dispositif && (
             <Typography
               fontWeight="light"
-              variant="body2"
+              variant="body1"
               flexGrow={1}
               flexShrink={1}
               flexBasis={0}
               component="div"
               sx={{ bgcolor: "grey.50", p: 1 }}
               dangerouslySetInnerHTML={{ __html: amendement.dispositif }}
+            />
+          )}
+          {amendement.exposeSommaire && (
+            <Typography
+              fontWeight="light"
+              variant="body2"
+              flexGrow={1}
+              flexShrink={1}
+              flexBasis={0}
+              component="div"
+              dangerouslySetInnerHTML={{ __html: amendement.exposeSommaire }}
             />
           )}
 

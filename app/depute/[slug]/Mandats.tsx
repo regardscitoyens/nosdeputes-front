@@ -18,7 +18,8 @@ const order = ["COMPER", "COMNL", "GE", "GA"];
 
 type MandatsPerType = Record<
   string,
-  (Pick<Organe, "libelle"> & Pick<Mandat, "libQualiteSex">)[]
+  (Pick<Organe, "libelle"> &
+    Pick<Mandat, "libQualiteSex" | "organeRefUid" | "dateFin">)[]
 >;
 
 export default function Mandats({
@@ -34,15 +35,17 @@ export default function Mandats({
       if (!organe) {
         return acc;
       }
-      const { libQualiteSex, typeOrgane } = mandat;
+      const { libQualiteSex, typeOrgane, organeRefUid, dateFin } = mandat;
 
       return {
         ...acc,
         [typeOrgane]: [
           ...(acc[typeOrgane] ?? []),
           {
+            organeRefUid,
             libelle: organe?.libelle,
             libQualiteSex,
+            dateFin,
           },
         ],
       };
@@ -64,14 +67,26 @@ export default function Mandats({
               <InfoOutlinedIcon fontSize="inherit" />
             </Typography>
             <List>
-              {mandatsPerType[type].map(({ libelle, libQualiteSex }) => (
-                <ListItem key={libelle} disablePadding>
-                  <Typography variant="body2">
-                    {libelle}
-                    {libQualiteSex && ` (${libQualiteSex})`}
-                  </Typography>
-                </ListItem>
-              ))}
+              {mandatsPerType[type]
+                .filter(({ libQualiteSex, organeRefUid }) => {
+                  if (libQualiteSex !== "Membre") {
+                    return true;
+                  }
+                  return (
+                    // Display "Membre" mandat if it's the unique mandat in the organe (avoid duplicate with membre + president, or secretaire, ...)
+                    mandatsPerType[type].filter(
+                      (item) => item.organeRefUid === organeRefUid
+                    ).length === 1
+                  );
+                })
+                .map(({ libelle, libQualiteSex }) => (
+                  <ListItem key={libelle} disablePadding>
+                    <Typography variant="body2">
+                      {libelle}
+                      {libQualiteSex && ` (${libQualiteSex})`}
+                    </Typography>
+                  </ListItem>
+                ))}
             </List>
           </Box>
         ))}

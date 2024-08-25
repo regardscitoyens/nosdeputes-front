@@ -12,8 +12,6 @@ model Amendement {
   prefixeOrganeExamen              String?
   numeroRect                       String?
   examenRef                        String?
-  /// Identifiant unique du texte législatif visé par l'amendement.
-  texteLegislatifRefUid            String?
   /// Lorsque tous les amendements visant un texte de loi sont triés sur cette clé, cela détermine leur ordre d'appel.
   triAmendement                    String?
   /// Le contenu de ce champ n'est pas défini.
@@ -102,19 +100,23 @@ model Amendement {
   idDiscussion                     String?
   typePosition                     String?
   accordGouvernementDepotHorsDelai String?
-  documentUid                      String?
   /// Exposé sommaire des motifs justifiant l'amendement, au format HTML.
   exposeSommaireHtml               String?
   /// Description exhaustive des modifications apportées au texte original, au format HTML.
   dispositifHtml                   String?
   /// Nombre de co-signataires
   nombreCoSignataires              Int       @default(0)
+  /// Identifiant du dossier de loi lié à l'amendement
+  dossierRefUid                    String?
+  /// Identifiant unique du texte législatif (document) visé par l'amendement.
+  texteLegislatifRefUid            String?
   /// Identifiant du scrutin lié à l'amendement
   scrutinRefUid                    String?   @unique
 
   vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
 
   texteLegislatifRef        Document?                @relation(fields: [texteLegislatifRefUid], references: [uid])
+  dossierRef                Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
   acteurRef                 Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
   scrutinRef                Scrutin?                 @relation(fields: [scrutinRefUid], references: [uid])
   amendementParentRef       Amendement?              @relation("amendementParentRef", fields: [amendementParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
@@ -129,7 +131,7 @@ model Amendement {
   @@index([acteurRefUid])
   @@index([seanceRefUid])
   @@index([scrutinRefUid])
-  @@index([documentUid])
+  @@index([dossierRefUid])
   @@index([texteLegislatifRefUid])
   @@index([amendementParentRefUid])
   @@index([auteurRapporteurOrganeRefUid])

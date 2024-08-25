@@ -113,7 +113,7 @@ model Vote {
   hash              String       @unique
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid      String
-  positionVote      PositionVote
+  positionVote      PositionVote?
   /// Raison pour laquelle un acteur n'as pas voté malgré sa présence. MG pour membre du gouvernement, PAN pour président de l'Assemblée nationale, PSE pour président de séance.
   causePositionVote String?
   /// Identifiant unique (uid) du mandat qui donne à l'acteur le droit de vote.

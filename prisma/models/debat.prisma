@@ -1,14 +1,14 @@
 /// Compte rendu des débats en séance.
 model Debat {
   /// Identifiant unique.
-  uid               String          @id
+  uid               String    @id
   /// Hachage de l'obejt.
-  hash              String          @unique
+  hash              String    @unique
   typeAssemblee     String
   legislature       String
-  seanceRef         String
+  reunionRefUid     String?
   sessionRef        String
-  dateSeance        String
+  dateSeance        DateTime?
   dateSeanceJour    String
   numSeance         String
   numSeanceJour     String
@@ -22,8 +22,12 @@ model Debat {
   validite          String
   quantiemesJournee String
   quantiemesSession String
-  paragraphes       Paragraphe[]
-  sommaires         SommaireDebat[]
+
+  reunionRef  Agenda?         @relation(fields: [reunionRefUid], references: [uid])
+  paragraphes Paragraphe[]
+  sommaires   SommaireDebat[]
+
+  @@index([reunionRefUid])
 }
 
 /// Sommaire d'une séance de débat.
@@ -42,7 +46,7 @@ model SommaireDebat {
 }
 
 model Paragraphe {
-  /// Hachage de l'obejt.
+  /// Hachage de l'objet.
   hash              String                   @unique
   debatRefUid       String
   adt               String?
@@ -52,8 +56,8 @@ model Paragraphe {
   codeParole        String?
   codeStyle         String?
   decision          String?
-  acteurRef         String?
-  mandatRef         String?
+  acteurRefUid      String?
+  mandatRefUid      String?
   idNominationOe    String?
   idNominationOp    String?
   idPreparation     String?
@@ -72,10 +76,12 @@ model Paragraphe {
   texte             String?
   stime             String?
   vecteurRecherche  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
+  acteurRef         Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
+  mandatRef         Mandat?                  @relation(fields: [mandatRefUid], references: [uid])
   debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
-  acteur            Acteur?                  @relation(fields: [acteurRef], references: [uid])
 
   @@index([vecteurRecherche], type: Gin)
   @@index([debatRefUid])
-  @@index([acteurRef])
+  @@index([acteurRefUid])
+  @@index([mandatRefUid])
 }

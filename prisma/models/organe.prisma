@@ -16,7 +16,8 @@ model Organe {
   secretaire02                   String?
   regimeJuridique                String?
   siteInternet                   String?
-  nombreReunionsAnnuelles        String?
+  nombreReunionsAnnuelles        Int?
+  nombreMembres                  Int?                     @default(0)
   positionPolitique              String?
   preseance                      String?
   couleurAssociee                String?
@@ -45,6 +46,7 @@ model Organe {
   membresGroupeParlementaire     Acteur[]                 @relation("Acteur_GroupeParlementaire")
   parlementairesCirsconscription Acteur[]                 @relation("Acteur_Circonscription")
   communes                       Commune[]
+  textesLoi                      TexteLoi[]
 
   @@index([vecteurRecherche], type: Gin)
   @@index([organeParentRefUid])

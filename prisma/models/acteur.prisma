@@ -64,8 +64,15 @@ model Acteur {
   questions                Question[]
   rapporteurs              Rapporteur[]
   suppletions              Suppleant[]
+  interventions            Paragraphe[]
   vecteurRecherche         Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
-  paroles                  Paragraphe[]
+
+  /// Lois présentées au nom de cet acteur (e.g. un premier ministre).
+  loisPortees    TexteLoi[] @relation("loisPortees")
+  /// Lois présentées par cet acteur.
+  loisPresentees TexteLoi[] @relation("loisPresentees")
+  /// Lois signées par cet acteur.
+  loisSignees    TexteLoi[] @relation("loisSignees")
 
   @@index([vecteurRecherche], type: Gin)
   @@index([actif])

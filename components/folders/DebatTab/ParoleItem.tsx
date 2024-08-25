@@ -12,7 +12,7 @@ import CircleDiv from "@/icons/CircleDiv";
 import { ParagrapheWithActeur } from "@/app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateTranscript";
 
 interface ParoleItemProps {
-  acteur: ParagrapheWithActeur["acteur"];
+  acteur: ParagrapheWithActeur["acteurRef"];
   roleDebat: string | null;
   texte: string | null;
 }

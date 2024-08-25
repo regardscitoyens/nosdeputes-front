@@ -50,7 +50,7 @@ export default async function Page({
   // A décider: Faut il afficher les mandats passé?
   // Exemple: la partissipation à des commission d'enquête
   const mandasEnCours = depute.mandats?.filter(
-    (mandat) => true //mandat.dateFin === null
+    (mandat) => mandat.dateFin === null
   );
 
   return (
@@ -78,7 +78,7 @@ export default async function Page({
                   <>
                     <br />
                     Fin de mandat le{" "}
-                    {new Date(circonscription.dateFin).toLocaleDateString()}
+                    {new Date(circonscription.dateFin).toLocaleDateString("fr-FR")}
                   </>
                 )}
               </Typography>

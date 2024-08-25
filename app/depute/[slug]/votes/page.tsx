@@ -44,8 +44,8 @@ async function getDeputeVotesUnCached(slug: string) {
 
 const getDeputeVotes = React.cache(getDeputeVotesUnCached);
 
-export default async function Votes(props: { deputeSlug: string }) {
-  const deputeWithVote = await getDeputeVotes(props.deputeSlug);
+export default async function Votes({ params }: { params: { slug: string } }) {
+  const deputeWithVote = await getDeputeVotes(params.slug);
 
   if (!deputeWithVote) {
     return <p>Deputé inconnu</p>;

@@ -21,14 +21,14 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
       },
     }}
   >
-    {paragraphs.map(({ hash, codeGrammaire, acteur, roleDebat, texte }) => {
+    {paragraphs.map(({ hash, codeGrammaire, acteurRef, roleDebat, texte }) => {
       switch (codeGrammaire) {
         case "PAROLE_GENERIQUE":
         case "INTERRUPTION_1_10":
           return (
             <ParoleItem
               key={hash}
-              acteur={acteur}
+              acteur={acteurRef}
               roleDebat={roleDebat}
               texte={texte}
             />

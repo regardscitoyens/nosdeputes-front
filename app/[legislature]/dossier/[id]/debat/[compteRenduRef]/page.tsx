@@ -39,7 +39,7 @@ async function getParagraphesUnCached(
         valeurPtsOdj: index.toString(),
       },
       include: {
-        acteur: {
+        acteurRef: {
           include: { groupeParlementaire: true },
         },
       },

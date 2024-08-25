@@ -8,6 +8,12 @@ model Dossier {
   xsiType                String?
   /// Numéro de la législature.
   legislature            String
+  /// Date de dépôt du texte
+  dateDepot              DateTime?
+  /// Date du dernier acte législatif lié au texte
+  dateDernierActe        DateTime?
+  /// Code du dernier acte législatif
+  codeDernierActe        String?
   /// URL du dossier législatif sur le site du Sénat.
   senatChemin            String?
   /// Titre du dossier législatif.
@@ -35,6 +41,7 @@ model Dossier {
   plf                    EtudePlf[]
   initiateurs            InitiateurDossier[]
   actesLegislatifs       ActeLegislatif[]
+  amendements            Amendement[]
   documents              Document[]
   pointsOdj              PointOdj[]
 

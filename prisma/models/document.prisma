@@ -1,3 +1,26 @@
+enum ClasseCode {
+  /// Projet de loi (initiative du gouvernement)
+  PRJLOI
+  /// Proposition de loi (initiative du parlement)
+  PIONLOI
+  /// Proposition de Resolution  
+  PIONRES
+  // Avis
+  AVIS
+  /// Motion (motion de censure article 49-2 de la consitution)
+  MOTION
+  /// Allocution
+  ALLOCUTION
+  /// Declaration du gouvernement (souvent utilisation de l'article 49-3)
+  DECLARATION
+  /// Rapport d'une commission
+  RAPPORT
+  /// Rapport d'information
+  RAPINF
+  /// Resolution (positionnement pris par l'assemblée sans impact legislatif)
+  RES
+}
+
 model Document {
   /// Hachage de l'objet
   hash                     String                   @unique
@@ -8,11 +31,11 @@ model Document {
   /// Identifiant unique du document.
   uid                      String                   @id
   /// Code unique pour traitement automatisé.
-  classeCode               String
+  classeCode               ClasseCode
   /// Signification du code.
   classeLibelle            String
   /// True si le document est un projet ou une proposition de loi.
-  texteDeLoi               Boolean?
+  texteLoi                 Boolean?
   /// Code unique pour traitement automatisé.
   depotCode                String
   /// Signification du code.
