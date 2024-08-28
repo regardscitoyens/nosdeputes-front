@@ -85,7 +85,7 @@ async function getReunionsUnCached(uid: string) {
   }
 }
 
-export const getReunions = React.cache(getReunionsUnCached);
+const getReunions = React.cache(getReunionsUnCached);
 
 export default async function Layout({
   params,

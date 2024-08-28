@@ -8,7 +8,7 @@ import DeputesView from "./DeputesView";
 import { getDeputes } from "./getDeputes";
 
 export default async function DeputesList() {
-  const deputes = await getDeputes("16");
+  const deputes = await getDeputes("17");
 
   const { indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
     groupDeputes(deputes);

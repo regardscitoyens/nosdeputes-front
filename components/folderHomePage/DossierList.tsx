@@ -1,9 +1,13 @@
+"use client";
+
 import * as React from "react";
 import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import LabelChip from "../LabelChip";
 import { prisma } from "@/prisma";
+import { Dossier } from "@prisma/client";
+import { LoadingButton } from "@mui/lab";
 
 async function getDossiersUnCached(legislature: string) {
   return prisma.dossier.findMany({
@@ -19,11 +23,65 @@ type DossierListProps = {
   search: string;
 };
 
-export default async function DossierList(props: DossierListProps) {
+const PAGE_SIZE = 10;
+
+export default function DossierList(props: DossierListProps) {
   const { theme, search } = props;
 
-  const dossiers = await getDossiers("16");
+  const [dossiers, setDossiers] = React.useState<Dossier[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [currentPage, setCurrentPage] = React.useState(0);
 
+  const fetchMoreDossiers = async () => {
+    setIsLoading(true);
+    let res = await fetch(
+      "/dossiers/api?" +
+        new URLSearchParams({
+          legislature: "16",
+          page: currentPage.toString(),
+          theme: theme,
+          pageSize: PAGE_SIZE.toString(),
+        }).toString()
+    );
+    const { data } = await res.json();
+
+    setIsLoading(false);
+    setDossiers((prev) => [...prev, ...data]);
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  React.useEffect(() => {
+    let isValid = true;
+
+    setIsLoading(true);
+    setCurrentPage(0);
+    setDossiers([]);
+
+    async function fetchInitialDossier() {
+      let res = await fetch(
+        "/dossiers/api?" +
+          new URLSearchParams({
+            legislature: "16",
+            page: "0",
+            theme: theme,
+            pageSize: PAGE_SIZE.toString(),
+          }).toString()
+      );
+      const { data } = await res.json();
+      if (isValid) {
+        setIsLoading(false);
+        setDossiers(data);
+        setCurrentPage((prev) => prev + 1);
+      }
+    }
+    fetchInitialDossier();
+
+    return () => {
+      isValid = false;
+    };
+  }, [theme]);
+
+  console.log(dossiers);
   return (
     <div>
       <Stack component="ol">
@@ -57,10 +115,21 @@ export default async function DossierList(props: DossierListProps) {
                     sx={{ ml: 1.5 }}
                   />
                 )}
+                {dossier.dateDernierActe?.toLocaleDateString()}
               </Stack>
             </Stack>
           ))}
       </Stack>
+
+      <LoadingButton
+        loading={isLoading}
+        onClick={() => fetchMoreDossiers()}
+        disabled={
+          isLoading || dossiers.length !== currentPage * PAGE_SIZE // The last fetch did not returned a full page
+        }
+      >
+        Dossiers suivant
+      </LoadingButton>
     </div>
   );
 }
