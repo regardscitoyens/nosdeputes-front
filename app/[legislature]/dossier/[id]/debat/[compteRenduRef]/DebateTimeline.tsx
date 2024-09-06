@@ -21,13 +21,13 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
       },
     }}
   >
-    {paragraphs.map(({ hash, codeGrammaire, acteurRef, roleDebat, texte }) => {
+    {paragraphs.map(({ id, codeGrammaire, acteurRef, roleDebat, texte }) => {
       switch (codeGrammaire) {
         case "PAROLE_GENERIQUE":
         case "INTERRUPTION_1_10":
           return (
             <ParoleItem
-              key={hash}
+              key={id}
               acteur={acteurRef}
               roleDebat={roleDebat}
               texte={texte}
@@ -38,7 +38,7 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
         case "DISC_GENERALE_1":
         case "MOTION_RP_1_1":
         case "DISC_ARTICLES_2_4":
-          return <SectionItem id={hash} title={texte} />;
+          return <SectionItem id={id.toString()} title={texte} />;
 
         case "TITRE_TEXTE_DISCUSSION":
           return (
@@ -76,7 +76,7 @@ export const DebateTimeline = ({ paragraphs }: DebateTimelineProps) => (
           ) : null;
         // return (
         //   <div
-        //     key={hash}
+        //     key={id}
         //     onClick={() => {
         //       console.log(other);
         //     }}

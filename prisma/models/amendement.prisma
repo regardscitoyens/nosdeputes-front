@@ -1,8 +1,8 @@
 model Amendement {
   /// Identifiant unique.
   uid                              String    @id
-  /// Hachage de l'objet
-  hash                             String    @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                          Int
   chronotag                        String?
   /// Numéro de la législature sous laquelle a été créé l'amendement. Nombre entier.
   legislature                      String?
@@ -127,6 +127,7 @@ model Amendement {
   seanceRef                 Agenda?                  @relation(fields: [seanceRefUid], references: [uid])
   coSignataires             CoSignataireAmendement[]
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([acteurRefUid])
   @@index([seanceRefUid])
@@ -142,7 +143,8 @@ model Amendement {
 model CoSignataireAmendement {
   /// Identifiant unique.
   id               Int     @id @default(autoincrement())
-  slug             String  @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset          Int
   /// Identifiants uniques (uid) des acteurs.
   acteurRefUid     String?
   amendementRefUid String?
@@ -150,6 +152,7 @@ model CoSignataireAmendement {
   acteurRef     Acteur?     @relation(fields: [acteurRefUid], references: [uid])
   amendementRef Amendement? @relation(fields: [amendementRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([amendementRefUid])
 }

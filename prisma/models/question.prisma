@@ -2,8 +2,8 @@
 model Question {
   /// Identifiant unique.
   uid              String                   @id
-  /// Hachage de l'objet
-  hash             String                   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset          Int
   legislature      String
   numero           String
   regime           String
@@ -36,6 +36,7 @@ model Question {
   mandatRef        Mandat                   @relation(fields: [mandatRefUid], references: [uid])
   minIntRef        Organe?                  @relation("Question_MinInt", fields: [minIntRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([acteurRefUid])
   @@index([groupeRefUid])

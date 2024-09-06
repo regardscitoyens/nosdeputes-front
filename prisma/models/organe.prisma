@@ -2,8 +2,8 @@
 model Organe {
   /// Identifiant unique.
   uid                            String                   @id
-  /// Hachage de l'objet
-  hash                           String                   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                        Int
   codeType                       String
   libelle                        String
   libelleEdition                 String?
@@ -48,6 +48,7 @@ model Organe {
   communes                       Commune[]
   textesLoi                      TexteLoi[]
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeParentRefUid])
 }

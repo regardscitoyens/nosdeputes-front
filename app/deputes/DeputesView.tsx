@@ -223,7 +223,6 @@ export default function DeputesView({
                 group={groups[key]}
                 nbDeputes={filteredDeputes.length}
               />
-              <p>{key}</p>
               <AccordionDetails>
                 <Deputes deputes={filteredDeputes} grouping={grouping} />
               </AccordionDetails>

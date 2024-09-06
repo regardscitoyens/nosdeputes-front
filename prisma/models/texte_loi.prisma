@@ -1,72 +1,61 @@
 /// Texte de loi rédigé par des acteurs.
 model TexteLoi {
-  /// Identifiant unique.
-  uid  String @id
-  /// Hachage de l'objet
-  hash String @unique
-
+  /// Identifiant unique d'un texte de loi.
+  uid                             String        @id @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                         Int
   /// Titre du texte de loi
-  titre   String
+  titre                           String
   /// Chambre du parlementaire (assemblée ou sénat)
-  chambre String?
-
+  chambre                         String?
   /// Numéro de législature.
-  legislature String
-
+  legislature                     String
   /// Identifiant de la commission associée à ce texte.
-  commissionRefUid   String
+  commissionRefUid                String
   /// `true` si la procédure est accélérée ; `false` sinon.
-  procedureAcceleree Boolean @default(false)
-
+  procedureAcceleree              Boolean       @default(false)
   /// Date de la constitution associée.
-  dateConstitution DateTime?
+  dateConstitution                DateTime?
   /// Date de dépôt à l'Assemblée Nationale
-  dateDepot        DateTime?
-
+  dateDepot                       DateTime?
   /// Numéro du texte
-  numero String
-
+  numero                          String
   /// Commission chargée du texte de loi.
-  commission Organe @relation(fields: [commissionRefUid], references: [uid])
-
+  commission                      Organe        @relation(fields: [commissionRefUid], references: [uid])
   /// Texte de loi présenté au nom de... (e.g. nom du Premier ministre)
-  presenteeAuNomDe Acteur[] @relation("loisPortees")
-
+  presenteeAuNomDe                Acteur[]      @relation("loisPortees")
   /// Texte de loi présenté par un ensemble de députés.
-  presenteePar Acteur[] @relation("loisPresentees")
-
+  presenteePar                    Acteur[]      @relation("loisPresentees")
   /// Signataires de cette loi.
-  signataires Acteur[] @relation("loisSignees")
-
+  signataires                     Acteur[]      @relation("loisSignees")
   /// Sommaire du texte de loi.
-  sommaire SommaireLoi[]
-
+  sommaire                        SommaireLoi[]
   /// Citation de l'exposé des motifs, si elle existe.
-  exposeMotifsCitation String?
-
+  exposeMotifsCitation            String?
   /// Description des articles de l'exposé des motifs, si elle existe.
   exposeMotifsDescriptionArticles String?
-
   /// Contenu de l'exposé des motifs comprenant la description des articles.
-  exposeMotifsContenu String?
-
+  exposeMotifsContenu             String?
   /// Liste des articles du texte de loi.
-  articles Article[]
+  articles                        Article[]
 
+  @@index([dataset])
   @@index([commissionRefUid])
 }
 
 /// Sommaire d'un texte de loi.
 model SommaireLoi {
-  /// Identifiant unique d'un sommaire.
-  uid  String @id
-  /// Hachage de l'objet.
-  hash String @unique
+  /// Id unique d'un sommaire d'un texte de loi.
+  id Int @id @default(autoincrement())
 
+  /// Jeu de données de provenance (numéro de législature).
+  dataset Int
+
+  /// Type de division.
   division DivisionType
 
   /// Numéro de la division.
-  numeroDivision Int
+  numeroDivision String
 
   /// Ordre de la division dans le document.
   sequence String
@@ -83,6 +72,7 @@ model SommaireLoi {
   /// Référence du texte de loi associé.
   texteLoiRef TexteLoi @relation(fields: [texteLoiRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([texteLoiRefUid])
 }
 
@@ -95,11 +85,24 @@ enum DivisionType {
 
 /// Article d'un texte de loi.
 model Article {
-  /// Identifiant unique d'un article.
-  uid String @id
+  /// Id unique d'un article.
+  id Int @id @default(autoincrement())
+
+  /// Jeu de données de provenance (numéro de législature)
+  dataset Int
 
   /// Hachage de l'objet.
+  /// Utilisé comme référence aux alinéas.
   hash String @unique
+
+  /// Liste des alinéas composant l'article.
+  alineas Alinea[]
+
+  /// Cardinal de l'article (e.g. er, bis).
+  cardinal String?
+
+  /// Mention spécifiée pour certains articles.
+  nouveau Boolean @default(false)
 
   /// Numéro de l'article.
   numero Int?
@@ -107,42 +110,42 @@ model Article {
   /// Numéro des articles (dans de rare cas, il y a un groupement d'articles).
   numeros Int[]
 
-  /// Cardinal de l'article (e.g. er, bis).
-  cardinal String?
-
   /// Section parente (e.g. Chapitre Ier BIS).
   parent String?
+
+  /// Rréférence du texte de loi associé à cet article.
+  texteLoiRef TexteLoi @relation(fields: [texteLoiRefUid], references: [uid])
+
+  /// Identifiant unique de référence du texte de loi associé à cet article.
+  texteLoiRefUid String
 
   /// Titre de l'article
   titre String
 
-  /// Liste des alinéas composant l'article.
-  alineas Alinea[]
-
-  /// Identifiant unique de référence du texte de loi associé à cet article.
-  texteLoiRefUid String
-  /// Rréférence du texte de loi associé à cet article.
-  texteLoiRef    TexteLoi @relation(fields: [texteLoiRefUid], references: [uid])
-
+  @@index([dataset])
   @@index([texteLoiRefUid])
 }
 
 /// Alinéa d'un texte de loi.
 model Alinea {
+  /// Id unique d'un alinéa.
+  id Int @id @default(autoincrement())
+
   /// Numéro de l'alinéa.
-  id Int @id
+  numero Int
 
-  /// Hachage de l'objet.
-  hash String @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset Int
 
-  /// Contenu de l'alinéa.
-  contenu String
+  /// Texte de l'alinéa.
+  texte String
 
-  /// Identifiant de référence de l'article parent.
-  articleRefUid String
+  /// Identifiant (string) de référence de l'article parent.
+  articleRefHash String
 
   /// Référence de l'article parent.
-  articleRef Article @relation(fields: [articleRefUid], references: [uid])
+  articleRef Article @relation(fields: [articleRefHash], references: [hash])
 
-  @@index([articleRefUid])
+  @@index([dataset])
+  @@index([articleRefHash])
 }
