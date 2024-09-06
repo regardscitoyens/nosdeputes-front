@@ -67,22 +67,22 @@ export default async function Page({ params }: any) {
     return <p>Aucun debat trouvé pour cette seance.</p>;
   }
 
-  let lastHash = "init";
+  let lastId = 'init';
 
   const wordsCounts: Record<string, number> = paragraphes.reduce(
     (acc, paragraphe) => {
       const { codeGrammaire, texte } = paragraphe;
 
       if (SUMMARY_CODES.includes(codeGrammaire!)) {
-        lastHash = paragraphe.hash;
-        return { ...acc, [lastHash]: 0 };
+        lastId = paragraphe.id.toString();
+        return { ...acc, [lastId]: 0 };
       }
 
       if (["PAROLE_GENERIQUE", "INTERRUPTION_1_10"].includes(codeGrammaire!)) {
         const texteLength = texte ? texte.split(" ").length : 0;
         return {
           ...acc,
-          [lastHash]: acc[lastHash] + texteLength,
+          [lastId]: acc[lastId] + texteLength,
         };
       }
       return acc;

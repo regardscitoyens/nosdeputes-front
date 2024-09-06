@@ -150,7 +150,7 @@ export default async function Amendements({
       <ul>
         {dossiers.map((dossier) => (
           <li
-            key={dossier.slug}
+            key={dossier.id}
             style={{
               display: "flex",
               width: "100%",

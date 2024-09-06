@@ -1,8 +1,8 @@
 /// Une personne physique peut être mandataire d'un mandat représentatif ou bien d'un mandat dit simple, comme par exemple être membre d'une commission. Un `mandat représentatif <https://fr.wikipedia.org/wiki/Mandat_repr%C3%A9sentatif>`__ est \"une forme de mandat politique qui possède la caractéristique d'être général, libre et non révocable\".
 model Mandat {
   uid                      String                     @id
-  /// Hachage de l'objet
-  hash                     String                     @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                  Int
   /// Identifiant de l'acteur qui détient le mandat
   acteurRefUid             String?
   /// Identifiant de l'organe référente
@@ -50,6 +50,7 @@ model Mandat {
   suppleantRef             Suppleant?
   votes                    Vote[]
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([acteurRefUid])
   @@index([organeRefUid])
@@ -57,8 +58,8 @@ model Mandat {
 
 model Collaborateur {
   id               Int                      @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash             String                   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset          Int
   qualite          String
   nom              String
   prenom           String
@@ -66,12 +67,15 @@ model Collaborateur {
   vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(nom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(prenom, ''::text))::character varying)))"))
   mandatRef        Mandat                   @relation(fields: [mandatRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([mandatRefUid])
 }
 
 model Suppleant {
   id           Int       @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset      Int
   dateDebut    DateTime
   dateFin      DateTime?
   acteurRefUid String
@@ -79,6 +83,7 @@ model Suppleant {
   acteurRef    Acteur    @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
   mandatRef    Mandat    @relation(fields: [mandatRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([mandatRefUid])
 }

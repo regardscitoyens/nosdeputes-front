@@ -2,8 +2,8 @@
 model Dossier {
   /// Identifiant unique.
   uid                    String                   @id
-  /// Hachage de l'objet
-  hash                   String                   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                Int
   /// Type du dossier
   xsiType                String?
   /// Numéro de la législature.
@@ -45,6 +45,11 @@ model Dossier {
   documents              Document[]
   pointsOdj              PointOdj[]
 
+  /// Type de dossier législatif 
+  /// (e.g. Projet de ratification, Motion de censure, Proposition de loi).
+  type String @default("")
+
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeRefUid])
   @@index([dossierAbsorbantRefUid])
@@ -53,8 +58,10 @@ model Dossier {
 model ActeLegislatif {
   /// Identifiant unique.
   uid                                 String                     @id
-  /// Hachage de l'objet
-  hash                                String                     @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                             Int
+  /// Identifiant de l'acte législatif parent.
+  parentUid                           String?
   /// Code de l'acte législatif dont la valeur dépend de sa place dans la hiérarchie.
   codeActe                            String
   /// Nom de l'acte législatif.
@@ -128,16 +135,14 @@ model ActeLegislatif {
   titreTexteEuropeen                  String?
   /// Type du texte européen (par exemple: Règlement de la Commission).
   typeTexteEuropeen                   String?
-  /// Identifiant unique de l'ordre du jour de la réunion dans l'agenda.
-  odjRefUid                           String?
-  /// Identifiant unique de la réunion dans l'agenda. 
+  /// Identifiant unique de la réunion dans l'agenda.
   reunionRefUid                       String?
   /// Code unique pour traitement automatisé du statut de l'adoption.
   famCodeStatutAdoption               String?
   /// Signification du code de statut de l'adoption.
   libelleStatutAdoption               String?
   /// Identifiant unique (uid) d'un rapport.
-  texteAdopteRefUid                   String?                    @unique
+  texteAdopteRefUid                   String?
   /// Identifiant unique (uid) d'un rapport.
   texteAssocieRefUid                  String?
   /// Code unique pour traitement automatisé du type de déclaration.
@@ -145,6 +150,7 @@ model ActeLegislatif {
   /// Signification du code du type de déclaration.
   libelleStatutTypeDeclaration        String?
   dossierRefUid                       String?
+  /// Identifiant unique de l'ordre du jour de la réunion dans l'agenda.
   pointOdjUid                         String?
   agendaRef                           Agenda?                    @relation(fields: [reunionRefUid], references: [uid])
   auteurMotionRef                     Acteur?                    @relation("ActeLegislatif_auteurMotion", fields: [auteurMotionRefUid], references: [uid])
@@ -158,6 +164,7 @@ model ActeLegislatif {
   textesAssocies                      TexteAssocie[]
   voteRefs                            VoteActeLegislatif[]
 
+  @@index([dataset])
   @@index([reunionRefUid])
   @@index([auteurMotionRefUid])
   @@index([dossierRefUid])
@@ -167,7 +174,9 @@ model ActeLegislatif {
 /// Acteur à l'initiative d'un dossier.
 model InitiateurDossier {
   /// Identifiant unique.
-  slug          String   @id
+  id            Int      @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset       Int
   /// Dossier référent.
   dossierRefUid String?
   /// Acteur référent.
@@ -178,6 +187,7 @@ model InitiateurDossier {
   dossierRef    Dossier? @relation(fields: [dossierRefUid], references: [uid])
   mandatRef     Mandat?  @relation(fields: [mandatRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([dossierRefUid])
   @@index([acteurRefUid])
   @@index([mandatRefUid])
@@ -186,21 +196,26 @@ model InitiateurDossier {
 /// Acteur auteur de la motion de censure ou de la motion référendaire.
 model AuteurMotion {
   /// Identifiant unique.
-  slug                 String          @id
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Identifiant unique (uid) de l'acteur auteur de la motion.
   auteurMotionRefUid   String?
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   auteurMotionRef      Acteur?         @relation(fields: [auteurMotionRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([auteurMotionRefUid])
 }
 
 /// Informations relatives à la publication d'une lettre rectificative au journal officiel.
 model InfoJoRect {
-  /// Hachage de l'objet
-  hash                 String          @id
+  /// Identifiant unique.
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Date de publication d'une lettre rectificative au journal officiel.
   dateJo               String?
   /// Numéro du journal officiel.
@@ -213,12 +228,15 @@ model InfoJoRect {
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
 }
 
 model InitiateurActeLegislatif {
   /// Identifiant unique.
-  slug                 String          @id
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid         String?
   /// Identifiant unique (uid) du mandat.
@@ -228,6 +246,7 @@ model InitiateurActeLegislatif {
   acteurRef            Acteur?         @relation(fields: [acteurRefUid], references: [uid])
   mandatRef            Mandat?         @relation(fields: [mandatRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([acteurRefUid])
   @@index([mandatRefUid])
@@ -235,7 +254,9 @@ model InitiateurActeLegislatif {
 
 model Rapporteur {
   /// Identifiant unique.
-  slug                 String          @id
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Identifiant unique (uid) du rapporteur.
   acteurRefUid         String
   /// Identifiant unique (uid) de l'étude relative à un projet de loi de finance.
@@ -247,6 +268,7 @@ model Rapporteur {
   acteurRef            Acteur?         @relation(fields: [acteurRefUid], references: [uid])
   etudePlfRef          EtudePlf?       @relation(fields: [etudePlfRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([acteurRefUid])
   @@index([etudePlfRefUid])
@@ -255,8 +277,8 @@ model Rapporteur {
 model EtudePlf {
   /// Identifiant unique.
   uid                 String       @id
-  /// Hachage de l'objet
-  hash                String       @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset             Int
   /// Nom de la mission de l'état à laquelle se rapporte l'étude.
   libelleCourt        String?
   /// Des missions secondaires (ou partie de mission) peuvent subsdiviser une mission principale. Par exemple la mission principale Action extérieure de l'État peut contenir une partie de mission Tourisme qui dispose de son propre budget.
@@ -276,6 +298,7 @@ model EtudePlf {
   organeRef           Organe?      @relation(fields: [organeRefUid], references: [uid])
   rapporteurs         Rapporteur[]
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([documentUid])
   @@index([dossierRefUid])
@@ -284,19 +307,24 @@ model EtudePlf {
 
 model VoteActeLegislatif {
   /// Identifiant unique.
-  slug                 String          @id
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   voteRefUid           String?
   acteLegislatifRefUid String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   voteRef              Scrutin?        @relation(fields: [voteRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([voteRefUid])
 }
 
 model TexteAssocie {
   /// Identifiant unique.
-  slug                 String          @id
+  id                   Int             @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Identifiant unique du texte adopté.
   texteAssocieRefUid   String?
   /// BTA pour Bibard du Texte Adopté ou TAP pour Texte Adopté Provisoire.
@@ -305,6 +333,7 @@ model TexteAssocie {
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
   texteAssocieRef      Document?       @relation(fields: [texteAssocieRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
 
+  @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([texteAssocieRefUid])
 }

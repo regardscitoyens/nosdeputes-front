@@ -70,7 +70,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
   const { sections, wordsCounts } = props;
   const theme = useTheme();
 
-  const [activeState, setActiveState] = React.useState<string | null>(null);
+  const [activeState, setActiveState] = React.useState<number | null>(null);
   const clickedRef = React.useRef(false);
   const unsetClickedRef = React.useRef<any>(null);
   const findActiveIndex = React.useCallback(() => {
@@ -81,14 +81,14 @@ export const DebateSummary = (props: DebateSummaryProps) => {
 
     let active;
     for (let i = sections.length - 1; i >= 0; i -= 1) {
-      // No hash if we're near the top of the page
+      // No id if we're near the top of the page
       if (document.documentElement.scrollTop < 200) {
-        active = { hash: null };
+        active = { id: null };
         break;
       }
 
       const item = sections[i];
-      const node = document.getElementById(item.hash);
+      const node = document.getElementById(item.id.toString());
 
       if (process.env.NODE_ENV !== "production") {
         if (!node) {
@@ -109,8 +109,8 @@ export const DebateSummary = (props: DebateSummaryProps) => {
       }
     }
 
-    if (active && activeState !== active.hash) {
-      setActiveState(active.hash);
+    if (active && activeState !== active.id) {
+      setActiveState(active.id);
     }
   }, [activeState, sections]);
 
@@ -118,7 +118,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
   useThrottledOnScroll(sections.length > 0 ? findActiveIndex : null, 166);
 
   const handleClick =
-    (hash: string) => (event: React.MouseEvent<HTMLElement>) => {
+    (id: number) => (event: React.MouseEvent<HTMLElement>) => {
       // Ignore click events meant for native link handling, for example open in new tab
       if (samePageLinkNavigation(event)) {
         return;
@@ -130,8 +130,8 @@ export const DebateSummary = (props: DebateSummaryProps) => {
         clickedRef.current = false;
       }, 1000);
 
-      if (activeState !== hash) {
-        setActiveState(hash);
+      if (activeState !== id) {
+        setActiveState(id);
       }
     };
 
@@ -162,10 +162,10 @@ export const DebateSummary = (props: DebateSummaryProps) => {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2} pb={3}>
-          {sections.map(({ hash, texte }, index) =>
-            activeState === hash || (activeState === null && index === 0) ? (
+          {sections.map(({ id, texte }, index) =>
+            activeState === id || (activeState === null && index === 0) ? (
               <Box
-                key={hash}
+                key={id}
                 sx={{
                   backgroundColor: theme.palette.grey[900],
                   p: 1,
@@ -175,7 +175,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                 <Typography
                   color="white"
                   component="a"
-                  href={`#${hash}`}
+                  href={`#${id}`}
                   dangerouslySetInnerHTML={{ __html: cleanText(texte!) }}
                 />
                 <Stack direction="row" alignItems="center" spacing={0.5}>
@@ -185,19 +185,19 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                     variant="caption"
                     fontWeight="light"
                   >
-                    {getDuration(wordsCounts[hash]) ?? "?"} minute
-                    {getDuration(wordsCounts[hash]) === 1 ? "" : "s"}
+                    {getDuration(wordsCounts[id]) ?? "?"} minute
+                    {getDuration(wordsCounts[id]) === 1 ? "" : "s"}
                   </Typography>
                 </Stack>
               </Box>
             ) : (
               <Typography
-                key={hash}
+                key={id}
                 component="a"
-                href={`#${hash}`}
+                href={`#${id}`}
                 dangerouslySetInnerHTML={{ __html: cleanText(texte!) }}
                 variant="body2"
-                onClick={handleClick(hash)}
+                onClick={handleClick(id)}
               />
             )
           )}

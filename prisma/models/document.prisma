@@ -1,29 +1,6 @@
-enum ClasseCode {
-  /// Projet de loi (initiative du gouvernement)
-  PRJLOI
-  /// Proposition de loi (initiative du parlement)
-  PIONLOI
-  /// Proposition de Resolution  
-  PIONRES
-  // Avis
-  AVIS
-  /// Motion (motion de censure article 49-2 de la consitution)
-  MOTION
-  /// Allocution
-  ALLOCUTION
-  /// Declaration du gouvernement (souvent utilisation de l'article 49-3)
-  DECLARATION
-  /// Rapport d'une commission
-  RAPPORT
-  /// Rapport d'information
-  RAPINF
-  /// Resolution (positionnement pris par l'assemblée sans impact legislatif)
-  RES
-}
-
 model Document {
-  /// Hachage de l'objet
-  hash                     String                   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                  Int
   /// Titre du document. Dans le cas d'un projet ou d'une proposition de loi, tel qu'il apparait au début du texte de loi.
   titrePrincipal           String
   /// Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu.
@@ -31,7 +8,7 @@ model Document {
   /// Identifiant unique du document.
   uid                      String                   @id
   /// Code unique pour traitement automatisé.
-  classeCode               ClasseCode
+  classeCode               String
   /// Signification du code.
   classeLibelle            String
   /// True si le document est un projet ou une proposition de loi.
@@ -99,6 +76,7 @@ model Document {
   etudesPlf                EtudePlf[]
   textesAssocies           TexteAssocie[]
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([auteurPrincipalUid])
   @@index([dossierRefUid])
@@ -108,8 +86,8 @@ model Document {
 model Auteur {
   /// Identifiant unique.
   id             Int     @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash           String  @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset        Int
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
   organeRefUid   String?
   /// Identifiant unique (uid) de l'acteur.
@@ -123,6 +101,7 @@ model Auteur {
   documentRef Document? @relation(fields: [documentRefUid], references: [uid])
   organeRef   Organe?   @relation(fields: [organeRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([acteurRefUid])
   @@index([documentRefUid])
@@ -131,8 +110,8 @@ model Auteur {
 model CoSignataireDocument {
   /// Identifiant unique.
   id                     Int       @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash                   String    @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                Int
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid           String?
   /// Date de la co-signature.
@@ -152,6 +131,7 @@ model CoSignataireDocument {
   documentRef Document? @relation(fields: [documentRefUid], references: [uid])
   organeRef   Organe?   @relation(fields: [organeRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([acteurRefUid])
   @@index([documentRefUid])
@@ -160,8 +140,8 @@ model CoSignataireDocument {
 model AmendementCommission {
   /// Identifiant unique.
   id             Int       @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash           String    @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset        Int
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
   organeRefUid   String?
   /// Toujours égal à true.
@@ -171,6 +151,7 @@ model AmendementCommission {
   documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
   organeRef      Organe?   @relation(fields: [organeRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([documentRefUid])
 }

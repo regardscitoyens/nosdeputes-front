@@ -2,8 +2,8 @@
 model Agenda {
   /// Identifiant unique.
   uid                         String                       @id
-  /// Hachage de l'objet
-  hash                        String                       @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                     Int
   /// Type de la réunion
   xsiType                     String?
   /// Date et heure du début de la réunion.
@@ -70,6 +70,7 @@ model Agenda {
   amendements                 Amendement[]
   debats                      Debat[]
 
+  @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeDemandeurRefUid])
   @@index([organeReunionRefUid])
@@ -79,8 +80,8 @@ model Agenda {
 model PointOdj {
   /// Identifiant unique.
   uid                  String           @id
-  /// Hachage de l'objet
-  hash                 String           @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset              Int
   /// Identifiant unique de la réunion associée.
   agendaRefUid         String?
   /// Le contenu de ce champ n'est pas défini.
@@ -110,14 +111,15 @@ model PointOdj {
   dossierLegislatif    Dossier?         @relation(fields: [dossierLegislatifUid], references: [uid])
   agendaRef            Agenda?          @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
 
+  @@index([dataset])
   @@index([agendaRefUid])
 }
 
 model ActeurDemandeur {
   /// Clé primaire.
   id           Int    @id @default(autoincrement())
-  /// Identifiant unique.
-  slug         String @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset           Int
   /// Acteur référent.
   acteurRefUid String
   /// Agenda référent.
@@ -125,6 +127,7 @@ model ActeurDemandeur {
   acteurRef    Acteur @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
   agendaRef    Agenda @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([agendaRefUid])
 }
@@ -132,8 +135,8 @@ model ActeurDemandeur {
 model ParticipantReunion {
   /// Clé primaire.
   id           Int     @id @default(autoincrement())
-  /// Identifiant unique.
-  slug         String  @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset           Int
   /// La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon.
   presence     String?
   /// Acteur référent.
@@ -143,6 +146,7 @@ model ParticipantReunion {
   acteurRef    Acteur? @relation(fields: [acteurRefUid], references: [uid])
   agendaRef    Agenda  @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([agendaRefUid])
 }
@@ -150,8 +154,8 @@ model ParticipantReunion {
 model PersonneAuditionneeReunion {
   /// Clé primaire.
   id           Int       @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash         String    @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset           Int
   /// Identifiant unique de l'acteur ou bien, dans le cas ou il ne s'agit pas d'un acteur, un identifiant unique de personne externe débutant par PE qui est utilisé uniquement dans ce contexte.
   uid          String
   /// Acteur référent.
@@ -171,6 +175,7 @@ model PersonneAuditionneeReunion {
   acteurRef    Acteur?   @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
   agendaRef    Agenda    @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([agendaRefUid])
 }

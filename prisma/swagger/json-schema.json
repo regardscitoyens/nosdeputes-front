@@ -8,9 +8,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "prenom": {
           "type": "string",
@@ -305,9 +305,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "type": {
           "type": "string"
@@ -351,9 +351,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "type": {
           "type": "string"
@@ -421,9 +421,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "xsiType": {
           "type": [
@@ -691,9 +691,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "comiteSecret": {
           "type": [
@@ -808,9 +808,9 @@
           "type": "integer",
           "description": "Clé primaire."
         },
-        "slug": {
-          "type": "string",
-          "description": "Identifiant unique."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteurRef": {
           "$ref": "#/definitions/Acteur"
@@ -827,9 +827,9 @@
           "type": "integer",
           "description": "Clé primaire."
         },
-        "slug": {
-          "type": "string",
-          "description": "Identifiant unique."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "presence": {
           "type": [
@@ -860,9 +860,9 @@
           "type": "integer",
           "description": "Clé primaire."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "uid": {
           "type": "string",
@@ -926,9 +926,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "chronotag": {
           "type": [
@@ -1497,8 +1497,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "slug": {
-          "type": "string"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteurRef": {
           "anyOf": [
@@ -1595,9 +1596,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'obejt."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "typeAssemblee": {
           "type": "string"
@@ -1685,6 +1686,10 @@
         "id": {
           "type": "string"
         },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
         "valeurPtsOdj": {
           "type": "string"
         },
@@ -1717,9 +1722,12 @@
     "Paragraphe": {
       "type": "object",
       "properties": {
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet."
+        "id": {
+          "type": "integer"
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "adt": {
           "type": [
@@ -1893,9 +1901,9 @@
     "Document": {
       "type": "object",
       "properties": {
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "titrePrincipal": {
           "type": "string",
@@ -1911,18 +1919,6 @@
         },
         "classeCode": {
           "type": "string",
-          "enum": [
-            "PRJLOI",
-            "PIONLOI",
-            "PIONRES",
-            "AVIS",
-            "MOTION",
-            "ALLOCUTION",
-            "DECLARATION",
-            "RAPPORT",
-            "RAPINF",
-            "RES"
-          ],
           "description": "Code unique pour traitement automatisé."
         },
         "classeLibelle": {
@@ -2197,9 +2193,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "qualite": {
           "type": [
@@ -2247,9 +2243,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "dateCosignature": {
           "type": [
@@ -2317,9 +2313,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "amendable": {
           "type": [
@@ -2357,9 +2353,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "xsiType": {
           "type": [
@@ -2510,6 +2506,11 @@
           "items": {
             "$ref": "#/definitions/PointOdj"
           }
+        },
+        "type": {
+          "type": "string",
+          "default": "",
+          "description": "Type de dossier législatif \n(e.g. Projet de ratification, Motion de censure, Proposition de loi)."
         }
       }
     },
@@ -2520,9 +2521,16 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
+        "parentUid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant de l'acte législatif parent."
         },
         "codeActe": {
           "type": "string",
@@ -2770,13 +2778,6 @@
           ],
           "description": "Type du texte européen (par exemple: Règlement de la Commission)."
         },
-        "odjRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique de l'ordre du jour de la réunion dans l'agenda."
-        },
         "famCodeStatutAdoption": {
           "type": [
             "string",
@@ -2906,9 +2907,13 @@
     "InitiateurDossier": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteurRef": {
           "anyOf": [
@@ -2945,9 +2950,13 @@
     "AuteurMotion": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteLegislatifRef": {
           "anyOf": [
@@ -2974,9 +2983,13 @@
     "InfoJoRect": {
       "type": "object",
       "properties": {
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "id": {
+          "type": "integer",
+          "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "dateJo": {
           "type": [
@@ -3027,9 +3040,13 @@
     "InitiateurActeLegislatif": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteLegislatifRef": {
           "anyOf": [
@@ -3066,9 +3083,13 @@
     "Rapporteur": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "typeRapporteur": {
           "type": "string",
@@ -3113,9 +3134,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "libelleCourt": {
           "type": [
@@ -3195,9 +3216,13 @@
     "VoteActeLegislatif": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "acteLegislatifRef": {
           "anyOf": [
@@ -3224,9 +3249,13 @@
     "TexteAssocie": {
       "type": "object",
       "properties": {
-        "slug": {
-          "type": "string",
+        "id": {
+          "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "typeTexte": {
           "type": [
@@ -3263,9 +3292,9 @@
         "uid": {
           "type": "string"
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "legislature": {
           "type": [
@@ -3528,9 +3557,9 @@
         "id": {
           "type": "integer"
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "qualite": {
           "type": "string"
@@ -3551,6 +3580,10 @@
       "properties": {
         "id": {
           "type": "integer"
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "dateDebut": {
           "type": "string",
@@ -3578,9 +3611,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "codeType": {
           "type": "string"
@@ -3833,9 +3866,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "legislature": {
           "type": "string"
@@ -3955,9 +3988,9 @@
           "type": "string",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "dateScrutin": {
           "type": [
@@ -4193,6 +4226,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
         "hash": {
           "type": "string",
           "description": "Hachage de l'objet"
@@ -4287,9 +4324,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "positionVote": {
           "type": [
@@ -4371,9 +4408,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "position": {
           "type": [
@@ -4410,9 +4447,9 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "position": {
           "type": [
@@ -4447,11 +4484,11 @@
       "properties": {
         "uid": {
           "type": "string",
-          "description": "Identifiant unique."
+          "description": "Identifiant unique d'un texte de loi."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet"
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "titre": {
           "type": "string",
@@ -4557,13 +4594,13 @@
     "SommaireLoi": {
       "type": "object",
       "properties": {
-        "uid": {
-          "type": "string",
-          "description": "Identifiant unique d'un sommaire."
+        "id": {
+          "type": "integer",
+          "description": "Id unique d'un sommaire d'un texte de loi."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)."
         },
         "division": {
           "type": "string",
@@ -4572,10 +4609,11 @@
             "Chapitre",
             "Section",
             "SousSection"
-          ]
+          ],
+          "description": "Type de division."
         },
         "numeroDivision": {
-          "type": "integer",
+          "type": "string",
           "description": "Numéro de la division."
         },
         "sequence": {
@@ -4601,13 +4639,36 @@
     "Article": {
       "type": "object",
       "properties": {
-        "uid": {
-          "type": "string",
-          "description": "Identifiant unique d'un article."
+        "id": {
+          "type": "integer",
+          "description": "Id unique d'un article."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
         "hash": {
           "type": "string",
-          "description": "Hachage de l'objet."
+          "description": "Hachage de l'objet.\nUtilisé comme référence aux alinéas."
+        },
+        "alineas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alinea"
+          },
+          "description": "Liste des alinéas composant l'article."
+        },
+        "cardinal": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cardinal de l'article (e.g. er, bis)."
+        },
+        "nouveau": {
+          "type": "boolean",
+          "default": false,
+          "description": "Mention spécifiée pour certains articles."
         },
         "numero": {
           "type": [
@@ -4623,13 +4684,6 @@
           },
           "description": "Numéro des articles (dans de rare cas, il y a un groupement d'articles)."
         },
-        "cardinal": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Cardinal de l'article (e.g. er, bis)."
-        },
         "parent": {
           "type": [
             "string",
@@ -4637,19 +4691,12 @@
           ],
           "description": "Section parente (e.g. Chapitre Ier BIS)."
         },
+        "texteLoiRef": {
+          "$ref": "#/definitions/TexteLoi"
+        },
         "titre": {
           "type": "string",
           "description": "Titre de l'article"
-        },
-        "alineas": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Alinea"
-          },
-          "description": "Liste des alinéas composant l'article."
-        },
-        "texteLoiRef": {
-          "$ref": "#/definitions/TexteLoi"
         }
       }
     },
@@ -4658,15 +4705,19 @@
       "properties": {
         "id": {
           "type": "integer",
+          "description": "Id unique d'un alinéa."
+        },
+        "numero": {
+          "type": "integer",
           "description": "Numéro de l'alinéa."
         },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet."
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
         },
-        "contenu": {
+        "texte": {
           "type": "string",
-          "description": "Contenu de l'alinéa."
+          "description": "Texte de l'alinéa."
         },
         "articleRef": {
           "$ref": "#/definitions/Article"

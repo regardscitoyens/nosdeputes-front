@@ -2,8 +2,8 @@
 model Scrutin {
   /// Identifiant unique.
   uid                     String               @id
-  /// Hachage de l'objet
-  hash                    String               @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset                 Int
   /// Date à laquelle le vote a eu lieu.
   dateScrutin             DateTime?
   /// L'acteur ou l'organe qui demande le vote.
@@ -63,6 +63,7 @@ model Scrutin {
   votes                   Vote[]
   votesActesLegislatifs   VoteActeLegislatif[]
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([seanceRefUid])
   @@index([acteLegislatifsRefUid])
@@ -71,6 +72,8 @@ model Scrutin {
 model GroupeVotant {
   /// Identifiant unique.
   id                    Int           @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset               Int
   /// Hachage de l'objet
   hash                  String        @unique
   /// Le nombre total de membres du groupe politique et non pas le nombre de membres présents au moment du vote.
@@ -95,6 +98,7 @@ model GroupeVotant {
   scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
   votes         Vote[]
 
+  @@index([dataset])
   @@index([organeRefUid])
   @@index([scrutinRefUid])
 }
@@ -108,9 +112,9 @@ enum PositionVote {
 
 model Vote {
   /// Identifiant unique.
-  id                Int          @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash              String       @unique
+  id                Int           @id @default(autoincrement())
+  /// Jeu de données de provenance (numéro de législature)
+  dataset           Int
   /// Identifiant unique (uid) de l'acteur.
   acteurRefUid      String
   positionVote      PositionVote?
@@ -130,6 +134,7 @@ model Vote {
   mandatRef       Mandat?       @relation(fields: [mandatRefUid], references: [uid])
   scrutinRef      Scrutin?      @relation(fields: [scrutinRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([groupeVotantRefId])
   @@index([mandatRefUid])
@@ -139,14 +144,15 @@ model Vote {
 model MiseAuPoint {
   /// Identifiant unique.
   id            Int      @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash          String   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset       Int
   acteurRefUid  String?
   position      String?
   scrutinRefUid String?
   acteurRef     Acteur?  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
   scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([scrutinRefUid])
 }
@@ -154,14 +160,15 @@ model MiseAuPoint {
 model Dysfonctionnement {
   /// Identifiant unique.
   id            Int      @id @default(autoincrement())
-  /// Hachage de l'objet
-  hash          String   @unique
+  /// Jeu de données de provenance (numéro de législature)
+  dataset       Int
   acteurRefUid  String?
   position      String?
   scrutinRefUid String?
   acteurRef     Acteur?  @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
   scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])
 
+  @@index([dataset])
   @@index([acteurRefUid])
   @@index([scrutinRefUid])
 }

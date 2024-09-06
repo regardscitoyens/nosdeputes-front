@@ -50,7 +50,7 @@ async function getReunionsUnCached(uid: string) {
         const pointIndex =
           1 +
           (act.agendaRef.pointsOdj.findIndex(
-            (pt) => pt.uid === act.odjRefUid
+            (pt) => pt.uid === act.pointOdjUid
           ) ?? -1);
 
         const {
