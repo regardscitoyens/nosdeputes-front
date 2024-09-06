@@ -4,12 +4,14 @@ import Stack from "@mui/material/Stack";
 
 import AmendementCard from "@/components/folders/AmendementCard";
 import { prisma } from "@/prisma";
+import { AmendementsStatistics } from "./AmendementsStatistics";
 
 async function getDeputeAmendementUnCached(slug: string) {
   try {
     return await prisma.acteur.findFirst({
       where: { slug },
       select: {
+        uid: true,
         amendements: {
           include: { texteLegislatifRef: { select: { numNotice: true } } },
         },
@@ -30,11 +32,12 @@ export default async function Amendements({
 }) {
   const deputeWithAmendements = await getDeputeAmendement(params.slug);
 
-  const { amendements } = deputeWithAmendements!;
+  const { amendements, uid } = deputeWithAmendements!;
 
   return (
     <Stack>
       <p>Amendements</p>
+      <AmendementsStatistics deputeUid={uid} />
       {amendements &&
         amendements
           .sort((a, b) =>
