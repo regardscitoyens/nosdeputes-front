@@ -41,8 +41,8 @@ export default async function Amendements({
       {amendements &&
         amendements
           .sort((a, b) =>
-            Number.parseInt(a.numeroOrdreDepot || "") <
-            Number.parseInt(b.numeroOrdreDepot || "")
+            (a.numeroOrdreDepot ?? Number.POSITIVE_INFINITY) <
+            (b.numeroOrdreDepot ?? Number.POSITIVE_INFINITY)
               ? -1
               : 1
           )

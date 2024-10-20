@@ -26,7 +26,7 @@ async function getDeputeActiviteUnCached(slug: string) {
         // },
         documents: true,
         // initiateurActeLegislatif: true,
-        dossiers: { include: { dossierRef: true } },
+        dossiers: true,
         // rapporteurs: true,
       },
     });
@@ -150,7 +150,7 @@ export default async function Amendements({
       <ul>
         {dossiers.map((dossier) => (
           <li
-            key={dossier.id}
+            key={dossier.uid}
             style={{
               display: "flex",
               width: "100%",
@@ -161,9 +161,9 @@ export default async function Amendements({
             <Typography
               variant="body2"
               component={Link}
-              href={`/${dossier.dossierRef?.legislature}/dossier/${dossier.dossierRef?.uid}/`}
+              href={`/${dossier.legislature}/dossier/${dossier.uid}/`}
             >
-              {dossier.dossierRef?.titre}
+              {dossier.titre}
             </Typography>
             {/* TODO: Ajouter le status du dossier legislatif ou la date de derniere modification */}
           </li>
