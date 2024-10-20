@@ -22,6 +22,7 @@ model Debat {
   validite          String
   quantiemesJournee String
   quantiemesSession String
+  presidentSeance   String?
 
   reunionRef  Agenda?         @relation(fields: [reunionRefUid], references: [uid])
   paragraphes Paragraphe[]
@@ -42,7 +43,6 @@ model SommaireDebat {
   titreIntitule     String?
   titreSousIntitule String?
   idSyceron         String
-  presidentSeance   String
   debatRef          Debat   @relation(fields: [debatRefUid], references: [uid])
 
   @@index([dataset])
@@ -50,10 +50,10 @@ model SommaireDebat {
 }
 
 model Paragraphe {
-  id                Int  @id  @default(autoincrement())
+  id                Int                      @id @default(autoincrement())
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
-  debatRefUid       String
+  dateSeance        DateTime?
   adt               String?
   art               String?
   bibard            String?
@@ -80,14 +80,24 @@ model Paragraphe {
   valeurPtsOdj      String?
   texte             String?
   stime             String?
+  debatRefUid       String
+  dossierRefUid     String?
+  texteRefUid       String?
+  pointOdjRefUid    String?
   vecteurRecherche  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
   acteurRef         Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
   mandatRef         Mandat?                  @relation(fields: [mandatRefUid], references: [uid])
   debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
+  dossierRef        Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
+  texteRef          Document?                @relation(fields: [texteRefUid], references: [uid])
+  pointOdjRef       PointOdj?                @relation(fields: [pointOdjRefUid], references: [uid])
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([debatRefUid])
   @@index([acteurRefUid])
   @@index([mandatRefUid])
+  @@index([dossierRefUid])
+  @@index([texteRefUid])
+  @@index([pointOdjRefUid])
 }

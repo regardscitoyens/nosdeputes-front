@@ -50,8 +50,8 @@ export default function AmendementsList(props: {
         !selectedDocument || texteLegislatifRefUid === selectedDocument
     )
     .sort((a, b) =>
-      Number.parseInt(a.numeroOrdreDepot ?? "0") <
-      Number.parseInt(b.numeroOrdreDepot ?? "0")
+      (a.numeroOrdreDepot ?? Number.POSITIVE_INFINITY) <
+      (b.numeroOrdreDepot ?? Number.POSITIVE_INFINITY)
         ? -1
         : 1
     );

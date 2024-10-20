@@ -18,6 +18,16 @@ async function getDossiersUnCached(legislature: string) {
 }
 const getDossiers = React.cache(getDossiersUnCached);
 
+// The API return string for Dates
+function formatDossier(dossier: Dossier): Dossier {
+  return {
+    ...dossier,
+    dateDernierActe: dossier.dateDernierActe
+      ? new Date(dossier.dateDernierActe)
+      : null,
+    dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
+  };
+}
 type DossierListProps = {
   theme: string;
   search: string;
@@ -46,7 +56,7 @@ export default function DossierList(props: DossierListProps) {
     const { data } = await res.json();
 
     setIsLoading(false);
-    setDossiers((prev) => [...prev, ...data]);
+    setDossiers((prev) => [...prev, ...data.map(formatDossier)]);
     setCurrentPage((prev) => prev + 1);
   };
 
@@ -70,7 +80,7 @@ export default function DossierList(props: DossierListProps) {
       const { data } = await res.json();
       if (isValid) {
         setIsLoading(false);
-        setDossiers(data);
+        setDossiers(data.map(formatDossier));
         setCurrentPage((prev) => prev + 1);
       }
     }

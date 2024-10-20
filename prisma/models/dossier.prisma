@@ -1,58 +1,79 @@
 /// Un dossier législatif comprend l'ensemble des travaux parlementaires relatifs à un texte depuis son dépôt - par le gouvernement (projet de loi), ou par un parlementaire (proposition de loi) - jusqu'à sa promulgation.
 model Dossier {
   /// Identifiant unique.
-  uid                    String                   @id
+  uid              String    @id
   /// Jeu de données de provenance (numéro de législature)
-  dataset                Int
+  dataset          Int
+  /// Numéro du dossier
+  numero           String?
   /// Type du dossier
-  xsiType                String?
+  xsiType          String?
   /// Numéro de la législature.
-  legislature            String
+  legislature      String
   /// Date de dépôt du texte
-  dateDepot              DateTime?
+  dateDepot        DateTime?
   /// Date du dernier acte législatif lié au texte
-  dateDernierActe        DateTime?
+  dateDernierActe  DateTime?
   /// Code du dernier acte législatif
-  codeDernierActe        String?
+  codeDernierActe  String?
   /// URL du dossier législatif sur le site du Sénat.
-  senatChemin            String?
+  senatChemin      String?
   /// Titre du dossier législatif.
-  titre                  String?
+  titre            String?
   /// Chemin permettant de construire l'URL du dossier législatif sur le site de l'Assemblée nationale: http://www.assemblee-nationale.fr/dyn/**legislature**/dossiers/**titreChemin**
-  titreChemin            String?
+  titreChemin      String?
   /// Mots clés.
-  theme                  String?
+  theme            String?
   /// Code unique pour traitement automatisé.
-  codeProcedure          String
+  codeProcedure    String
   /// Signification du code.
-  libelleProcedure       String
+  libelleProcedure String
+
+  /// Dernier statut de ce dossier parlementaire (e.g. Texte déposé à l’Assemblée nationale).
+  statut String?
+
+  /// Initiative du dossier législatif
+  /// (e.g. Proposition de loi, Mission d'information, Motion de censure).
+  typeInitiative String @default("")
+
+  /// Procédure du dossier législatif
+  /// (e.g. Finances de l'année, Sans mission).
+  typeProcedure  String @default("")
+
   /// Le dossier parlementaire est lié à un autre. Si la cause est un 'Examen commun', les deux dossiers continuent d'évoluer indépendament. Par exemple une mission d'information peut être liée au dossier parlementaire qui représente le rapport produit par cette mission. Si la cause est 'Dossier absorbé', il devient obsolete et le dossier absorbant prend la suite. Par exemple, lorsqu'une loi ordinaire devient une loi organique, un nouveau dossier parlementaire est constitué, l'intégralité du dossier absorbé est copié dans le nouveau dossier.
   causeFusionDossier     String?
   /// Identifiant unique (uid) du dossier parlementaire absorbant.
-  dossierAbsorbantRefUid String?                  @unique
+  dossierAbsorbantRefUid String? @unique
   /// Organe à l'initiative du dossier.
   organeRefUid           String?
-  /// Numéro du dossier
-  numero                 String?
-  vecteurRecherche       Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
-  dossierAbsorbantRef    Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-  dossierAbsorbrant      Dossier?                 @relation("DossierAbsorbant")
-  organeRef              Organe?                  @relation(fields: [organeRefUid], references: [uid])
-  plf                    EtudePlf[]
-  initiateurs            InitiateurDossier[]
-  actesLegislatifs       ActeLegislatif[]
-  amendements            Amendement[]
-  documents              Document[]
-  pointsOdj              PointOdj[]
+  /// Identifiant de la commission référente
+  commissionRefUid       String?
+  /// Identifiant unique (uid) de l'acteur.
+  acteurPrincipalRefUid  String?
 
-  /// Type de dossier législatif 
-  /// (e.g. Projet de ratification, Motion de censure, Proposition de loi).
-  type String @default("")
+  vecteurRecherche    Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
+  /// Référence vers l'acteur principal.
+  acteurPrincipalRef  Acteur?                  @relation(fields: [acteurPrincipalRefUid], references: [uid])
+  dossierAbsorbantRef Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  dossierAbsorbrant   Dossier?                 @relation("DossierAbsorbant")
+  organeRef           Organe?                  @relation("OrganeMission", fields: [organeRefUid], references: [uid])
+  commissionRef       Organe?                  @relation("OrganeCommission", fields: [commissionRefUid], references: [uid])
+  plf                 EtudePlf[]
+  initiateurs         InitiateurDossier[]
+  actesLegislatifs    ActeLegislatif[]
+  amendements         Amendement[]
+  documents           Document[]
+  pointsOdj           PointOdj[]
+  paragraphes         Paragraphe[]
+  // themes
+  themes              DossierThemes[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeRefUid])
+  @@index([commissionRefUid])
   @@index([dossierAbsorbantRefUid])
+  @@index([acteurPrincipalRefUid])
 }
 
 model ActeLegislatif {
@@ -336,4 +357,14 @@ model TexteAssocie {
   @@index([dataset])
   @@index([acteLegislatifRefUid])
   @@index([texteAssocieRefUid])
+}
+
+model DossierThemes {
+  uid             String   @id
+  dossierRefUid   String
+  dossierRef      Dossier  @relation(fields: [dossierRefUid], references: [uid])
+  labels          String[]
+  source          String?
+  version         String?
+  prediction_data Json
 }

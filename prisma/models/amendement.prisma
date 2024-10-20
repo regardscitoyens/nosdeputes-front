@@ -8,14 +8,14 @@ model Amendement {
   legislature                      String?
   /// Libelle désignant l'amendement et incluant son numéro (correspondant au champ numero), une indication du nombre de rectifications qui lui ont été apportés (correspondant au champ identifiant.numRect et d'autres informations dérivées du champ identifiant.
   numeroLong                       String?
-  numeroOrdreDepot                 String?
+  numeroOrdreDepot                 Int?
   prefixeOrganeExamen              String?
-  numeroRect                       String?
+  numeroRect                       Int?
   examenRef                        String?
   /// Lorsque tous les amendements visant un texte de loi sont triés sur cette clé, cela détermine leur ordre d'appel.
   triAmendement                    String?
   /// Le contenu de ce champ n'est pas défini.
-  cardinaliteAmdtMultiples         String?
+  cardinaliteAmdtMultiples         Int?
   /// L'identifiant unique (uid) de l'amendement modifié par un sous amendement. Les amendements peuvent faire l’objet de sous-amendements qui doivent respecter les mêmes règles formelles que les amendements.
   amendementParentRefUid           String?
   /// 'Depute' si l'auteur dépose l'amendement en sa qualité de député, 'Gouvernement' s'il le fait au nom du gouvernement, 'Rapporteur' s'il est le rapporteur de la commission désignée par organeRef.
@@ -97,8 +97,10 @@ model Amendement {
   article99                        String?
   codeLoi                          String?
   divisionCodeLoi                  String?
-  idDiscussion                     String?
-  typePosition                     String?
+  idDiscussionCommune              Int?
+  typePositionCommune            String?
+  idDiscussionIdentique            Int?
+  typePositionIdentique            String?
   accordGouvernementDepotHorsDelai String?
   /// Exposé sommaire des motifs justifiant l'amendement, au format HTML.
   exposeSommaireHtml               String?

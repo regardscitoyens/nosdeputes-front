@@ -6,6 +6,8 @@ model Agenda {
   dataset                     Int
   /// Type de la réunion
   xsiType                     String?
+  /// Chambre de la réunion (Assemblée ou Sénat)
+  chambre                     String?
   /// Date et heure du début de la réunion.
   timestampDebut              DateTime?
   /// Date et heure de la fin de la réunion.
@@ -82,8 +84,6 @@ model PointOdj {
   uid                  String           @id
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
-  /// Identifiant unique de la réunion associée.
-  agendaRefUid         String?
   /// Le contenu de ce champ n'est pas défini.
   comiteSecret         Boolean?
   /// Date de fin.
@@ -105,21 +105,25 @@ model PointOdj {
   /// Type de point de l'ordre du jour (par exemple: Discussion, Examen, Suite de la discussion, Amendements (Art. 88), etc.)
   typePointOdj         String?
   dossierLegislatifUid String?
-  /// Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, chaque point de l'ordre du jour est fixé par la `conférence des présidents <https://fr.wikipedia.org/wiki/Conf%C3%A9rence_des_pr%C3%A9sidents_de_l%27Assembl%C3%A9e_nationale>`__ et a donc la valeur 'podjSeanceConfPres_type' pour le champ xsiType. Dans tout les autres cas la valeur est 'podjReunion_type'
+  /// Identifiant unique de la réunion associée.
+  agendaRefUid         String?
+  /// Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, chaque point de l'ordre du jour est fixé par la `conférence des présidents <https://fr.wikipedia.org/wiki/Conf%C3%A9rence_des_pr%C3%A9sidents_de_l%27Assembl%C3%A9e_nationale>`__ et a donc la valeur 'podjSeanceConfPres_type' pour le champ xsiType. Dans tout les autres cas la valeur est 'podjReunion_type'.
   xsiType              String
   actesLegislatifs     ActeLegislatif[]
   dossierLegislatif    Dossier?         @relation(fields: [dossierLegislatifUid], references: [uid])
   agendaRef            Agenda?          @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+  interventions        Paragraphe[]
 
   @@index([dataset])
   @@index([agendaRefUid])
+  @@index([dossierLegislatifUid])
 }
 
 model ActeurDemandeur {
   /// Clé primaire.
   id           Int    @id @default(autoincrement())
   /// Jeu de données de provenance (numéro de législature)
-  dataset           Int
+  dataset      Int
   /// Acteur référent.
   acteurRefUid String
   /// Agenda référent.
@@ -136,7 +140,7 @@ model ParticipantReunion {
   /// Clé primaire.
   id           Int     @id @default(autoincrement())
   /// Jeu de données de provenance (numéro de législature)
-  dataset           Int
+  dataset      Int
   /// La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon.
   presence     String?
   /// Acteur référent.
@@ -155,7 +159,7 @@ model PersonneAuditionneeReunion {
   /// Clé primaire.
   id           Int       @id @default(autoincrement())
   /// Jeu de données de provenance (numéro de législature)
-  dataset           Int
+  dataset      Int
   /// Identifiant unique de l'acteur ou bien, dans le cas ou il ne s'agit pas d'un acteur, un identifiant unique de personne externe débutant par PE qui est utilisé uniquement dans ce contexte.
   uid          String
   /// Acteur référent.

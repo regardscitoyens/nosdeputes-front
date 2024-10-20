@@ -1,9 +1,10 @@
 /// Il contribue au fonctionnement de l'Etat (par exemple l'Assemblée nationale ou une Délégation parlementaire)
 model Organe {
   /// Identifiant unique.
-  uid                            String                   @id
+  uid     String @id
   /// Jeu de données de provenance (numéro de législature)
-  dataset                        Int
+  dataset Int
+
   codeType                       String
   libelle                        String
   libelleEdition                 String?
@@ -11,6 +12,10 @@ model Organe {
   libelleAbrev                   String
   organeParentRefUid             String?
   regime                         String?
+  /// Chambre parente de l'organe (Assemblée ou Sénat)
+  chambre                        String?
+  /// Vrai si l'organe est en cours d'agrément.
+  actif                          Boolean?                 @default(false)
   legislature                    String?
   secretaire01                   String?
   secretaire02                   String?
@@ -26,6 +31,8 @@ model Organe {
   dateFin                        DateTime?
   xsiType                        String?
   vecteurRecherche               Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(libelle, ''::text))::character varying))"))
+  /// Acteurs faisant parti de cette commission permanente, si cet organe est une commission.
+  acteursCommissionPermanente    Acteur[]
   reunionsDemandees              Agenda[]                 @relation("OrganeDemandeur")
   reunions                       Agenda[]                 @relation("OrganeReunion")
   amendementsOrgane              Amendement[]             @relation("Amendement_Organe")
@@ -35,7 +42,8 @@ model Organe {
   mandats                        Mandat[]
   auteurs                        Auteur[]
   coSignataires                  CoSignataireDocument[]
-  dossiers                       Dossier[]
+  dossiers                       Dossier[]                @relation("OrganeMission")
+  dossiersCommissions            Dossier[]                @relation("OrganeCommission")
   etudesPlf                      EtudePlf[]
   groupesVotants                 GroupeVotant[]
   organeParentRef                Organe?                  @relation("OrganeParentRef", fields: [organeParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
@@ -46,9 +54,9 @@ model Organe {
   membresGroupeParlementaire     Acteur[]                 @relation("Acteur_GroupeParlementaire")
   parlementairesCirsconscription Acteur[]                 @relation("Acteur_Circonscription")
   communes                       Commune[]
-  textesLoi                      TexteLoi[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeParentRefUid])
+  @@index([actif])
 }

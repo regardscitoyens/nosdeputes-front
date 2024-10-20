@@ -1,6 +1,8 @@
 model Document {
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
+  /// Chambre parente du document (Assemblée ou Sénat)
+  chambre                  String?
   /// Titre du document. Dans le cas d'un projet ou d'une proposition de loi, tel qu'il apparait au début du texte de loi.
   titrePrincipal           String
   /// Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu.
@@ -75,6 +77,10 @@ model Document {
   coSignataires            CoSignataireDocument[]
   etudesPlf                EtudePlf[]
   textesAssocies           TexteAssocie[]
+  interventions            Paragraphe[]
+
+  /// URL of the PDF of this document.
+  pdfUrl String?
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
