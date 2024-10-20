@@ -6,7 +6,7 @@ model TexteLoi {
   dataset                         Int
   /// Titre du texte de loi
   titre                           String
-  /// Chambre du parlementaire (assemblée ou sénat)
+  /// Chambre du texte (assemblée ou sénat)
   chambre                         String?
   /// Numéro de législature.
   legislature                     String
@@ -21,7 +21,8 @@ model TexteLoi {
   /// Numéro du texte
   numero                          String
   /// Commission chargée du texte de loi.
-  commission                      Organe        @relation(fields: [commissionRefUid], references: [uid])
+  commission                      String
+  // commission                      Organe        @relation(fields: [commissionRefUid], references: [uid])
   /// Texte de loi présenté au nom de... (e.g. nom du Premier ministre)
   presenteeAuNomDe                Acteur[]      @relation("loisPortees")
   /// Texte de loi présenté par un ensemble de députés.
