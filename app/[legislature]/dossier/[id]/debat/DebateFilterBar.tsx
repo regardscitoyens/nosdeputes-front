@@ -15,17 +15,7 @@ import Typography from "@mui/material/Typography";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Agenda } from "@prisma/client";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
 import Link from "next/link";
-
-type Debat = {
-  uid: string;
-  libelleCourtLieu: string | null;
-  libelleLongLieu: string | null;
-  timestampDebut: Date;
-  compteRenduRef: string;
-};
 
 type DebateFilterBarProps = {
   reunions: Pick<
@@ -35,7 +25,7 @@ type DebateFilterBarProps = {
     | "libelleLongLieu"
     | "timestampDebut"
     | "timestampFin"
-    | "compteRenduRef"
+    | "compteRenduRefUid"
   >[];
   // setDebateRef: (newRef: string) => void;
   // debats: Debat[];
@@ -46,14 +36,14 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
   const sceanceUid = useSelectedLayoutSegment();
 
   const reunionIndex = reunions.findIndex(
-    (reunion) => reunion.compteRenduRef === sceanceUid
+    (reunion) => reunion.compteRenduRefUid === sceanceUid
   );
   if (!sceanceUid || reunionIndex < 0) {
     if (reunions.length > 0) {
       if (sceanceUid) {
-        permanentRedirect(`${reunions[0].compteRenduRef}`);
+        permanentRedirect(`${reunions[0].compteRenduRefUid}`);
       } else {
-        permanentRedirect(`debat/${reunions[0].compteRenduRef}`);
+        permanentRedirect(`debat/${reunions[0].compteRenduRefUid}`);
       }
     }
   }
@@ -86,7 +76,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           <Select value={sceanceUid} displayEmpty sx={{ flex: 1 }}>
             {reunions.map(
               ({
-                compteRenduRef,
+                compteRenduRefUid,
                 libelleCourtLieu,
                 libelleLongLieu,
                 timestampDebut,
@@ -94,10 +84,10 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
                 return (
                   // @ts-ignore
                   <MenuItem
-                    key={compteRenduRef}
-                    value={compteRenduRef}
+                    key={compteRenduRefUid}
+                    value={compteRenduRefUid}
                     component={Link}
-                    href={compteRenduRef}
+                    href={compteRenduRefUid}
                   >
                     <Typography
                       variant="caption"
@@ -141,7 +131,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
               href={
                 reunionIndex <= 0
                   ? ""
-                  : reunions[reunionIndex - 1].compteRenduRef!
+                  : reunions[reunionIndex - 1].compteRenduRefUid!
               }
               disabled={reunionIndex <= 0}
             >
@@ -153,7 +143,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
               href={
                 reunionIndex >= reunions.length - 1
                   ? ""
-                  : reunions[reunionIndex + 1].compteRenduRef!
+                  : reunions[reunionIndex + 1].compteRenduRefUid!
               }
               disabled={reunionIndex >= reunions.length - 1}
             >

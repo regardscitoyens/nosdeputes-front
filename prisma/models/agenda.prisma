@@ -1,7 +1,7 @@
 /// Toutes les réunions de commissions, les séances publiques, les groupes d'amitiés `etc <organe.html#code-du-type-d-organe>`__. Réunion qui a lieu dans une salle réservée dans le système informatique de l’assemblée nationale, y compris les séances publiques qui ont lieu dans l'hémicycle. Cela peut aussi être une réunion dite internationale qui a lieu hors de l'assemblée.
 model Agenda {
   /// Identifiant unique.
-  uid                         String                       @id
+  uid                         String    @id
   /// Jeu de données de provenance (numéro de législature)
   dataset                     Int
   /// Type de la réunion
@@ -22,7 +22,7 @@ model Agenda {
   captationVideo              Boolean?
   visioConference             Boolean?
   /// Identifiant unique du compte rendu d'une séance publique. Uniquement si xsiType égal à 'seance_type'.
-  compteRenduRef              String?
+  compteRenduRefUid           String?
   /// Date à laquelle la séance publique a lieu.
   dateSeance                  DateTime?
   /// Le contenu de ce champ n'est pas défini.
@@ -56,26 +56,32 @@ model Agenda {
   /// Texte court décrivant l'objet de la réunion.
   resumeOdj                   String[]
   /// Nombre de participants à la réunion
-  nombreParticipants          Int?                         @default(0)
+  nombreParticipants          Int?      @default(0)
   organeReunionRefUid         String?
   /// Organes à l'initiative de la réunion.
   organeDemandeurRefUid       String?
-  vecteurRecherche            Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
-  actesLegislatif             ActeLegislatif[]
-  acteursDemandeurs           ActeurDemandeur[]
-  organeDemandeurRef          Organe?                      @relation("OrganeDemandeur", fields: [organeDemandeurRefUid], references: [uid])
-  organeReunionRef            Organe?                      @relation("OrganeReunion", fields: [organeReunionRefUid], references: [uid])
-  participantsInternes        ParticipantReunion[]
-  personnesAuditionnees       PersonneAuditionneeReunion[]
-  pointsOdj                   PointOdj[]
-  scrutins                    Scrutin[]
-  amendements                 Amendement[]
-  debats                      Debat[]
+
+  /// Vrai si la réunion contient (au moins) une audition.
+  contientAudition                 Boolean @default(false)
+
+  vecteurRecherche      Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
+  compteRenduRef        Debat?                       @relation(fields: [compteRenduRefUid], references: [uid])
+  organeDemandeurRef    Organe?                      @relation("OrganeDemandeur", fields: [organeDemandeurRefUid], references: [uid])
+  organeReunionRef      Organe?                      @relation("OrganeReunion", fields: [organeReunionRefUid], references: [uid])
+  actesLegislatif       ActeLegislatif[]
+  acteursDemandeurs     ActeurDemandeur[]
+  participantsInternes  ParticipantReunion[]
+  personnesAuditionnees PersonneAuditionneeReunion[]
+  pointsOdj             PointOdj[]
+  scrutins              Scrutin[]
+  amendements           Amendement[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeDemandeurRefUid])
   @@index([organeReunionRefUid])
+  @@index([compteRenduRefUid])
+  @@index([dateSeance])
 }
 
 /// Point de l'ordre du jour.

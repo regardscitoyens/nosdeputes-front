@@ -1,0 +1,60 @@
+model Stats {
+  /// L'écart entre l'écart minimum et maximum.
+  ecartMinMax Int @default(0)
+
+  /// L'écart entre la moyenne et la valeur maximum.
+  ecartMoyenneMax Int @default(0)
+
+  /// L'écart entre la moyenne et la valeur minimum.
+  ecartMoyenneMin Int @default(0)
+
+  /// Id de ces statistiques.
+  id String @id
+
+  /// La législature de ces statistiques.
+  legislature String
+
+  /// La valeur maximum.
+  maximum Int @default(0)
+
+  /// La valeur minimum.
+  minimum Int @default(0)
+
+  /// La moyenne des valeurs de ces statistiques.
+  moyenne Int @default(0)
+
+  /// Le quantile a 20%
+  q20 Int @default(0)
+
+  /// Le quantile a 40%
+  q40 Int @default(0)
+
+  /// Le quantile a 60%
+  q60 Int @default(0)
+
+  /// Le quantile a 80%
+  q80 Int @default(0)
+
+  /// Le quantile a 100% (max)
+  q100 Int @default(0)
+
+  /// L'activité mesurée
+  type StatsType
+}
+
+enum StatsType {
+  /// Stats pour les acteurs.
+  acteurs
+
+  /// Stats pour les amendements.
+  amendements
+
+  /// Stats pour les interventions.
+  interventions
+
+  /// Stats pour les questions.
+  questions
+
+  /// Stats pour les textes.
+  textes
+}

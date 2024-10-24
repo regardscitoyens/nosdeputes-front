@@ -8,6 +8,8 @@ model Mandat {
   /// Identifiant de l'organe référente
   organeRefUid             String?
   legislature              String?
+  /// Chambre de provenance (AN, SN ou CG)
+  chambre                  String?
   typeOrgane               String
   /// Vrai si le mandat est en cours
   actif                    Boolean?
@@ -64,12 +66,15 @@ model Collaborateur {
   nom              String
   prenom           String
   mandatRefUid     String
+  acteurRefUid     String
   vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(nom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(prenom, ''::text))::character varying)))"))
   mandatRef        Mandat                   @relation(fields: [mandatRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  acteurRef        Acteur                   @relation(fields: [acteurRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([mandatRefUid])
+  @@index([acteurRefUid])
 }
 
 model Suppleant {

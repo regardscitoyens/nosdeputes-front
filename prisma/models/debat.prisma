@@ -4,6 +4,8 @@ model Debat {
   uid               String    @id
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
+  /// Chambre de provenance (AN, SN ou CG)
+  chambre           String?
   typeAssemblee     String
   legislature       String
   reunionRefUid     String?
@@ -24,12 +26,13 @@ model Debat {
   quantiemesSession String
   presidentSeance   String?
 
-  reunionRef  Agenda?         @relation(fields: [reunionRefUid], references: [uid])
+  reunions    Agenda[]
   paragraphes Paragraphe[]
   sommaires   SommaireDebat[]
 
   @@index([dataset])
   @@index([reunionRefUid])
+  @@index([dateSeance])
 }
 
 /// Sommaire d'une séance de débat.
@@ -53,6 +56,8 @@ model Paragraphe {
   id                Int                      @id @default(autoincrement())
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
+  /// Chambre de provenance (AN, SN ou CG)
+  chambre           String?
   dateSeance        DateTime?
   adt               String?
   art               String?
@@ -100,4 +105,5 @@ model Paragraphe {
   @@index([dossierRefUid])
   @@index([texteRefUid])
   @@index([pointOdjRefUid])
+  @@index([dateSeance])
 }

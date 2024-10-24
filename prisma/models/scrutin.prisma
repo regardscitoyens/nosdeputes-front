@@ -17,7 +17,7 @@ model Scrutin {
   /// Numéro unique du vote, relativement à la législature, débutant par 1 et par incrément de 1. On le retrouve aussi à la fin de l'identifiant unique du vote (uid).
   numero                  String?
   /// Objet du vote, toujours identique au champ titre.
-  objet                   String?
+  objet                   String?  
   /// L'identifiant unique (uid) de l'organe au sein duquel se déroule le vote. Il s'agit toujours de l'Assemblée Nationale mais son uid varie en fonction de la législature.
   organeRefUid            String?
   /// Numéro de la séance dans la journée.
@@ -57,6 +57,16 @@ model Scrutin {
   acteLegislatifsRefUid   String?
   /// Identifiant unique du dossier législatif dont ce scrutin appartient.
   dossierRefUid           String?
+
+  /// Dossier législatif dont ce scrutin appartient.
+  dossier Dossier?       @relation(fields: [dossierRefUid], references: [uid])
+
+  /// Identifiant unique d'un amendement lié à ce scrutin.
+  amendementRefUid       String?
+
+  /// Identifiant unique d'une proposition de loi liée à ce scrutin.
+  propositionLoiRefUid   String?
+
   amendementRef           Amendement?
   acteLegislatifsRef      ActeLegislatif?      @relation(fields: [acteLegislatifsRefUid], references: [uid])
   agendaRef               Agenda?              @relation(fields: [seanceRefUid], references: [uid])
@@ -64,8 +74,10 @@ model Scrutin {
   dysfonctionnements      Dysfonctionnement[]
   groupesVotants          GroupeVotant[]
   misesAuPoint            MiseAuPoint[]
+  
   /// Numéro de l'objet (e.g. 1, 2, 3, etc.).
-  numeroTypeObjet         String?
+  numeroTypeObjet         Int?
+  
   /// Type de l'objet (e.g. amendement, article).
   typeObjet               TypeObjetScrutin?
   votes                   Vote[]
@@ -75,13 +87,15 @@ model Scrutin {
   @@index([organeRefUid])
   @@index([seanceRefUid])
   @@index([acteLegislatifsRefUid])
+  @@index([dateScrutin])
+  @@index([dossierRefUid])
 }
 
 /// Énumération du type de l'objet.
 enum TypeObjetScrutin {
   /// L'objet concerne un amendement.
   amendement
-  
+
   /// L'objet concerne un article.
   article
 

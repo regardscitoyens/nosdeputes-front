@@ -1,7 +1,7 @@
 model Document {
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
-  /// Chambre parente du document (Assemblée ou Sénat)
+  /// Chambre parente du document (AN, SN, ou CG)
   chambre                  String?
   /// Titre du document. Dans le cas d'un projet ou d'une proposition de loi, tel qu'il apparait au début du texte de loi.
   titrePrincipal           String
@@ -61,14 +61,20 @@ model Document {
   numNotice                String?
   /// Le contenu de ce champ n'est pas défini.
   provenance               String?
+  /// URL of the PDF of this document.
+  pdfUrl                   String?
   xsiType                  String
   /// Identifiant de l'auteur principal du document
   auteurPrincipalUid       String?
   documentParentRefUid     String?                  @unique
+  /// Identifiant du dossier législatif lié
   dossierRefUid            String?
+  /// Identifiant de l'organe référent ou de l'organe auteur
+  organeRefUid             String?
   vecteurRecherche         Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"titrePrincipalCourt\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"numNotice\", ''::text))::character varying)))"))
   auteurPrincipal          Acteur?                  @relation(fields: [auteurPrincipalUid], references: [uid])
   dossierRef               Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
+  organeRef                Organe?                  @relation(fields: [organeRefUid], references: [uid])
   documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousDocuments            Document?                @relation("DocumentParentRef")
   amendements              Amendement[]
@@ -79,14 +85,13 @@ model Document {
   textesAssocies           TexteAssocie[]
   interventions            Paragraphe[]
 
-  /// URL of the PDF of this document.
-  pdfUrl String?
-
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([auteurPrincipalUid])
   @@index([dossierRefUid])
+  @@index([organeRefUid])
   @@index([documentParentRefUid])
+  @@index([dateCreation])
 }
 
 model Auteur {
