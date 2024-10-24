@@ -91,7 +91,6 @@ export default function DossierList(props: DossierListProps) {
     };
   }, [theme]);
 
-  console.log(dossiers);
   return (
     <div>
       <Stack component="ol">

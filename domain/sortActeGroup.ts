@@ -1,4 +1,3 @@
-import { ActsStructure } from "@/repository/Acts";
 import { ActeLegislatif } from "@prisma/client";
 
 // Chaque list est un ordre d'éléments.
@@ -9,54 +8,39 @@ const ACTS_ORDERS = [
   ["AN1-DEPOT", "AN1-COM", "AN1-DEBATS", "AN1-RTRINI"],
 ];
 
-export default function getSortedActGroups(
-  group: ActsStructure,
-  actsLookup: Record<string, ActeLegislatif>
-): {
-  children?: ActsStructure;
-  groupDate?: Date;
-  acts?: ActeLegislatif[];
-}[] {
-  return Object.entries(group)
-    .sort(([codeAct1, { date: date1 }], [codeAct2, { date: date2 }]) => {
-      if (date1 && date2) {
-        if (date1.getTime() > date2.getTime()) return 1;
-        if (date1.getTime() < date2.getTime()) return -1;
-      }
-
-      for (let i = 0; i < ACTS_ORDERS.length; i++) {
-        const order = ACTS_ORDERS[i];
-        if (order.includes(codeAct1) && order.includes(codeAct2)) {
-          return (
-            order.findIndex((o) => o === codeAct1) -
-            order.findIndex((o) => o === codeAct2)
-          );
+export default function getSortedActs(
+  actes: {
+    id: string;
+    date?: Date;
+    codeActe: ActeLegislatif["codeActe"];
+  }[]
+): string[] {
+  return actes
+    .sort(
+      (
+        { date: date1, codeActe: codeActe1 },
+        { date: date2, codeActe: codeActe2 }
+      ) => {
+        if (date1 && date2) {
+          // Si les deux actes on une date, on s'en l'utilise
+          if (date1.getTime() > date2.getTime()) return 1;
+          if (date1.getTime() < date2.getTime()) return -1;
         }
-      }
-      return 0;
-    })
-    .map(([codeAct, { date, children, ids }]) => {
-      return {
-        groupDate: date,
-        children,
-        acts: ids
-          ?.map((id) => actsLookup[id])
-          .sort((act1, act2) => {
-            // Ici on a un problem pour les elements du dernier niveau.
-            // Comme on tri le group puis on tris leurs enfants, on a le probleme suivant dans le dossier DLR5L16N46484:
-            // Le Dépot de rapport devrait être entre la premiere et la second réunion.
-            // Pour l'instant on refait l'ordre dans la timeline.
 
-            // - Réunion de commission du 26 oct. 2022
-            // - Réunion de commission du 16 nov. 2022
-            // - Réunion de commission du 28 nov. 2022
-            // - Dépôt de rapport du 15 nov. 2022
-            if (act1.dateActe && act2.dateActe) {
-              if (act1.dateActe.getTime() > act2.dateActe.getTime()) return 1;
-              if (act1.dateActe.getTime() < act2.dateActe.getTime()) return -1;
-            }
-            return 0;
-          }),
-      };
-    });
+        // Cas particulier d'acte sans date
+
+        for (let i = 0; i < ACTS_ORDERS.length; i++) {
+          const order = ACTS_ORDERS[i];
+          if (order.includes(codeActe1) && order.includes(codeActe2)) {
+            // Certains actes ont lieu avant d'autre. Par exemple u, depot de projet avant la saisie des commissions.
+            return (
+              order.findIndex((o) => o === codeActe1) -
+              order.findIndex((o) => o === codeActe2)
+            );
+          }
+        }
+        return 0;
+      }
+    )
+    .map(({ id }) => id);
 }
