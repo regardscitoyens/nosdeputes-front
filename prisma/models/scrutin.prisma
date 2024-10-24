@@ -4,6 +4,8 @@ model Scrutin {
   uid                     String               @id
   /// Jeu de données de provenance (numéro de législature)
   dataset                 Int
+  /// Chambre parente du document (Assemblée ou Sénat)
+  chambre                 String
   /// Date à laquelle le vote a eu lieu.
   dateScrutin             DateTime?
   /// L'acteur ou l'organe qui demande le vote.
@@ -53,6 +55,8 @@ model Scrutin {
   /// La signification de ce champ n'est pas définie.
   typeMajorite            String?
   acteLegislatifsRefUid   String?
+  /// Identifiant unique du dossier législatif dont ce scrutin appartient.
+  dossierRefUid           String?
   amendementRef           Amendement?
   acteLegislatifsRef      ActeLegislatif?      @relation(fields: [acteLegislatifsRefUid], references: [uid])
   agendaRef               Agenda?              @relation(fields: [seanceRefUid], references: [uid])
@@ -60,6 +64,10 @@ model Scrutin {
   dysfonctionnements      Dysfonctionnement[]
   groupesVotants          GroupeVotant[]
   misesAuPoint            MiseAuPoint[]
+  /// Numéro de l'objet (e.g. 1, 2, 3, etc.).
+  numeroTypeObjet         String?
+  /// Type de l'objet (e.g. amendement, article).
+  typeObjet               TypeObjetScrutin?
   votes                   Vote[]
   votesActesLegislatifs   VoteActeLegislatif[]
 
@@ -67,6 +75,36 @@ model Scrutin {
   @@index([organeRefUid])
   @@index([seanceRefUid])
   @@index([acteLegislatifsRefUid])
+}
+
+/// Énumération du type de l'objet.
+enum TypeObjetScrutin {
+  /// L'objet concerne un amendement.
+  amendement
+  
+  /// L'objet concerne un article.
+  article
+
+  /// L'objet concerne une motion de censure.
+  motionCensure
+
+  /// L'objet concerne une motion referendaire.
+  motionReferendaire
+
+  /// L'objet concerne une motion de rejet.
+  motionRejet
+
+  /// L'objet concerne un projet de loi.
+  projetLoi
+
+  /// L'objet concerne une proposition de loi.
+  propositionLoi
+
+  /// L'objet concerne une proposition de résolution.
+  propositionResolution
+
+  /// L'objet concerne un sous-amendement.
+  sousAmendement
 }
 
 model GroupeVotant {
