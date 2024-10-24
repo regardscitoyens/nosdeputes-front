@@ -6,10 +6,14 @@ model Organe {
   dataset Int
 
   codeType                       String
+  /// Type d'organe (ex: "Commission permanente")
+  type                           String?
   libelle                        String
   libelleEdition                 String?
   libelleAbrege                  String
   libelleAbrev                   String
+  /// Libellé tronquée (e.g. "Gauche Dém. et Rép.")
+  libelleTronque                 String?
   organeParentRefUid             String?
   regime                         String?
   /// Chambre parente de l'organe (Assemblée ou Sénat)
@@ -29,6 +33,8 @@ model Organe {
   dateDebut                      DateTime?
   dateAgrement                   DateTime?
   dateFin                        DateTime?
+  /// URL de l'image de l'organe
+  urlImage                       String?
   xsiType                        String?
   vecteurRecherche               Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(libelle, ''::text))::character varying))"))
   /// Acteurs faisant parti de cette commission permanente, si cet organe est une commission.
@@ -44,6 +50,7 @@ model Organe {
   coSignataires                  CoSignataireDocument[]
   dossiers                       Dossier[]                @relation("OrganeMission")
   dossiersCommissions            Dossier[]                @relation("OrganeCommission")
+  documents                      Document[]
   etudesPlf                      EtudePlf[]
   groupesVotants                 GroupeVotant[]
   organeParentRef                Organe?                  @relation("OrganeParentRef", fields: [organeParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)

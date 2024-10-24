@@ -19,7 +19,7 @@ async function getReunionsUnCached(uid: string) {
                 libelleLongLieu: true,
                 timestampDebut: true,
                 timestampFin: true,
-                compteRenduRef: true,
+                compteRenduRefUid: true,
                 pointsOdj: {
                   where: {
                     etat: { equals: "Confirmé" },
@@ -59,7 +59,7 @@ async function getReunionsUnCached(uid: string) {
           libelleLongLieu,
           timestampDebut,
           timestampFin,
-          compteRenduRef,
+          compteRenduRefUid,
         } = act.agendaRef;
 
         return {
@@ -68,12 +68,12 @@ async function getReunionsUnCached(uid: string) {
           libelleLongLieu,
           timestampDebut,
           timestampFin,
-          compteRenduRef,
+          compteRenduRefUid,
           pointIndex,
         };
       })
       .filter((agenda) => agenda !== null) // Extracted just for TS to understand
-      .filter((agenda) => agenda.compteRenduRef !== null)
+      .filter((agenda) => agenda.compteRenduRefUid !== null)
       .filter(
         // Otherwise we have an issue. TODO: throw an error instead of silently failing.
         (agenda) => agenda.pointIndex > 0 && agenda.timestampDebut

@@ -1,17 +1,17 @@
 import * as React from "react";
 import { prisma } from "@/prisma";
-import { DebateSummary } from "@/app/[legislature]/dossier/[id]/debat/[compteRenduRef]/DebateSummary";
+import { DebateSummary } from "./DebateSummary";
 import { SUMMARY_CODES } from "@/components/const";
 import { DebateTranscript } from "./DebateTranscript";
 
 async function getParagraphesUnCached(
-  compteRenduRef: string,
+  compteRenduRefUid: string,
   dossierUid: string
 ) {
   try {
     const agenda = await prisma.agenda.findFirst({
       where: {
-        compteRenduRef,
+        compteRenduRefUid,
       },
       include: {
         pointsOdj: {
@@ -35,7 +35,7 @@ async function getParagraphesUnCached(
 
     const paragraphes = await prisma.paragraphe.findMany({
       where: {
-        debatRefUid: compteRenduRef,
+        debatRefUid: compteRenduRefUid,
         valeurPtsOdj: index.toString(),
       },
       include: {
@@ -56,10 +56,10 @@ async function getParagraphesUnCached(
 const getParagraphes = React.cache(getParagraphesUnCached);
 
 export default async function Page({ params }: any) {
-  const { id: dossierUid, compteRenduRef } = params;
+  const { id: dossierUid, compteRenduRefUid } = params;
 
   const { agenda, paragraphes } = await getParagraphes(
-    compteRenduRef,
+    compteRenduRefUid,
     dossierUid
   );
 
@@ -67,7 +67,7 @@ export default async function Page({ params }: any) {
     return <p>Aucun debat trouvé pour cette seance.</p>;
   }
 
-  let lastId = 'init';
+  let lastId = "init";
 
   const wordsCounts: Record<string, number> = paragraphes.reduce(
     (acc, paragraphe) => {
