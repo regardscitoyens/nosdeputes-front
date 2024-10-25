@@ -3,6 +3,8 @@ model Amendement {
   uid                              String    @id
   /// Jeu de données de provenance (numéro de législature)
   dataset                          Int
+  /// Chambre de provenance (Assemblée ou Sénat)
+  chambre                          String?
   chronotag                        String?
   /// Numéro de la législature sous laquelle a été créé l'amendement. Nombre entier.
   legislature                      String?
@@ -98,7 +100,7 @@ model Amendement {
   codeLoi                          String?
   divisionCodeLoi                  String?
   idDiscussionCommune              Int?
-  typePositionCommune            String?
+  typePositionCommune              String?
   idDiscussionIdentique            Int?
   typePositionIdentique            String?
   accordGouvernementDepotHorsDelai String?
@@ -140,6 +142,7 @@ model Amendement {
   @@index([auteurRapporteurOrganeRefUid])
   @@index([gouvernementOrganeRefUid])
   @@index([groupePolitiqueRefUid])
+  @@index([dateDepot])
 }
 
 model CoSignataireAmendement {

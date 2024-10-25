@@ -6,7 +6,7 @@ model TexteLoi {
   dataset                         Int
   /// Titre du texte de loi
   titre                           String
-  /// Chambre du texte (assemblée ou sénat)
+  /// Chambre du texte (Assemblée ou Sénat)
   chambre                         String?
   /// Numéro de législature.
   legislature                     String

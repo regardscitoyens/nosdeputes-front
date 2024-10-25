@@ -5,6 +5,8 @@ model Question {
   /// Jeu de données de provenance (numéro de législature)
   dataset          Int
   legislature      String
+  /// Chambre de provenance (AN, SN ou CG)
+  chambre          String?
   numero           String
   regime           String
   rubrique         String?
@@ -42,10 +44,16 @@ model Question {
   @@index([groupeRefUid])
   @@index([mandatRefUid])
   @@index([minIntRefUid])
+  @@index([dateDepot])
 }
 
 enum QuestionType {
+  /// Question écrite
   QE
+
+  /// Question au Gouvernement
   QG
+
+  /// Question orale sans débat
   QOSD
 }
