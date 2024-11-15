@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.14.19",
     "@mui/lab": "^5.0.0-alpha.153",
     "@mui/material": "^5.14.18",
+    "@mui/x-charts": "^7.22.2",
     "@prisma/client": "^5.16.1",
     "@types/lodash": "^4.17.4",
     "dotenv": "^16.3.1",

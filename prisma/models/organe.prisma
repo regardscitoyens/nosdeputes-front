@@ -5,62 +5,62 @@ model Organe {
   /// Jeu de données de provenance (numéro de législature)
   dataset Int
 
-  codeType                       String
+  codeType                      String
   /// Type d'organe (ex: "Commission permanente")
-  type                           String?
-  libelle                        String
-  libelleEdition                 String?
-  libelleAbrege                  String
-  libelleAbrev                   String
+  type                          String?
+  libelle                       String
+  libelleEdition                String?
+  libelleAbrege                 String
+  libelleAbrev                  String
   /// Libellé tronquée (e.g. "Gauche Dém. et Rép.")
-  libelleTronque                 String?
-  organeParentRefUid             String?
-  regime                         String?
+  libelleTronque                String?
+  organeParentRefUid            String?
+  regime                        String?
   /// Chambre parente de l'organe (Assemblée ou Sénat)
-  chambre                        String?
+  chambre                       String?
   /// Vrai si l'organe est en cours d'agrément.
-  actif                          Boolean?                 @default(false)
-  legislature                    String?
-  secretaire01                   String?
-  secretaire02                   String?
-  regimeJuridique                String?
-  siteInternet                   String?
-  nombreReunionsAnnuelles        Int?
-  nombreMembres                  Int?                     @default(0)
-  positionPolitique              String?
-  preseance                      String?
-  couleurAssociee                String?
-  dateDebut                      DateTime?
-  dateAgrement                   DateTime?
-  dateFin                        DateTime?
+  actif                         Boolean?                 @default(false)
+  legislature                   String?
+  secretaire01                  String?
+  secretaire02                  String?
+  regimeJuridique               String?
+  siteInternet                  String?
+  nombreReunionsAnnuelles       Int?
+  nombreMembres                 Int?                     @default(0)
+  positionPolitique             String?
+  preseance                     String?
+  couleurAssociee               String?
+  dateDebut                     DateTime?
+  dateAgrement                  DateTime?
+  dateFin                       DateTime?
   /// URL de l'image de l'organe
-  urlImage                       String?
-  xsiType                        String?
-  vecteurRecherche               Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(libelle, ''::text))::character varying))"))
+  urlImage                      String?
+  xsiType                       String?
+  vecteurRecherche              Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(libelle, ''::text))::character varying))"))
   /// Acteurs faisant parti de cette commission permanente, si cet organe est une commission.
-  acteursCommissionPermanente    Acteur[]
-  reunionsDemandees              Agenda[]                 @relation("OrganeDemandeur")
-  reunions                       Agenda[]                 @relation("OrganeReunion")
-  amendementsOrgane              Amendement[]             @relation("Amendement_Organe")
-  amendementsGouvernementOrgane  Amendement[]             @relation("Amendement_Gouvernement")
-  amendementsGroupePolitique     Amendement[]             @relation("Amendement_GroupePolitique")
-  amendementsCommission          AmendementCommission[]
-  mandats                        Mandat[]
-  auteurs                        Auteur[]
-  coSignataires                  CoSignataireDocument[]
-  dossiers                       Dossier[]                @relation("OrganeMission")
-  dossiersCommissions            Dossier[]                @relation("OrganeCommission")
-  documents                      Document[]
-  etudesPlf                      EtudePlf[]
-  groupesVotants                 GroupeVotant[]
-  organeParentRef                Organe?                  @relation("OrganeParentRef", fields: [organeParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-  organeEnfants                  Organe[]                 @relation("OrganeParentRef")
-  questionsGroupe                Question[]               @relation("Question_Groupe")
-  questionsMinInt                Question[]               @relation("Question_MinInt")
-  scrutins                       Scrutin[]
-  membresGroupeParlementaire     Acteur[]                 @relation("Acteur_GroupeParlementaire")
-  parlementairesCirsconscription Acteur[]                 @relation("Acteur_Circonscription")
-  communes                       Commune[]
+  acteursCommissionPermanente   Acteur[]
+  reunionsDemandees             Agenda[]                 @relation("OrganeDemandeur")
+  reunions                      Agenda[]                 @relation("OrganeReunion")
+  amendementsOrgane             Amendement[]             @relation("Amendement_Organe")
+  amendementsGouvernementOrgane Amendement[]             @relation("Amendement_Gouvernement")
+  amendementsGroupePolitique    Amendement[]             @relation("Amendement_GroupePolitique")
+  amendementsCommission         AmendementCommission[]
+  mandats                       Mandat[]
+  auteurs                       Auteur[]
+  coSignataires                 CoSignataireDocument[]
+  dossiers                      Dossier[]                @relation("OrganeMission")
+  dossiersCommissions           Dossier[]                @relation("OrganeCommission")
+  documents                     Document[]
+  etudesPlf                     EtudePlf[]
+  groupesVotants                GroupeVotant[]
+  organeParentRef               Organe?                  @relation("OrganeParentRef", fields: [organeParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  organeEnfants                 Organe[]                 @relation("OrganeParentRef")
+  questionsGroupe               Question[]               @relation("Question_Groupe")
+  questionsMinInt               Question[]               @relation("Question_MinInt")
+  scrutins                      Scrutin[]
+  membresGroupeParlementaire    Acteur[]                 @relation("Acteur_GroupeParlementaire")
+  parlementairesCirconscription Acteur[]                 @relation("Acteur_Circonscription")
+  communes                      Commune[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)

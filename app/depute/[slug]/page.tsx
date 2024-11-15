@@ -7,6 +7,7 @@ import CardHeader from "@mui/material/CardHeader";
 
 import { prisma } from "@/prisma";
 import { Box, Typography } from "@mui/material";
+import WeeklyStats from "./WeeklyActivity";
 
 async function getDeputeStatsUnCached(slug: string) {
   try {
@@ -17,6 +18,24 @@ async function getDeputeStatsUnCached(slug: string) {
         nombreAmendements: true,
         nombreInterventions: true,
         nombreQuestions: true,
+        weeklyStats: true,
+      },
+    });
+  } catch (error) {
+    console.error(`Error fetching stats from depute ${slug}:`, error);
+    throw error;
+  }
+}
+
+async function getStatsOnWeeklyActivityUnCached(slug: string) {
+  try {
+    return await prisma.statsPerWeek.findMany({
+      where: { OR: [{ acteurUid: "median" }, { acteurUid: "max" }] },
+      select: {
+        type: true,
+        weekIndex: true,
+        quantity: true,
+        acteurUid: true,
       },
     });
   } catch (error) {
@@ -47,6 +66,7 @@ async function getBaselineStatsUnCached() {
 
 const getDeputeStats = React.cache(getDeputeStatsUnCached);
 const getBaselineStats = React.cache(getBaselineStatsUnCached);
+const getStatsOnWeeklyActivity = React.cache(getStatsOnWeeklyActivityUnCached);
 
 const baselineTypeToDeputeKey: Record<
   string,
@@ -73,17 +93,23 @@ const quantilesSentences = [
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const deputeStatsData = getDeputeStats(params.slug);
+  const statsOnWeeklyActivityData = getStatsOnWeeklyActivity(params.slug);
   const baselineStatsData = getBaselineStats();
 
   // Initiate both requests in parallel
-  const [deputeStats, baselineStats] = await Promise.all([
-    deputeStatsData,
-    baselineStatsData,
-  ]);
+  const [deputeStats, statsOnWeeklyActivity, baselineStats] = await Promise.all(
+    [deputeStatsData, statsOnWeeklyActivityData, baselineStatsData]
+  );
 
   return (
     <div>
       <p>Activités</p>
+
+      <WeeklyStats
+        deputeWeeklyActivity={deputeStats?.weeklyStats ?? []}
+        statsOnWeeklyActivity={statsOnWeeklyActivity}
+      />
+
       {baselineStats.map(({ q20, q40, q60, q80, maximum, type }) => {
         if (!baselineTypeToDeputeKey[type as string] || !deputeStats) {
           return null;

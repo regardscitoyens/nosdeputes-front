@@ -37,6 +37,8 @@ model Acteur {
   mandatPrincipalUid           String?                      @unique
   /// Organe de circonscription
   circonscriptionUid           String?
+  /// Place dans l'hémicycle de l'acteur
+  placeHemicycle               String?
   /// Identifiant unique de la commission permanente et active de cet acteur.
   commissionPermanenteRefUid   String?
   /// URL de l'image de l'acteur
@@ -86,6 +88,9 @@ model Acteur {
 
   /// Nombre de questions pour cet acteur.
   nombreQuestions Int @default(0)
+
+  /// Statistiques d'activité agrégé par semaine.
+  weeklyStats StatsPerWeek[]
 
   /// Lois présentées au nom de cet acteur (e.g. un premier ministre).
   loisPortees    TexteLoi[] @relation("loisPortees")
@@ -142,4 +147,30 @@ model AdressePostale {
 
   @@index([dataset])
   @@index([acteurRefUid])
+}
+
+/// Statistiques des deputes par semaine de legislature.
+model StatsPerWeek {
+  /// L'index de la semain depuis le debut de la legislature
+  weekIndex Int
+  /// Jeu de données de provenance (numéro de législature)
+  dataset   Int
+  /// L'acteur concerné par la statistique. Ou la statistique utilisée ("mediane" ou "max")
+  acteurUid String
+  /// Nombre d'occurence dans la semaine.
+  quantity  Int
+  /// Type d'occurence compté.
+  type      WeekStatType
+
+  acteur Acteur? @relation(fields: [acteurUid], references: [uid], onDelete: Cascade)
+
+  @@id([weekIndex, dataset, acteurUid, type])
+}
+
+enum WeekStatType {
+  /// Presence detecté en scéance.
+  debatDetected
+
+  /// Présence notée en commission.
+  commisionEnregistree
 }

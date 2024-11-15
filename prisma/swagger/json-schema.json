@@ -100,6 +100,13 @@
           "default": false,
           "description": "Deputé en poste actuellement."
         },
+        "placeHemicycle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Place dans l'hémicycle de l'acteur"
+        },
         "urlImage": {
           "type": [
             "string",
@@ -327,6 +334,13 @@
           "default": 0,
           "description": "Nombre de questions pour cet acteur."
         },
+        "weeklyStats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StatsPerWeek"
+          },
+          "description": "Statistiques d'activité agrégé par semaine."
+        },
         "loisPortees": {
           "type": "array",
           "items": {
@@ -463,6 +477,41 @@
         },
         "acteurRef": {
           "$ref": "#/definitions/Acteur"
+        }
+      }
+    },
+    "StatsPerWeek": {
+      "type": "object",
+      "properties": {
+        "weekIndex": {
+          "type": "integer",
+          "description": "L'index de la semain depuis le debut de la legislature"
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Nombre d'occurence dans la semaine."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "debatDetected",
+            "commisionEnregistree"
+          ],
+          "description": "Type d'occurence compté."
+        },
+        "acteur": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -4180,7 +4229,7 @@
             "$ref": "#/definitions/Acteur"
           }
         },
-        "parlementairesCirsconscription": {
+        "parlementairesCirconscription": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Acteur"
@@ -4877,6 +4926,10 @@
     "Stats": {
       "type": "object",
       "properties": {
+        "chambre": {
+          "type": "string",
+          "description": "Chambre du parlementaire (e.g.: AN = assemblée, SN = sénat)"
+        },
         "ecartMinMax": {
           "type": "integer",
           "default": 0,
@@ -4891,6 +4944,11 @@
           "type": "integer",
           "default": 0,
           "description": "L'écart entre la moyenne et la valeur minimum."
+        },
+        "ecartMoyenneMinMax": {
+          "type": "integer",
+          "default": 0,
+          "description": "L'écart entre la moyenne minimum et la moyenne maximum."
         },
         "id": {
           "type": "string",
@@ -5214,6 +5272,9 @@
     },
     "adressePostale": {
       "$ref": "#/definitions/AdressePostale"
+    },
+    "statsPerWeek": {
+      "$ref": "#/definitions/StatsPerWeek"
     },
     "agenda": {
       "$ref": "#/definitions/Agenda"
