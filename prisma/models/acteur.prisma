@@ -1,51 +1,58 @@
 /// Personne physique ayant été élue ou nommée dans un organe.
 model Acteur {
   /// Identifiant unique.
-  uid                          String                       @id
+  uid                        String    @id
   /// Jeu de données de provenance (numéro de législature)
-  dataset                      Int
+  dataset                    Int
   /// Prénom.
-  prenom                       String
+  prenom                     String
   /// Nom.
-  nom                          String
+  nom                        String
   /// Civilité.                   
-  civ                          String
+  civ                        String
   /// Date de naissance.
-  dateNais                     DateTime?
+  dateNais                   DateTime?
   /// Date de décès.
-  dateDeces                    DateTime?
+  dateDeces                  DateTime?
   /// Ville de naissance.
-  villeNais                    String?
+  villeNais                  String?
   /// Département de naissance.
-  depNais                      String?
+  depNais                    String?
   /// Pays de naissance.
-  paysNais                     String?
+  paysNais                   String?
   /// Profession.
-  profession                   String?
+  profession                 String?
   /// Catégorie socio professionelle de l'INSEE.
-  catSocPro                    String?
+  catSocPro                  String?
   /// Famille socio professionelle de l'INSEE.
-  famSocPro                    String?
-  slug                         String
+  famSocPro                  String?
+  slug                       String
   /// URL de la déclaration d'intérêt de l'acteur sur le site de la Haute Autorité pour la Transparence dans la Vie Publique.
-  uriHatvp                     String?
+  uriHatvp                   String?
   /// Deputé en poste actuellement.
-  actif                        Boolean?                     @default(false)
+  actif                      Boolean?  @default(false)
   /// Groupe parlementaire du député.
-  groupeParlementaireUid       String?
+  groupeParlementaireUid     String?
   /// Mandat principal du député, c'est à dire s'il est actif ou non.
-  mandatPrincipalUid           String?                      @unique
+  mandatPrincipalUid         String?   @unique
   /// Organe de circonscription
-  circonscriptionUid           String?
+  circonscriptionUid         String?
   /// Place dans l'hémicycle de l'acteur
-  placeHemicycle               String?
+  placeHemicycle             String?
   /// Identifiant unique de la commission permanente et active de cet acteur.
-  commissionPermanenteRefUid   String?
+  commissionPermanenteRefUid String?
   /// URL de l'image de l'acteur
-  urlImage                     String?
+  urlImage                   String?
   /// Chambre du parlementaire (assemblée ou sénat)
-  chambre                      String?
-  compteTwitter                String?
+  chambre                    String?
+  compteTwitter              String?
+  /// Nombre d'amendements pour cet acteur.
+  nombreAmendements          Int       @default(0)
+  /// Nombre d'interventions pour cet acteur.
+  nombreInterventions        Int       @default(0)
+  /// Nombre de questions pour cet acteur.
+  nombreQuestions            Int       @default(0)
+
   groupeParlementaire          Organe?                      @relation("Acteur_GroupeParlementaire", fields: [groupeParlementaireUid], references: [uid])
   mandatPrincipal              Mandat?                      @relation("Acteur_MandatPrincipal", fields: [mandatPrincipalUid], references: [uid])
   circonscription              Organe?                      @relation("Acteur_Circonscription", fields: [circonscriptionUid], references: [uid])
@@ -80,24 +87,8 @@ model Acteur {
   dossiers                     Dossier[]
   vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
 
-  /// Nombre d'amendements pour cet acteur.
-  nombreAmendements Int @default(0)
-
-  /// Nombre d'interventions pour cet acteur.
-  nombreInterventions Int @default(0)
-
-  /// Nombre de questions pour cet acteur.
-  nombreQuestions Int @default(0)
-
   /// Statistiques d'activité agrégé par semaine.
-  weeklyStats StatsPerWeek[]
-
-  /// Lois présentées au nom de cet acteur (e.g. un premier ministre).
-  loisPortees    TexteLoi[] @relation("loisPortees")
-  /// Lois présentées par cet acteur.
-  loisPresentees TexteLoi[] @relation("loisPresentees")
-  /// Lois signées par cet acteur.
-  loisSignees    TexteLoi[] @relation("loisSignees")
+  statistiquesHebdomadaire StatistiqueHebdomadaire[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
@@ -150,27 +141,27 @@ model AdressePostale {
 }
 
 /// Statistiques des deputes par semaine de legislature.
-model StatsPerWeek {
+model StatistiqueHebdomadaire {
   /// L'index de la semain depuis le debut de la legislature
-  weekIndex Int
+  semaineIndex Int
   /// Jeu de données de provenance (numéro de législature)
-  dataset   Int
+  dataset      Int
   /// L'acteur concerné par la statistique. Ou la statistique utilisée ("mediane" ou "max")
-  acteurUid String
+  acteurUid    String
   /// Nombre d'occurence dans la semaine.
-  quantity  Int
+  valeur       Int
   /// Type d'occurence compté.
-  type      WeekStatType
+  type         StateHebdoType
 
   acteur Acteur? @relation(fields: [acteurUid], references: [uid], onDelete: Cascade)
 
-  @@id([weekIndex, dataset, acteurUid, type])
+  @@id([semaineIndex, dataset, acteurUid, type])
 }
 
-enum WeekStatType {
+enum StateHebdoType {
   /// Presence detecté en scéance.
-  debatDetected
+  presenceDetectee
 
   /// Présence notée en commission.
-  commisionEnregistree
+  presenceCommision
 }

@@ -18,7 +18,7 @@ async function getDeputeStatsUnCached(slug: string) {
         nombreAmendements: true,
         nombreInterventions: true,
         nombreQuestions: true,
-        weeklyStats: true,
+        statistiquesHebdomadaire: true,
       },
     });
   } catch (error) {
@@ -29,12 +29,12 @@ async function getDeputeStatsUnCached(slug: string) {
 
 async function getStatsOnWeeklyActivityUnCached(slug: string) {
   try {
-    return await prisma.statsPerWeek.findMany({
+    return await prisma.statistiqueHebdomadaire.findMany({
       where: { OR: [{ acteurUid: "median" }, { acteurUid: "max" }] },
       select: {
         type: true,
-        weekIndex: true,
-        quantity: true,
+        semaineIndex: true,
+        valeur: true,
         acteurUid: true,
       },
     });
@@ -103,15 +103,18 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      <p>Activités</p>
-
       <WeeklyStats
-        deputeWeeklyActivity={deputeStats?.weeklyStats ?? []}
+        deputeWeeklyActivity={deputeStats?.statistiquesHebdomadaire ?? []}
         statsOnWeeklyActivity={statsOnWeeklyActivity}
       />
 
-      {baselineStats.map(({ q20, q40, q60, q80, maximum, type }) => {
+      {baselineStats.map(({ q20, q40, q60, q80, maximum, type, id }) => {
         if (!baselineTypeToDeputeKey[type as string] || !deputeStats) {
+          return null;
+        }
+
+        if (!id.includes("-AN-")) {
+          // Enleve les stats liées au senat
           return null;
         }
 
@@ -125,7 +128,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         );
 
         return (
-          <Card key={type}>
+          <Card key={id}>
             <CardContent>
               <Typography variant="h1" sx={{ textAlign: "right" }}>
                 {value}

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { WeekStatType } from "@prisma/client";
+import { StateHebdoType } from "@prisma/client";
 import { getMondayDate, getWeekIndex } from "./getWeekIndex";
 import {
   BarPlot,
@@ -8,7 +8,7 @@ import {
   ChartsAxisHighlight,
   ChartsTooltip,
   LinePlot,
-  ResponsiveChartContainer,
+  ChartContainer,
   useDrawingArea,
   useXScale,
 } from "@mui/x-charts";
@@ -17,21 +17,21 @@ const POINTS_NUMBER = 50;
 
 export type WeeklyStatsProps = {
   deputeWeeklyActivity: {
-    weekIndex: number;
-    quantity: number;
-    type: WeekStatType;
+    semaineIndex: number;
+    valeur: number;
+    type: StateHebdoType;
     acteurUid: string;
   }[];
   statsOnWeeklyActivity: {
-    weekIndex: number;
-    quantity: number;
-    type: WeekStatType;
+    semaineIndex: number;
+    valeur: number;
+    type: StateHebdoType;
     acteurUid: string;
   }[];
 };
 
 type WeekActivity = {
-  [key in WeekStatType]: {
+  [key in StateHebdoType]: {
     depute?: number;
     max?: number;
     median?: number;
@@ -45,26 +45,26 @@ export default function WeeklyStats(props: WeeklyStatsProps) {
     ...props.deputeWeeklyActivity,
     ...props.statsOnWeeklyActivity,
   ]) {
-    if (groupedPerWeek[activity.weekIndex] === undefined) {
-      groupedPerWeek[activity.weekIndex] = {} as WeekActivity;
+    if (groupedPerWeek[activity.semaineIndex] === undefined) {
+      groupedPerWeek[activity.semaineIndex] = {} as WeekActivity;
     }
 
-    if (groupedPerWeek[activity.weekIndex][activity.type] === undefined) {
-      groupedPerWeek[activity.weekIndex][activity.type] = {};
+    if (groupedPerWeek[activity.semaineIndex][activity.type] === undefined) {
+      groupedPerWeek[activity.semaineIndex][activity.type] = {};
     }
 
     switch (activity.acteurUid) {
       case "median":
-        groupedPerWeek[activity.weekIndex][activity.type].median =
-          activity.quantity;
+        groupedPerWeek[activity.semaineIndex][activity.type].median =
+          activity.valeur;
         break;
       case "max":
-        groupedPerWeek[activity.weekIndex][activity.type].max =
-          activity.quantity;
+        groupedPerWeek[activity.semaineIndex][activity.type].max =
+          activity.valeur;
         break;
       default:
-        groupedPerWeek[activity.weekIndex][activity.type].depute =
-          activity.quantity;
+        groupedPerWeek[activity.semaineIndex][activity.type].depute =
+          activity.valeur;
         break;
     }
   }
@@ -75,21 +75,21 @@ export default function WeeklyStats(props: WeeklyStatsProps) {
     (_, index) => currentWeekIndex - POINTS_NUMBER + index
   );
 
-  const debatDetectedDataset = displayedWeekIndex.map((weekIndex) => ({
-    date: getMondayDate(17, weekIndex),
-    debat: groupedPerWeek[weekIndex]?.debatDetected?.depute ?? 0,
-    debatMedian: groupedPerWeek[weekIndex]?.debatDetected?.median ?? 0,
-    debatMax: groupedPerWeek[weekIndex]?.debatDetected?.max ?? 0,
+  const presenceDetecteeDataset = displayedWeekIndex.map((semaineIndex) => ({
+    date: getMondayDate(17, semaineIndex),
+    debat: groupedPerWeek[semaineIndex]?.presenceDetectee?.depute ?? 0,
+    debatMedian: groupedPerWeek[semaineIndex]?.presenceDetectee?.median ?? 0,
+    debatMax: groupedPerWeek[semaineIndex]?.presenceDetectee?.max ?? 0,
 
     presenceCommission:
-      groupedPerWeek[weekIndex]?.commisionEnregistree?.depute ?? 0,
+      groupedPerWeek[semaineIndex]?.presenceCommision?.depute ?? 0,
     presenceCommissionMedian:
-      groupedPerWeek[weekIndex]?.commisionEnregistree?.median ?? 0,
+      groupedPerWeek[semaineIndex]?.presenceCommision?.median ?? 0,
     presenceCommissionMax:
-      groupedPerWeek[weekIndex]?.commisionEnregistree?.max ?? 0,
+      groupedPerWeek[semaineIndex]?.presenceCommision?.max ?? 0,
   }));
 
-  const vacances = debatDetectedDataset
+  const vacances = presenceDetecteeDataset
     .reduce<{ start: number; end: number }[]>((acc, week, index) => {
       if (week.debatMax !== 0 || week.presenceCommissionMax !== 0) {
         return acc;
@@ -107,14 +107,14 @@ export default function WeeklyStats(props: WeeklyStatsProps) {
       return [...acc, { start: index, end: index + 1 }];
     }, [])
     .map(({ start, end }) => ({
-      start: debatDetectedDataset[start].date,
-      end: debatDetectedDataset[end - 1].date,
+      start: presenceDetecteeDataset[start].date,
+      end: presenceDetecteeDataset[end - 1].date,
     }));
 
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       height={300}
-      dataset={debatDetectedDataset}
+      dataset={presenceDetecteeDataset}
       xAxis={[
         {
           scaleType: "band",
@@ -177,7 +177,7 @@ export default function WeeklyStats(props: WeeklyStatsProps) {
       <ChartsAxisHighlight x="band" />
       <VacanceParlementaire vacances={vacances} />
       <ChartsTooltip trigger="axis" />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }
 

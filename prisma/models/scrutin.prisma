@@ -95,28 +95,20 @@ model Scrutin {
 enum TypeObjetScrutin {
   /// L'objet concerne un amendement.
   amendement
-
   /// L'objet concerne un article.
   article
-
   /// L'objet concerne une motion de censure.
   motionCensure
-
   /// L'objet concerne une motion referendaire.
   motionReferendaire
-
   /// L'objet concerne une motion de rejet.
   motionRejet
-
   /// L'objet concerne un projet de loi.
   projetLoi
-
   /// L'objet concerne une proposition de loi.
   propositionLoi
-
   /// L'objet concerne une proposition de résolution.
   propositionResolution
-
   /// L'objet concerne un sous-amendement.
   sousAmendement
 }

@@ -35,7 +35,7 @@ export const FilterContainer = ({
         <Stack
           direction="column"
           spacing={2}
-          sx={{ [".MuiInputBase-root"]: { bgcolor: "white" } }}
+          sx={{ [".MuiInputBase-root"]: { bgcolor: "#fff" } }}
         >
           {children}
         </Stack>
@@ -56,7 +56,7 @@ export const FilterContainer = ({
         <Stack
           direction="column"
           spacing={2}
-          sx={{ [".MuiInputBase-root"]: { bgcolor: "white" } }}
+          sx={{ [".MuiInputBase-root"]: { bgcolor: "#fff" } }}
         >
           {children}
         </Stack>

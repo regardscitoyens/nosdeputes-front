@@ -20,7 +20,7 @@ function Icon(props: IconProps) {
         height: 2 * radius,
         borderRadius: radius,
         position: "absolute",
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         border: "solid gray 1px",
         textAlign: "center",
         lineHeight: `${2 * radius}px`,

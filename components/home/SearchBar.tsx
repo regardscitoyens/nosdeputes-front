@@ -61,7 +61,7 @@ export default function SearchBar() {
         freeSolo
         sx={{
           "& .MuiInputBase-root": {
-            bgcolor: "white",
+            bgcolor: "#fff",
             height: 68,
             borderRadius: 34,
             pl: 4,

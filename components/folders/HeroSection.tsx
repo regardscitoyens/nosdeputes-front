@@ -51,7 +51,7 @@ export const HeroSection = ({
         // separator={<ChevronRightIcon sx={{ fontSize: 8 }} />}
         separator=">"
         aria-label="breadcrumb"
-        sx={{ backgroundColor: "white", padding: "12px 16px" }}
+        sx={{ backgroundColor: "#fff", padding: "12px 16px" }}
       >
         {breadcrumbs}
       </Breadcrumbs>
@@ -91,7 +91,7 @@ export const HeroSection = ({
             borderRadius: 1,
             backgroundColor: "transparent",
             [theme.breakpoints.up("md")]: {
-              backgroundColor: "white",
+              backgroundColor: "#fff",
             },
           }}
         >
@@ -119,7 +119,7 @@ export const HeroSection = ({
                 fontWeight="bold"
                 variant="body2"
                 sx={{
-                  color: "white",
+                  color: "#fff",
                   [theme.breakpoints.up("md")]: {
                     color: "grey.900",
                   },
@@ -131,7 +131,7 @@ export const HeroSection = ({
               <Typography
                 component="h1"
                 sx={{
-                  color: "white",
+                  color: "#fff",
                   fontSize: "body1.fontSize",
                   fontWeight: "fontWeightBold",
                   [theme.breakpoints.up("md")]: {

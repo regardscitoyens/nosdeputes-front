@@ -23,7 +23,7 @@ export default function QuestionCard(props: QuestionCardProps) {
       type,
       numero,
       dateDepot,
-      dateCloture,
+      // dateCloture,
       titre,
       rubrique,
       texteQuestion,
@@ -57,7 +57,7 @@ export default function QuestionCard(props: QuestionCardProps) {
           spacing={1}
           sx={{ width: "100%", mr: 2 }}
         >
-          {titre && <Typography>{titre}</Typography>}
+          {titre && <Typography sx={{ flexGrow: 1 }}>{titre}</Typography>}
           {rubrique && <StatusChip size="small" label={rubrique} />}
           {type && <StatusChip size="small" label={type} />}
         </Stack>
@@ -74,9 +74,8 @@ export default function QuestionCard(props: QuestionCardProps) {
               flexBasis={0}
               component="div"
               sx={{ bgcolor: "grey.50", p: 1 }}
-            >
-              {texteQuestion}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: texteQuestion }}
+            />
           )}
           {texteReponse && (
             <Typography
@@ -87,9 +86,8 @@ export default function QuestionCard(props: QuestionCardProps) {
               flexBasis={0}
               component="div"
               sx={{ bgcolor: "grey.50", p: 1 }}
-            >
-              {texteReponse}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: texteReponse }}
+            />
           )}
           {erratumQuestion && (
             <Typography
@@ -132,12 +130,12 @@ export default function QuestionCard(props: QuestionCardProps) {
               </Typography>
             </Typography>
 
-            <Typography fontWeight="light" variant="body2">
+            {/* <Typography fontWeight="light" variant="body2">
               Date de cloture:&nbsp;
               <Typography component="span" variant="body2">
                 {dateCloture && dateCloture.toLocaleDateString("fr-FR")}
               </Typography>
-            </Typography>
+            </Typography> */}
           </Stack>
         </Stack>
       </AccordionDetails>
