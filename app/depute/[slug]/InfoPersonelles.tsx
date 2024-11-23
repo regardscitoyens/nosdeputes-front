@@ -44,7 +44,7 @@ export default function InfoPersonelles({
             <Typography variant="body2" fontWeight="light">
               Debut de mandat <InfoOutlinedIcon fontSize="inherit" />
             </Typography>
-            <Typography variant="body2">N'est pas député·e·s</Typography>
+            <Typography variant="body2">Pas de mandat de député·e·s</Typography>
           </div>
         ) : (
           <React.Fragment>
