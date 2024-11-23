@@ -1,7 +1,4 @@
 import React from "react";
-
-import Stack from "@mui/material/Stack";
-
 import { prisma } from "@/prisma";
 
 async function getDeputeAmendementStatsUnCached(uid: string) {

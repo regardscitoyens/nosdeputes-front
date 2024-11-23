@@ -1,3 +1,4 @@
+"use client";
 import { Raleway } from "next/font/google";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import { createTheme } from "@mui/material/styles";
@@ -12,13 +13,8 @@ const AccordionIcon = (props: SvgIconProps) => (
   </>
 );
 
-const raleway = Raleway({
-  weight: ["400", "600", "700"],
-  subsets: ["latin"],
-  display: "swap",
-});
-
 const theme = createTheme({
+  cssVariables: true,
   palette: {
     mode: "light",
     success: {
@@ -39,7 +35,7 @@ const theme = createTheme({
     },
     primary: {
       main: "#171B1E",
-      contrastText: "white",
+      contrastText: "#fff",
     },
     grey: {
       900: "#171B1E",
@@ -56,7 +52,7 @@ const theme = createTheme({
   },
   spacing: 8,
   typography: {
-    fontFamily: raleway.style.fontFamily,
+    fontFamily: "var(--font-raleway)",
     fontWeightBold: 700,
     fontWeightRegular: 600,
     fontWeightLight: 400,

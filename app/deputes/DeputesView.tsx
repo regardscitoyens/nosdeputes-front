@@ -131,11 +131,7 @@ function Deputes({
                     }
                   : undefined
               }
-              component={Link}
-              href={`/depute/${slug}`}
-              sx={{
-                "&:hover": { bgcolor: "grey.50" },
-              }}
+              isFullCardLink
             />
           );
         })}

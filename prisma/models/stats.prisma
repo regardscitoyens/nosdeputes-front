@@ -1,4 +1,7 @@
 model Stats {
+  /// Chambre du parlementaire (e.g.: AN = assemblée, SN = sénat)
+  chambre String
+
   /// L'écart entre l'écart minimum et maximum.
   ecartMinMax Int @default(0)
 
@@ -7,6 +10,9 @@ model Stats {
 
   /// L'écart entre la moyenne et la valeur minimum.
   ecartMoyenneMin Int @default(0)
+
+  /// L'écart entre la moyenne minimum et la moyenne maximum.
+  ecartMoyenneMinMax Int @default(0)
 
   /// Id de ces statistiques.
   id String @id

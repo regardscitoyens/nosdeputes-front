@@ -30,7 +30,7 @@ model Question {
   texteReponse     String?
   erratumQuestion  String?
   erratumReponse   String?
-  vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
+  vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
   /// Titre de la question
   titre            String?
   acteurRef        Acteur                   @relation(fields: [acteurRefUid], references: [uid])

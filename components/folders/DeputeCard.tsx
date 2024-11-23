@@ -23,6 +23,10 @@ type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
   } | null;
   smallGroupColor?: boolean;
   showVote?: boolean;
+  /**
+   * If true, the entire card is a link to the deputy page. Otherwise it's its name.
+   */
+  isFullCardLink?: boolean;
   vote?: "pour" | "contre" | "nonVotant" | "abstention" | null;
   groupPosition?: "pour" | "contre" | "nonVotant" | "abstention";
 } & BoxProps<RootComponent>;
@@ -41,6 +45,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
     groupPosition,
     sx,
     secondaryText,
+    isFullCardLink,
     ...other
   } = props;
 
@@ -55,9 +60,16 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          "&:hover": isFullCardLink ? { bgcolor: "grey.50" } : {},
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      {...(isFullCardLink
+        ? {
+            component: Link,
+            href: `/depute/${slug}`,
+          }
+        : {})}
       {...other}
     >
       <Box sx={{ display: "flex", minWidth: 0 }}>
@@ -78,7 +90,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
             minWidth: 0,
           }}
         >
-          {slug ? (
+          {slug && !isFullCardLink ? (
             <MuiLink
               variant="body2"
               fontWeight="bold"

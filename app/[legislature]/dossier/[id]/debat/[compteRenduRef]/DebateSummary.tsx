@@ -173,7 +173,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                 }}
               >
                 <Typography
-                  color="white"
+                  color="#fff"
                   component="a"
                   href={`#${id}`}
                   dangerouslySetInnerHTML={{ __html: cleanText(texte!) }}
@@ -181,7 +181,7 @@ export const DebateSummary = (props: DebateSummaryProps) => {
                 <Stack direction="row" alignItems="center" spacing={0.5}>
                   <ClockMovingIcon sx={{ fontSize: "12px" }} fill="white" />
                   <Typography
-                    color="white"
+                    color="#fff"
                     variant="caption"
                     fontWeight="light"
                   >

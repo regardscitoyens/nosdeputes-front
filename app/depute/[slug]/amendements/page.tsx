@@ -37,7 +37,9 @@ export default async function Amendements({
   return (
     <Stack>
       <p>Amendements</p>
+
       <AmendementsStatistics deputeUid={uid} />
+
       {amendements &&
         amendements
           .sort((a, b) =>

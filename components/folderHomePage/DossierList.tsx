@@ -91,14 +91,19 @@ export default function DossierList(props: DossierListProps) {
     };
   }, [theme]);
 
-  console.log(dossiers);
   return (
     <div>
       <Stack component="ol">
         {dossiers
           .filter((dossier) => theme === "" || dossier.theme === theme)
           .map((dossier) => (
-            <Stack key={dossier.uid} component="li" sx={{ m: 2 }} gap={1}>
+            <Stack
+              key={dossier.uid}
+              component="li"
+              sx={{ m: 2 }}
+              gap={1}
+              title={dossier.titre || undefined}
+            >
               <Stack
                 direction="row"
                 justifyContent="space-between"

@@ -3,6 +3,8 @@ model Document {
   dataset                  Int
   /// Chambre parente du document (AN, SN, ou CG)
   chambre                  String?
+  /// Numéro de `la législature <https://fr.wikipedia.org/wiki/Liste_des_l%C3%A9gislatures_fran%C3%A7aises>`__ sous laquelle a été créé le dossier. Nombre entier.
+  legislature              String?
   /// Titre du document. Dans le cas d'un projet ou d'une proposition de loi, tel qu'il apparait au début du texte de loi.
   titrePrincipal           String
   /// Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu.
@@ -51,8 +53,6 @@ model Document {
   nbPage                   String?
   /// Le prix en euros d'un exemplaire papier du document à `la boutique de l'assemblée nationale.
   prix                     String?
-  /// Numéro de `la législature <https://fr.wikipedia.org/wiki/Liste_des_l%C3%A9gislatures_fran%C3%A7aises>`__ sous laquelle a été créé le dossier. Nombre entier.
-  legislature              String?
   /// Un document est dit conforme `lorsqu'il est adopté sans modification par les deux assemblées <http://www2.assemblee-nationale.fr/decouvrir-l-assemblee/role-et-pouvoirs-de-l-assemblee-nationale/les-fonctions-de-l-assemblee-nationale/les-fonctions-legislatives/la-procedure-legislative>`.
   adoptionConforme         Boolean
   /// Le contenu de ce champ n'est pas défini.
@@ -61,6 +61,8 @@ model Document {
   numNotice                String?
   /// Le contenu de ce champ n'est pas défini.
   provenance               String?
+  /// L'exposé des motifs du document (si présent)
+  exposeMotifs             String?
   /// URL of the PDF of this document.
   pdfUrl                   String?
   xsiType                  String
@@ -84,6 +86,8 @@ model Document {
   etudesPlf                EtudePlf[]
   textesAssocies           TexteAssocie[]
   interventions            Paragraphe[]
+  subdivisions             Subdivision[]
+  alineas                  Alinea[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
@@ -164,5 +168,63 @@ model AmendementCommission {
 
   @@index([dataset])
   @@index([organeRefUid])
+  @@index([documentRefUid])
+}
+
+model Subdivision {
+  /// Identifiant unique.
+  hash           String       @id
+  /// Jeu de données de provenance (numéro de législature)
+  dataset        Int
+  /// Identifiant unique (uid) du document.
+  documentRefUid String?
+  documentRef    Document?    @relation(fields: [documentRefUid], references: [uid])
+  /// Type de division.
+  type           String?
+  /// Identifiant de la division.
+  identifiant    String?
+  /// Titre de la division.
+  titre          String?
+  /// Sous-titre de la division.
+  sousTitre      String?
+  /// Titre de la division en format HTML.
+  titreHtml      String?
+  /// Sous-titre de la division en format HTML.
+  sousTitreHtml  String?
+  /// Identifiant de la division parente.
+  parent         String?
+  /// Niveau de la subdivision
+  niveau         Int?
+  /// Ordre de la division dans le document.
+  sequence       Int?
+
+  alineas Alinea[]
+
+  @@index([dataset])
+  @@index([documentRefUid])
+}
+
+/// Alinéa d'un texte de loi.
+model Alinea {
+  /// Id unique d'un alinéa.
+  id             Int         @id @default(autoincrement())
+  /// Numéro de l'alinéa.
+  numero         Int
+  /// Jeu de données de provenance (numéro de législature)
+  dataset        Int
+  /// Texte de l'alinéa.
+  texte          String?
+  /// Html de l'alinéa.
+  html           String?
+  /// Identifiant (string) de référence de l'article parent.
+  articleRefHash String
+  /// Référence de l'article parent.
+  articleRef     Subdivision @relation(fields: [articleRefHash], references: [hash])
+  /// Identifiant unique (uid) du document.
+  documentRefUid String?
+  documentRef    Document?    @relation(fields: [documentRefUid], references: [uid])
+
+  @@index([dataset])
+  @@index([articleRefHash])
   @@index([documentRefUid])
 }

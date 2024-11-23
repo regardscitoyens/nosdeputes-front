@@ -100,6 +100,13 @@
           "default": false,
           "description": "Deputé en poste actuellement."
         },
+        "placeHemicycle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Place dans l'hémicycle de l'acteur"
+        },
         "urlImage": {
           "type": [
             "string",
@@ -119,6 +126,21 @@
             "string",
             "null"
           ]
+        },
+        "nombreAmendements": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre d'amendements pour cet acteur."
+        },
+        "nombreInterventions": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre d'interventions pour cet acteur."
+        },
+        "nombreQuestions": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de questions pour cet acteur."
         },
         "groupeParlementaire": {
           "anyOf": [
@@ -312,41 +334,12 @@
           },
           "description": "Les dossiers de cet acteur."
         },
-        "nombreAmendements": {
-          "type": "integer",
-          "default": 0,
-          "description": "Nombre d'amendements pour cet acteur."
-        },
-        "nombreInterventions": {
-          "type": "integer",
-          "default": 0,
-          "description": "Nombre d'interventions pour cet acteur."
-        },
-        "nombreQuestions": {
-          "type": "integer",
-          "default": 0,
-          "description": "Nombre de questions pour cet acteur."
-        },
-        "loisPortees": {
+        "statistiquesHebdomadaire": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TexteLoi"
+            "$ref": "#/definitions/StatistiqueHebdomadaire"
           },
-          "description": "Lois présentées au nom de cet acteur (e.g. un premier ministre)."
-        },
-        "loisPresentees": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TexteLoi"
-          },
-          "description": "Lois présentées par cet acteur."
-        },
-        "loisSignees": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TexteLoi"
-          },
-          "description": "Lois signées par cet acteur."
+          "description": "Statistiques d'activité agrégé par semaine."
         }
       }
     },
@@ -466,6 +459,41 @@
         }
       }
     },
+    "StatistiqueHebdomadaire": {
+      "type": "object",
+      "properties": {
+        "semaineIndex": {
+          "type": "integer",
+          "description": "L'index de la semain depuis le debut de la legislature"
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
+        "valeur": {
+          "type": "integer",
+          "description": "Nombre d'occurence dans la semaine."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "presenceDetectee",
+            "presenceCommision"
+          ],
+          "description": "Type d'occurence compté."
+        },
+        "acteur": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Acteur"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
     "Agenda": {
       "type": "object",
       "properties": {
@@ -542,6 +570,13 @@
             "boolean",
             "null"
           ]
+        },
+        "compteRenduDisponible": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Vrai si le compte-rendu est disponible."
         },
         "dateSeance": {
           "type": [
@@ -2054,6 +2089,13 @@
           ],
           "description": "Chambre parente du document (AN, SN, ou CG)"
         },
+        "legislature": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Numéro de `la législature <https://fr.wikipedia.org/wiki/Liste_des_l%C3%A9gislatures_fran%C3%A7aises>`__ sous laquelle a été créé le dossier. Nombre entier."
+        },
         "titrePrincipal": {
           "type": "string",
           "description": "Titre du document. Dans le cas d'un projet ou d'une proposition de loi, tel qu'il apparait au début du texte de loi."
@@ -2222,13 +2264,6 @@
           ],
           "description": "Le prix en euros d'un exemplaire papier du document à `la boutique de l'assemblée nationale."
         },
-        "legislature": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Numéro de `la législature <https://fr.wikipedia.org/wiki/Liste_des_l%C3%A9gislatures_fran%C3%A7aises>`__ sous laquelle a été créé le dossier. Nombre entier."
-        },
         "adoptionConforme": {
           "type": "boolean",
           "description": "Un document est dit conforme `lorsqu'il est adopté sans modification par les deux assemblées <http://www2.assemblee-nationale.fr/decouvrir-l-assemblee/role-et-pouvoirs-de-l-assemblee-nationale/les-fonctions-de-l-assemblee-nationale/les-fonctions-legislatives/la-procedure-legislative>`."
@@ -2253,6 +2288,13 @@
             "null"
           ],
           "description": "Le contenu de ce champ n'est pas défini."
+        },
+        "exposeMotifs": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document (si présent)"
         },
         "pdfUrl": {
           "type": [
@@ -2354,6 +2396,18 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Paragraphe"
+          }
+        },
+        "subdivisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subdivision"
+          }
+        },
+        "alineas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alinea"
           }
         }
       }
@@ -2510,6 +2564,142 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Subdivision": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string",
+          "description": "Identifiant unique."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
+        "documentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Type de division."
+        },
+        "identifiant": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant de la division."
+        },
+        "titre": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Titre de la division."
+        },
+        "sousTitre": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sous-titre de la division."
+        },
+        "titreHtml": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Titre de la division en format HTML."
+        },
+        "sousTitreHtml": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sous-titre de la division en format HTML."
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant de la division parente."
+        },
+        "niveau": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Niveau de la subdivision"
+        },
+        "sequence": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Ordre de la division dans le document."
+        },
+        "alineas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alinea"
+          }
+        }
+      }
+    },
+    "Alinea": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id unique d'un alinéa."
+        },
+        "numero": {
+          "type": "integer",
+          "description": "Numéro de l'alinéa."
+        },
+        "dataset": {
+          "type": "integer",
+          "description": "Jeu de données de provenance (numéro de législature)"
+        },
+        "texte": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Texte de l'alinéa."
+        },
+        "html": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Html de l'alinéa."
+        },
+        "articleRef": {
+          "$ref": "#/definitions/Subdivision"
+        },
+        "documentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
             },
             {
               "type": "null"
@@ -4180,7 +4370,7 @@
             "$ref": "#/definitions/Acteur"
           }
         },
-        "parlementairesCirsconscription": {
+        "parlementairesCirconscription": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Acteur"
@@ -4877,6 +5067,10 @@
     "Stats": {
       "type": "object",
       "properties": {
+        "chambre": {
+          "type": "string",
+          "description": "Chambre du parlementaire (e.g.: AN = assemblée, SN = sénat)"
+        },
         "ecartMinMax": {
           "type": "integer",
           "default": 0,
@@ -4891,6 +5085,11 @@
           "type": "integer",
           "default": 0,
           "description": "L'écart entre la moyenne et la valeur minimum."
+        },
+        "ecartMoyenneMinMax": {
+          "type": "integer",
+          "default": 0,
+          "description": "L'écart entre la moyenne minimum et la moyenne maximum."
         },
         "id": {
           "type": "string",
@@ -4952,256 +5151,6 @@
           "description": "L'activité mesurée"
         }
       }
-    },
-    "TexteLoi": {
-      "type": "object",
-      "properties": {
-        "uid": {
-          "type": "string",
-          "description": "Identifiant unique d'un texte de loi."
-        },
-        "dataset": {
-          "type": "integer",
-          "description": "Jeu de données de provenance (numéro de législature)"
-        },
-        "titre": {
-          "type": "string",
-          "description": "Titre du texte de loi"
-        },
-        "chambre": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Chambre du texte (Assemblée ou Sénat)"
-        },
-        "legislature": {
-          "type": "string",
-          "description": "Numéro de législature."
-        },
-        "commissionRefUid": {
-          "type": "string",
-          "description": "Identifiant de la commission associée à ce texte."
-        },
-        "procedureAcceleree": {
-          "type": "boolean",
-          "default": false,
-          "description": "`true` si la procédure est accélérée ; `false` sinon."
-        },
-        "dateConstitution": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time",
-          "description": "Date de la constitution associée."
-        },
-        "dateDepot": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time",
-          "description": "Date de dépôt à l'Assemblée Nationale"
-        },
-        "numero": {
-          "type": "string",
-          "description": "Numéro du texte"
-        },
-        "commission": {
-          "type": "string",
-          "description": "Commission chargée du texte de loi."
-        },
-        "presenteeAuNomDe": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Acteur"
-          },
-          "description": "Texte de loi présenté au nom de... (e.g. nom du Premier ministre)"
-        },
-        "presenteePar": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Acteur"
-          },
-          "description": "Texte de loi présenté par un ensemble de députés."
-        },
-        "signataires": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Acteur"
-          },
-          "description": "Signataires de cette loi."
-        },
-        "sommaire": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SommaireLoi"
-          },
-          "description": "Sommaire du texte de loi."
-        },
-        "exposeMotifsCitation": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Citation de l'exposé des motifs, si elle existe."
-        },
-        "exposeMotifsDescriptionArticles": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Description des articles de l'exposé des motifs, si elle existe."
-        },
-        "exposeMotifsContenu": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Contenu de l'exposé des motifs comprenant la description des articles."
-        },
-        "articles": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Article"
-          },
-          "description": "Liste des articles du texte de loi."
-        }
-      }
-    },
-    "SommaireLoi": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Id unique d'un sommaire d'un texte de loi."
-        },
-        "dataset": {
-          "type": "integer",
-          "description": "Jeu de données de provenance (numéro de législature)."
-        },
-        "division": {
-          "type": "string",
-          "enum": [
-            "Titre",
-            "Chapitre",
-            "Section",
-            "SousSection"
-          ],
-          "description": "Type de division."
-        },
-        "numeroDivision": {
-          "type": "string",
-          "description": "Numéro de la division."
-        },
-        "sequence": {
-          "type": "string",
-          "description": "Ordre de la division dans le document."
-        },
-        "titre": {
-          "type": "string",
-          "description": "Titre de la division."
-        },
-        "parent": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant de la division parente."
-        },
-        "texteLoiRef": {
-          "$ref": "#/definitions/TexteLoi"
-        }
-      }
-    },
-    "Article": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Id unique d'un article."
-        },
-        "dataset": {
-          "type": "integer",
-          "description": "Jeu de données de provenance (numéro de législature)"
-        },
-        "hash": {
-          "type": "string",
-          "description": "Hachage de l'objet.\nUtilisé comme référence aux alinéas."
-        },
-        "alineas": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Alinea"
-          },
-          "description": "Liste des alinéas composant l'article."
-        },
-        "cardinal": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Cardinal de l'article (e.g. er, bis)."
-        },
-        "nouveau": {
-          "type": "boolean",
-          "default": false,
-          "description": "Mention spécifiée pour certains articles."
-        },
-        "numero": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "description": "Numéro de l'article."
-        },
-        "numeros": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          },
-          "description": "Numéro des articles (dans de rare cas, il y a un groupement d'articles)."
-        },
-        "parent": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Section parente (e.g. Chapitre Ier BIS)."
-        },
-        "texteLoiRef": {
-          "$ref": "#/definitions/TexteLoi"
-        },
-        "titre": {
-          "type": "string",
-          "description": "Titre de l'article"
-        }
-      }
-    },
-    "Alinea": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Id unique d'un alinéa."
-        },
-        "numero": {
-          "type": "integer",
-          "description": "Numéro de l'alinéa."
-        },
-        "dataset": {
-          "type": "integer",
-          "description": "Jeu de données de provenance (numéro de législature)"
-        },
-        "texte": {
-          "type": "string",
-          "description": "Texte de l'alinéa."
-        },
-        "articleRef": {
-          "$ref": "#/definitions/Article"
-        }
-      }
     }
   },
   "type": "object",
@@ -5214,6 +5163,9 @@
     },
     "adressePostale": {
       "$ref": "#/definitions/AdressePostale"
+    },
+    "statistiqueHebdomadaire": {
+      "$ref": "#/definitions/StatistiqueHebdomadaire"
     },
     "agenda": {
       "$ref": "#/definitions/Agenda"
@@ -5259,6 +5211,12 @@
     },
     "amendementCommission": {
       "$ref": "#/definitions/AmendementCommission"
+    },
+    "subdivision": {
+      "$ref": "#/definitions/Subdivision"
+    },
+    "alinea": {
+      "$ref": "#/definitions/Alinea"
     },
     "dossier": {
       "$ref": "#/definitions/Dossier"
@@ -5325,18 +5283,6 @@
     },
     "stats": {
       "$ref": "#/definitions/Stats"
-    },
-    "texteLoi": {
-      "$ref": "#/definitions/TexteLoi"
-    },
-    "sommaireLoi": {
-      "$ref": "#/definitions/SommaireLoi"
-    },
-    "article": {
-      "$ref": "#/definitions/Article"
-    },
-    "alinea": {
-      "$ref": "#/definitions/Alinea"
     }
   }
 }

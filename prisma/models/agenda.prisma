@@ -23,6 +23,8 @@ model Agenda {
   visioConference             Boolean?
   /// Identifiant unique du compte rendu d'une séance publique. Uniquement si xsiType égal à 'seance_type'.
   compteRenduRefUid           String?
+  /// Vrai si le compte-rendu est disponible.
+  compteRenduDisponible       Boolean?
   /// Date à laquelle la séance publique a lieu.
   dateSeance                  DateTime?
   /// Le contenu de ce champ n'est pas défini.
@@ -60,9 +62,8 @@ model Agenda {
   organeReunionRefUid         String?
   /// Organes à l'initiative de la réunion.
   organeDemandeurRefUid       String?
-
   /// Vrai si la réunion contient (au moins) une audition.
-  contientAudition                 Boolean @default(false)
+  contientAudition            Boolean   @default(false)
 
   vecteurRecherche      Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
   compteRenduRef        Debat?                       @relation(fields: [compteRenduRefUid], references: [uid])
