@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
-import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { NavBar, NavigationItem } from "@/components/NavBar";
+import theme from "./theme";
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 
-const inter = Raleway({ subsets: ["latin"] });
+const raleway = Raleway({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-raleway",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.nosdeputes.fr"),
@@ -50,13 +58,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>
-        <ThemeRegistry>
-          <main className="flex min-h-screen flex-col">
-            <NavBar navigation={navigation} />
-            {children}
-          </main>
-        </ThemeRegistry>
+      <body className={raleway.variable}>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <main className="flex min-h-screen flex-col">
+              <NavBar navigation={navigation} />
+              {children}
+            </main>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

@@ -15,15 +15,15 @@ export default function InfoPersonelles({
     // .filter((mandat) => mandat.legislature === "16") Partis politique est `null`
     .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1));
 
-  const dernerMandatDepute = sortedMandats.filter(
+  const dernierMandatDepute = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "ASSEMBLEE"
   )[0];
 
-  const dernergroupeParlementaire = sortedMandats.filter(
+  const derniergroupeParlementaire = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "GP"
   )[0];
 
-  const dernerPartisPolitique = sortedMandats.filter(
+  const dernierPartisPolitique = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "PARPOL"
   )[0];
 
@@ -37,43 +37,57 @@ export default function InfoPersonelles({
   return (
     <Paper sx={{ p: 2, bgcolor: "grey.50", width: 300 }} elevation={0}>
       <Stack direction="column" spacing={2}>
-        <Typography variant="subtitle1">Infomrations personelles</Typography>
+        <Typography variant="subtitle1">Informations personelles</Typography>
 
-        <div>
-          <Typography variant="body2" fontWeight="light">
-            Debut de mandat <InfoOutlinedIcon fontSize="inherit" />
-          </Typography>
-          <Typography variant="body2">
-            Le{" "}
-            {new Date(dernerMandatDepute.dateDebut).toLocaleDateString(
-              "fr-FR",
-              { day: "numeric", month: "long", year: "numeric" }
-            )}
-          </Typography>
-        </div>
-
-        <div>
-          <Typography variant="body2" fontWeight="light">
-            Fin de mandat <InfoOutlinedIcon fontSize="inherit" />
-          </Typography>
-          <Typography variant="body2">
-            {dernerMandatDepute.dateFin !== null
-              ? `Le ${new Date(dernerMandatDepute.dateFin).toLocaleDateString(
+        {dernierMandatDepute === undefined ? (
+          <div>
+            <Typography variant="body2" fontWeight="light">
+              Debut de mandat <InfoOutlinedIcon fontSize="inherit" />
+            </Typography>
+            <Typography variant="body2">N'est pas député·e·s</Typography>
+          </div>
+        ) : (
+          <React.Fragment>
+            <div>
+              <Typography variant="body2" fontWeight="light">
+                Debut de mandat <InfoOutlinedIcon fontSize="inherit" />
+              </Typography>
+              <Typography variant="body2">
+                Le{" "}
+                {new Date(dernierMandatDepute?.dateDebut).toLocaleDateString(
                   "fr-FR",
                   { day: "numeric", month: "long", year: "numeric" }
-                )}`
-              : "en cours"}
-          </Typography>
-        </div>
+                )}
+              </Typography>
+            </div>
+
+            <div>
+              <Typography variant="body2" fontWeight="light">
+                Fin de mandat <InfoOutlinedIcon fontSize="inherit" />
+              </Typography>
+              <Typography variant="body2">
+                {dernierMandatDepute?.dateFin !== null
+                  ? `Le ${new Date(
+                      dernierMandatDepute?.dateFin
+                    ).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}`
+                  : "en cours"}
+              </Typography>
+            </div>
+          </React.Fragment>
+        )}
 
         <div>
           <Typography variant="body2" fontWeight="light">
             Group politique <InfoOutlinedIcon fontSize="inherit" />
           </Typography>
           <Typography variant="body2">
-            {dernergroupeParlementaire &&
-            dernergroupeParlementaire.dateFin === null
-              ? dernergroupeParlementaire.libelle
+            {derniergroupeParlementaire &&
+            derniergroupeParlementaire.dateFin === null
+              ? derniergroupeParlementaire.libelle
               : "-"}
           </Typography>
         </div>
@@ -83,8 +97,8 @@ export default function InfoPersonelles({
             Partis politique <InfoOutlinedIcon fontSize="inherit" />
           </Typography>
           <Typography variant="body2">
-            {dernerPartisPolitique && dernerPartisPolitique.dateFin === null
-              ? dernerPartisPolitique.libelle
+            {dernierPartisPolitique && dernierPartisPolitique.dateFin === null
+              ? dernierPartisPolitique.libelle
               : "-"}
           </Typography>
         </div>

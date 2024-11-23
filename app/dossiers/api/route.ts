@@ -15,7 +15,7 @@ function parseNumber(value: string | null, defaultValue: number) {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const legislature = searchParams.get("legislature") ?? "16";
+  const legislature = searchParams.get("legislature") ?? "17";
   const theme = searchParams.get("theme");
   const page = parseNumber(searchParams.get("page"), 0);
   const pageSize = parseNumber(searchParams.get("pageSize"), 20);
