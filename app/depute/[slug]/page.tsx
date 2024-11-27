@@ -1,13 +1,11 @@
 import React from "react";
 
-import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 
 import { prisma } from "@/prisma";
 import { Box, Typography } from "@mui/material";
-import WeeklyStats from "./WeeklyActivity";
+import WeeklyActivitySection from "./WeeklyActivity/WeeklyActivitySection";
 
 async function getDeputeStatsUnCached(slug: string) {
   try {
@@ -103,7 +101,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      <WeeklyStats
+      <WeeklyActivitySection
         deputeWeeklyActivity={deputeStats?.statistiquesHebdomadaire ?? []}
         statsOnWeeklyActivity={statsOnWeeklyActivity}
       />
