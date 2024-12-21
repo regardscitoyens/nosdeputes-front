@@ -8,6 +8,16 @@
           "type": "string",
           "description": "Identifiant unique."
         },
+        "senatMatricule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -350,6 +360,10 @@
           "type": "string",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -395,6 +409,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -500,6 +518,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -787,6 +809,10 @@
           "type": "string",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -869,12 +895,6 @@
           "type": "string",
           "description": "Pour les réunions dont xsiType est 'seance_type', c'est à dire une séance publique, chaque point de l'ordre du jour est fixé par la `conférence des présidents <https://fr.wikipedia.org/wiki/Conf%C3%A9rence_des_pr%C3%A9sidents_de_l%27Assembl%C3%A9e_nationale>`__ et a donc la valeur 'podjSeanceConfPres_type' pour le champ xsiType. Dans tout les autres cas la valeur est 'podjReunion_type'."
         },
-        "actesLegislatifs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActeLegislatif"
-          }
-        },
         "dossierLegislatif": {
           "anyOf": [
             {
@@ -895,6 +915,18 @@
             }
           ]
         },
+        "scrutins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scrutin"
+          }
+        },
+        "actesLegislatifs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActeLegislatif"
+          }
+        },
         "interventions": {
           "type": "array",
           "items": {
@@ -909,6 +941,10 @@
         "id": {
           "type": "integer",
           "description": "Clé primaire."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -928,6 +964,10 @@
         "id": {
           "type": "integer",
           "description": "Clé primaire."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -961,6 +1001,10 @@
         "id": {
           "type": "integer",
           "description": "Clé primaire."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -1027,6 +1071,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -1608,6 +1656,16 @@
           "items": {
             "$ref": "#/definitions/CoSignataireAmendement"
           }
+        },
+        "subdivisionRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Subdivision"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -1617,6 +1675,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -1644,12 +1706,42 @@
         }
       }
     },
+    "BatchRuns": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "dateDebut": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateFin": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "nomTable": {
+          "type": "string"
+        },
+        "nbLignesAffectees": {
+          "type": "integer",
+          "default": 0
+        }
+      }
+    },
     "Commune": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "hash": {
           "type": "string",
@@ -1716,6 +1808,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -1822,6 +1918,10 @@
         "id": {
           "type": "string"
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -1857,6 +1957,10 @@
       "properties": {
         "id": {
           "type": "integer"
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -2078,6 +2182,10 @@
     "Document": {
       "type": "object",
       "properties": {
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -2356,6 +2464,12 @@
             }
           ]
         },
+        "scrutins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scrutin"
+          }
+        },
         "amendements": {
           "type": "array",
           "items": {
@@ -2366,6 +2480,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/AmendementCommission"
+          }
+        },
+        "actesLegislatifs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActeLegislatif"
           }
         },
         "auteurs": {
@@ -2384,12 +2504,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/EtudePlf"
-          }
-        },
-        "textesAssocies": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TexteAssocie"
           }
         },
         "interventions": {
@@ -2418,6 +2532,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -2468,6 +2586,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -2538,6 +2660,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -2656,11 +2782,29 @@
           ],
           "description": "Ordre de la division dans le document."
         },
+        "nombreAmendements": {
+          "type": "integer",
+          "default": 0,
+          "description": "Le nombre d'amendements liés à cette subdivision."
+        },
         "alineas": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Alinea"
           }
+        },
+        "scrutins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scrutin"
+          }
+        },
+        "amendements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amendement"
+          },
+          "description": "Amendements liés à cette subdivision."
         }
       }
     },
@@ -2714,6 +2858,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -2867,7 +3015,17 @@
             }
           ]
         },
-        "commissionRef": {
+        "commissionANRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commissionSNRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Organe"
@@ -2940,6 +3098,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -3277,6 +3439,16 @@
             }
           ]
         },
+        "documentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "pointOdj": {
           "anyOf": [
             {
@@ -3317,12 +3489,6 @@
             "$ref": "#/definitions/Scrutin"
           }
         },
-        "textesAssocies": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TexteAssocie"
-          }
-        },
         "voteRefs": {
           "type": "array",
           "items": {
@@ -3337,6 +3503,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -3381,6 +3551,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -3413,6 +3587,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -3471,6 +3649,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -3513,6 +3695,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -3560,6 +3746,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -3647,6 +3837,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -3673,51 +3867,15 @@
         }
       }
     },
-    "TexteAssocie": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Identifiant unique."
-        },
-        "dataset": {
-          "type": "integer",
-          "description": "Jeu de données de provenance (numéro de législature)"
-        },
-        "typeTexte": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "BTA pour Bibard du Texte Adopté ou TAP pour Texte Adopté Provisoire."
-        },
-        "acteLegislatifRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ActeLegislatif"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "texteAssocieRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Document"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
     "DossierThemes": {
       "type": "object",
       "properties": {
         "uid": {
           "type": "string"
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dossierRef": {
           "$ref": "#/definitions/Dossier"
@@ -3757,6 +3915,10 @@
       "properties": {
         "uid": {
           "type": "string"
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4030,6 +4192,10 @@
         "id": {
           "type": "integer"
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -4056,6 +4222,10 @@
       "properties": {
         "id": {
           "type": "integer"
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4086,6 +4256,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4186,6 +4360,51 @@
             "null"
           ],
           "default": 0
+        },
+        "nombreTextesLoisDeposes": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de textes de lois déposées."
+        },
+        "nombreAmendementsProposes": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre d'amendements proposés."
+        },
+        "nombreInterventions": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre d'interventions en hémicycle."
+        },
+        "nombreQuestions": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de questions."
+        },
+        "cohesion": {
+          "type": "integer",
+          "default": 0,
+          "description": "Taux de cohésion du groupe."
+        },
+        "auditionsRealisees": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre d'auditions réalisées."
+        },
+        "rapportsPublies": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de rapports publiés."
+        },
+        "missionsDemarrees": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de missions démarrées."
+        },
+        "dossiersLoiTraites": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de dossiers de loi traités."
         },
         "positionPolitique": {
           "type": [
@@ -4306,12 +4525,6 @@
             "$ref": "#/definitions/Dossier"
           }
         },
-        "dossiersCommissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Dossier"
-          }
-        },
         "documents": {
           "type": "array",
           "items": {
@@ -4381,6 +4594,18 @@
           "items": {
             "$ref": "#/definitions/Commune"
           }
+        },
+        "dossiersCommissionsAN": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Dossier"
+          }
+        },
+        "dossiersCommissionsSN": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Dossier"
+          }
         }
       }
     },
@@ -4390,6 +4615,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4519,6 +4748,10 @@
         "uid": {
           "type": "string",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4683,7 +4916,39 @@
           ],
           "description": "La signification de ce champ n'est pas définie."
         },
-        "dossier": {
+        "typeObjet": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "amendement",
+            "article",
+            "motionCensure",
+            "motionReferendaire",
+            "motionRejet",
+            "projetLoi",
+            "propositionLoi",
+            "propositionResolution",
+            "sousAmendement"
+          ],
+          "description": "Type de l'objet (e.g. amendement, article)."
+        },
+        "numeroTypeObjet": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Numéro de l'objet (e.g. 1, 2, 3, etc.)."
+        },
+        "amendementRefUid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant unique d'un amendement lié à ce scrutin."
+        },
+        "dossierRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Dossier"
@@ -4693,19 +4958,25 @@
             }
           ]
         },
-        "amendementRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique d'un amendement lié à ce scrutin."
+        "documentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "propositionLoiRefUid": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Identifiant unique d'une proposition de loi liée à ce scrutin."
+        "pointOdjRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PointOdj"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "amendementRef": {
           "anyOf": [
@@ -4717,7 +4988,17 @@
             }
           ]
         },
-        "acteLegislatifsRef": {
+        "articleRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Subdivision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "acteLegislatifRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/ActeLegislatif"
@@ -4765,31 +5046,6 @@
             "$ref": "#/definitions/MiseAuPoint"
           }
         },
-        "numeroTypeObjet": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "description": "Numéro de l'objet (e.g. 1, 2, 3, etc.)."
-        },
-        "typeObjet": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "enum": [
-            "amendement",
-            "article",
-            "motionCensure",
-            "motionReferendaire",
-            "motionRejet",
-            "projetLoi",
-            "propositionLoi",
-            "propositionResolution",
-            "sousAmendement"
-          ],
-          "description": "Type de l'objet (e.g. amendement, article)."
-        },
         "votes": {
           "type": "array",
           "items": {
@@ -4810,6 +5066,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -4909,6 +5169,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -4993,6 +5257,10 @@
           "type": "integer",
           "description": "Identifiant unique."
         },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
+        },
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
@@ -5031,6 +5299,10 @@
         "id": {
           "type": "integer",
           "description": "Identifiant unique."
+        },
+        "dateMaj": {
+          "type": "string",
+          "format": "date-time"
         },
         "dataset": {
           "type": "integer",
@@ -5145,6 +5417,7 @@
             "acteurs",
             "amendements",
             "interventions",
+            "organes",
             "questions",
             "textes"
           ],
@@ -5187,6 +5460,9 @@
     },
     "coSignataireAmendement": {
       "$ref": "#/definitions/CoSignataireAmendement"
+    },
+    "batchRuns": {
+      "$ref": "#/definitions/BatchRuns"
     },
     "commune": {
       "$ref": "#/definitions/Commune"
@@ -5244,9 +5520,6 @@
     },
     "voteActeLegislatif": {
       "$ref": "#/definitions/VoteActeLegislatif"
-    },
-    "texteAssocie": {
-      "$ref": "#/definitions/TexteAssocie"
     },
     "dossierThemes": {
       "$ref": "#/definitions/DossierThemes"

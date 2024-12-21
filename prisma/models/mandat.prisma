@@ -1,6 +1,7 @@
 /// Une personne physique peut être mandataire d'un mandat représentatif ou bien d'un mandat dit simple, comme par exemple être membre d'une commission. Un `mandat représentatif <https://fr.wikipedia.org/wiki/Mandat_repr%C3%A9sentatif>`__ est \"une forme de mandat politique qui possède la caractéristique d'être général, libre et non révocable\".
 model Mandat {
   uid                      String                     @id
+  dateMaj                  DateTime                   @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
   /// Identifiant de l'acteur qui détient le mandat
@@ -60,6 +61,7 @@ model Mandat {
 
 model Collaborateur {
   id               Int                      @id @default(autoincrement())
+  dateMaj          DateTime                 @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset          Int
   qualite          String
@@ -79,6 +81,7 @@ model Collaborateur {
 
 model Suppleant {
   id           Int       @id @default(autoincrement())
+  dateMaj      DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset      Int
   dateDebut    DateTime

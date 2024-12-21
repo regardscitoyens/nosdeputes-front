@@ -1,6 +1,7 @@
 model Amendement {
   /// Identifiant unique.
   uid                              String    @id
+  dateMaj                          DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                          Int
   /// Chambre de provenance (Assemblée ou Sénat)
@@ -117,6 +118,9 @@ model Amendement {
   /// Identifiant du scrutin lié à l'amendement
   scrutinRefUid                    String?   @unique
 
+  /// Identifiant (string) de référence de l'article modifié par cet amendement.
+  subdivisionRefHash String?
+
   vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
 
   texteLegislatifRef        Document?                @relation(fields: [texteLegislatifRefUid], references: [uid])
@@ -130,6 +134,7 @@ model Amendement {
   groupePolitiqueRef        Organe?                  @relation("Amendement_GroupePolitique", fields: [groupePolitiqueRefUid], references: [uid])
   seanceRef                 Agenda?                  @relation(fields: [seanceRefUid], references: [uid])
   coSignataires             CoSignataireAmendement[]
+  subdivisionRef            Subdivision?             @relation(fields: [subdivisionRefHash], references: [hash])
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
@@ -143,11 +148,13 @@ model Amendement {
   @@index([gouvernementOrganeRefUid])
   @@index([groupePolitiqueRefUid])
   @@index([dateDepot])
+  @@index([subdivisionRefHash])
 }
 
 model CoSignataireAmendement {
   /// Identifiant unique.
-  id               Int     @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
+  dateMaj          DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset          Int
   /// Identifiants uniques (uid) des acteurs.

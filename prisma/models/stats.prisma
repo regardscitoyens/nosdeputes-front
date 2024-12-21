@@ -58,6 +58,9 @@ enum StatsType {
   /// Stats pour les interventions.
   interventions
 
+  /// Stats pour les organes.
+  organes
+
   /// Stats pour les questions.
   questions
 
