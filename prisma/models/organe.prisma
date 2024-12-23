@@ -1,32 +1,61 @@
 /// Il contribue au fonctionnement de l'Etat (par exemple l'Assemblée nationale ou une Délégation parlementaire)
 model Organe {
   /// Identifiant unique.
-  uid     String @id
+  uid     String   @id
+  dateMaj DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset Int
 
-  codeType                      String
+  codeType                String
   /// Type d'organe (ex: "Commission permanente")
-  type                          String?
-  libelle                       String
-  libelleEdition                String?
-  libelleAbrege                 String
-  libelleAbrev                  String
+  type                    String?
+  libelle                 String
+  libelleEdition          String?
+  libelleAbrege           String
+  libelleAbrev            String
   /// Libellé tronquée (e.g. "Gauche Dém. et Rép.")
-  libelleTronque                String?
-  organeParentRefUid            String?
-  regime                        String?
+  libelleTronque          String?
+  organeParentRefUid      String?
+  regime                  String?
   /// Chambre parente de l'organe (Assemblée ou Sénat)
-  chambre                       String?
+  chambre                 String?
   /// Vrai si l'organe est en cours d'agrément.
-  actif                         Boolean?                 @default(false)
-  legislature                   String?
-  secretaire01                  String?
-  secretaire02                  String?
-  regimeJuridique               String?
-  siteInternet                  String?
-  nombreReunionsAnnuelles       Int?
-  nombreMembres                 Int?                     @default(0)
+  actif                   Boolean? @default(false)
+  legislature             String?
+  secretaire01            String?
+  secretaire02            String?
+  regimeJuridique         String?
+  siteInternet            String?
+  nombreReunionsAnnuelles Int?
+  nombreMembres           Int?     @default(0)
+
+  /// Nombre de textes de lois déposées.
+  nombreTextesLoisDeposes Int @default(0)
+
+  /// Nombre d'amendements proposés.
+  nombreAmendementsProposes Int @default(0)
+
+  /// Nombre d'interventions en hémicycle.
+  nombreInterventions Int @default(0)
+
+  /// Nombre de questions.
+  nombreQuestions Int @default(0)
+
+  /// Taux de cohésion du groupe.
+  cohesion Int @default(0)
+
+  /// Nombre d'auditions réalisées.
+  auditionsRealisees Int @default(0)
+
+  /// Nombre de rapports publiés.
+  rapportsPublies Int @default(0)
+
+  /// Nombre de missions démarrées.
+  missionsDemarrees Int @default(0)
+
+  /// Nombre de dossiers de loi traités.
+  dossiersLoiTraites Int @default(0)
+
   positionPolitique             String?
   preseance                     String?
   couleurAssociee               String?
@@ -49,7 +78,6 @@ model Organe {
   auteurs                       Auteur[]
   coSignataires                 CoSignataireDocument[]
   dossiers                      Dossier[]                @relation("OrganeMission")
-  dossiersCommissions           Dossier[]                @relation("OrganeCommission")
   documents                     Document[]
   etudesPlf                     EtudePlf[]
   groupesVotants                GroupeVotant[]
@@ -61,6 +89,8 @@ model Organe {
   membresGroupeParlementaire    Acteur[]                 @relation("Acteur_GroupeParlementaire")
   parlementairesCirconscription Acteur[]                 @relation("Acteur_Circonscription")
   communes                      Commune[]
+  dossiersCommissionsAN         Dossier[]                @relation("OrganeANCommission")
+  dossiersCommissionsSN         Dossier[]                @relation("OrganeSNCommission")
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)

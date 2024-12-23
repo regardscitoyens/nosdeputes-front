@@ -1,7 +1,8 @@
 /// Les positions de vote (pour, contre ou abstention) de chaque député pour les `scrutins solennels <https://www.vie-publique.fr/fiches/19498-comment-votent-les-parlementaires>`__, les déclarations du Gouvernement, les motions de procédure et les autres scrutins publics.
 model Scrutin {
   /// Identifiant unique.
-  uid                     String               @id
+  uid                     String            @id
+  dateMaj                 DateTime          @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                 Int
   /// Chambre parente du document (Assemblée ou Sénat)
@@ -17,7 +18,7 @@ model Scrutin {
   /// Numéro unique du vote, relativement à la législature, débutant par 1 et par incrément de 1. On le retrouve aussi à la fin de l'identifiant unique du vote (uid).
   numero                  String?
   /// Objet du vote, toujours identique au champ titre.
-  objet                   String?  
+  objet                   String?
   /// L'identifiant unique (uid) de l'organe au sein duquel se déroule le vote. Il s'agit toujours de l'Assemblée Nationale mais son uid varie en fonction de la législature.
   organeRefUid            String?
   /// Numéro de la séance dans la journée.
@@ -54,41 +55,47 @@ model Scrutin {
   libelleTypeVote         String?
   /// La signification de ce champ n'est pas définie.
   typeMajorite            String?
-  acteLegislatifsRefUid   String?
-  /// Identifiant unique du dossier législatif dont ce scrutin appartient.
-  dossierRefUid           String?
-
-  /// Dossier législatif dont ce scrutin appartient.
-  dossier Dossier?       @relation(fields: [dossierRefUid], references: [uid])
-
-  /// Identifiant unique d'un amendement lié à ce scrutin.
-  amendementRefUid       String?
-
-  /// Identifiant unique d'une proposition de loi liée à ce scrutin.
-  propositionLoiRefUid   String?
-
-  amendementRef           Amendement?
-  acteLegislatifsRef      ActeLegislatif?      @relation(fields: [acteLegislatifsRefUid], references: [uid])
-  agendaRef               Agenda?              @relation(fields: [seanceRefUid], references: [uid])
-  organeRef               Organe?              @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
-  dysfonctionnements      Dysfonctionnement[]
-  groupesVotants          GroupeVotant[]
-  misesAuPoint            MiseAuPoint[]
-  
-  /// Numéro de l'objet (e.g. 1, 2, 3, etc.).
-  numeroTypeObjet         Int?
-  
   /// Type de l'objet (e.g. amendement, article).
   typeObjet               TypeObjetScrutin?
-  votes                   Vote[]
-  votesActesLegislatifs   VoteActeLegislatif[]
+  /// Numéro de l'objet (e.g. 1, 2, 3, etc.).
+  numeroTypeObjet         Int?
+  /// Identifiant de l'acte législatif associé au scrutin.
+  acteLegislatifRefUid    String?
+  /// Identifiant unique du dossier législatif dont ce scrutin appartient.
+  dossierRefUid           String?
+  /// Identifiant unique du point d'ordre du jour associé.
+  pointOdjRefUid           String?
+  /// Identifiant unique d'un amendement lié à ce scrutin.
+  amendementRefUid        String?
+  /// Identifiant de l'article associé
+  articleRefUid           String?
+  /// Identifiant du document associé au scrutin
+  documentRefUid          String?
+
+  /// Dossier législatif lié au scrutin.
+  dossierRef            Dossier?             @relation(fields: [dossierRefUid], references: [uid])
+  documentRef           Document?            @relation(fields: [documentRefUid], references: [uid])
+  pointOdjRef           PointOdj?            @relation(fields: [pointOdjRefUid], references: [uid])
+  amendementRef         Amendement?
+  articleRef            Subdivision?         @relation(fields: [articleRefUid], references: [hash])
+  acteLegislatifRef     ActeLegislatif?      @relation(fields: [acteLegislatifRefUid], references: [uid])
+  agendaRef             Agenda?              @relation(fields: [seanceRefUid], references: [uid])
+  organeRef             Organe?              @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  dysfonctionnements    Dysfonctionnement[]
+  groupesVotants        GroupeVotant[]
+  misesAuPoint          MiseAuPoint[]
+  votes                 Vote[]
+  votesActesLegislatifs VoteActeLegislatif[]
 
   @@index([dataset])
   @@index([organeRefUid])
   @@index([seanceRefUid])
-  @@index([acteLegislatifsRefUid])
-  @@index([dateScrutin])
+  @@index([pointOdjRefUid])
+  @@index([acteLegislatifRefUid])
+  @@index([articleRefUid])
+  @@index([documentRefUid])
   @@index([dossierRefUid])
+  @@index([dateScrutin])
 }
 
 /// Énumération du type de l'objet.
@@ -116,6 +123,7 @@ enum TypeObjetScrutin {
 model GroupeVotant {
   /// Identifiant unique.
   id                    Int           @id @default(autoincrement())
+  dateMaj               DateTime      @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset               Int
   /// Hachage de l'objet
@@ -157,6 +165,7 @@ enum PositionVote {
 model Vote {
   /// Identifiant unique.
   id                Int           @id @default(autoincrement())
+  dateMaj           DateTime      @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   /// Identifiant unique (uid) de l'acteur.
@@ -188,6 +197,7 @@ model Vote {
 model MiseAuPoint {
   /// Identifiant unique.
   id            Int      @id @default(autoincrement())
+  dateMaj       DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset       Int
   acteurRefUid  String?
@@ -204,6 +214,7 @@ model MiseAuPoint {
 model Dysfonctionnement {
   /// Identifiant unique.
   id            Int      @id @default(autoincrement())
+  dateMaj       DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset       Int
   acteurRefUid  String?

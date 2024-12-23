@@ -1,9 +1,10 @@
 /// L'ensemble des communes de France et leur circonscription associée
 model Commune {
   /// Identifiant unique.
-  id                 Int     @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
+  dateMaj            DateTime @default(now()) @updatedAt
   /// Hachage de l'objet
-  hash               String  @unique
+  hash               String   @unique
   /// Nom de la commune
   libelle            String
   /// Numéro de la région où se trouve la commune
@@ -19,12 +20,12 @@ model Commune {
   /// Code postal
   codePostal         String
   /// Vrai si la commune est sur plusieurs circonscriptions
-  circoPartielle     Boolean @default(false)
+  circoPartielle     Boolean  @default(false)
   /// Numéro de la cirsconscription
   numCirco           Int?
   /// Identifiant unique de la cirsconscription liée à la commune
   circonscriptionUid String?
-  circonscription    Organe? @relation(fields: [circonscriptionUid], references: [uid])
+  circonscription    Organe?  @relation(fields: [circonscriptionUid], references: [uid])
 
   @@index([circonscriptionUid])
 }

@@ -2,6 +2,7 @@
 model Question {
   /// Identifiant unique.
   uid              String                   @id
+  dateMaj          DateTime                 @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset          Int
   legislature      String
@@ -17,6 +18,8 @@ model Question {
   mandatRefUid     String
   /// Identifiant unique du groupe politique de l'auteur
   groupeRefUid     String
+
+  /// Identifiant unique du ministère interrogé.
   minIntRefUid     String?
   codeCloture      String?
   libelleCloture   String?

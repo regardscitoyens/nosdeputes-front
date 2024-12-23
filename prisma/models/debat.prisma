@@ -2,6 +2,7 @@
 model Debat {
   /// Identifiant unique.
   uid               String    @id
+  dateMaj           DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   /// Chambre de provenance (AN, SN ou CG)
@@ -37,7 +38,8 @@ model Debat {
 
 /// Sommaire d'une séance de débat.
 model SommaireDebat {
-  id                String  @id
+  id                String   @id
+  dateMaj           DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   debatRefUid       String
@@ -46,7 +48,7 @@ model SommaireDebat {
   titreIntitule     String?
   titreSousIntitule String?
   idSyceron         String
-  debatRef          Debat   @relation(fields: [debatRefUid], references: [uid])
+  debatRef          Debat    @relation(fields: [debatRefUid], references: [uid])
 
   @@index([dataset])
   @@index([debatRefUid])
@@ -54,6 +56,7 @@ model SommaireDebat {
 
 model Paragraphe {
   id                Int                      @id @default(autoincrement())
+  dateMaj           DateTime                 @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   /// Chambre de provenance (AN, SN ou CG)

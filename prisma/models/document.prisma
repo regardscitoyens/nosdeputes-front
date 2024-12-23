@@ -1,4 +1,5 @@
 model Document {
+  dateMaj                  DateTime                 @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
   /// Chambre parente du document (AN, SN, ou CG)
@@ -79,12 +80,13 @@ model Document {
   organeRef                Organe?                  @relation(fields: [organeRefUid], references: [uid])
   documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousDocuments            Document?                @relation("DocumentParentRef")
+  scrutins                 Scrutin[]
   amendements              Amendement[]
   amendementsCommission    AmendementCommission[]
+  actesLegislatifs         ActeLegislatif[]
   auteurs                  Auteur[]
   coSignataires            CoSignataireDocument[]
   etudesPlf                EtudePlf[]
-  textesAssocies           TexteAssocie[]
   interventions            Paragraphe[]
   subdivisions             Subdivision[]
   alineas                  Alinea[]
@@ -100,7 +102,8 @@ model Document {
 
 model Auteur {
   /// Identifiant unique.
-  id             Int     @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
+  dateMaj        DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset        Int
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
@@ -125,6 +128,7 @@ model Auteur {
 model CoSignataireDocument {
   /// Identifiant unique.
   id                     Int       @id @default(autoincrement())
+  dateMaj                DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                Int
   /// Identifiant unique (uid) de l'acteur.
@@ -155,6 +159,7 @@ model CoSignataireDocument {
 model AmendementCommission {
   /// Identifiant unique.
   id             Int       @id @default(autoincrement())
+  dateMaj        DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset        Int
   /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
@@ -173,12 +178,12 @@ model AmendementCommission {
 
 model Subdivision {
   /// Identifiant unique.
-  hash           String       @id
+  hash           String    @id
   /// Jeu de données de provenance (numéro de législature)
   dataset        Int
   /// Identifiant unique (uid) du document.
   documentRefUid String?
-  documentRef    Document?    @relation(fields: [documentRefUid], references: [uid])
+  documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
   /// Type de division.
   type           String?
   /// Identifiant de la division.
@@ -198,7 +203,14 @@ model Subdivision {
   /// Ordre de la division dans le document.
   sequence       Int?
 
-  alineas Alinea[]
+  /// Le nombre d'amendements liés à cette subdivision.
+  nombreAmendements Int @default(0)
+
+  alineas  Alinea[]
+  scrutins Scrutin[]
+
+  /// Amendements liés à cette subdivision.
+  amendements Amendement[]
 
   @@index([dataset])
   @@index([documentRefUid])
@@ -222,7 +234,7 @@ model Alinea {
   articleRef     Subdivision @relation(fields: [articleRefHash], references: [hash])
   /// Identifiant unique (uid) du document.
   documentRefUid String?
-  documentRef    Document?    @relation(fields: [documentRefUid], references: [uid])
+  documentRef    Document?   @relation(fields: [documentRefUid], references: [uid])
 
   @@index([dataset])
   @@index([articleRefHash])

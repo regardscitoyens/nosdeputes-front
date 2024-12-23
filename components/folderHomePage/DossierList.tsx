@@ -47,7 +47,7 @@ export default function DossierList(props: DossierListProps) {
     let res = await fetch(
       "/dossiers/api?" +
         new URLSearchParams({
-          legislature: "16",
+          legislature: "17",
           page: currentPage.toString(),
           theme: theme,
           pageSize: PAGE_SIZE.toString(),
@@ -71,7 +71,7 @@ export default function DossierList(props: DossierListProps) {
       let res = await fetch(
         "/dossiers/api?" +
           new URLSearchParams({
-            legislature: "16",
+            legislature: "17",
             page: "0",
             theme: theme,
             pageSize: PAGE_SIZE.toString(),

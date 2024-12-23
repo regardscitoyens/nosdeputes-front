@@ -80,7 +80,7 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
           dossierUid={dossier!.uid}
           legislature={dossier!.legislature}
         />
-        <TextStructureCard />
+        {/* <TextStructureCard /> */}
       </div>
     </div>
   );

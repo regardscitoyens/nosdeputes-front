@@ -51,14 +51,15 @@ const HeroSection = () => {
           component="p"
         >
           NosDéputés met en valeur l&apos;activité parlementaire des députés de
-          l&apos;Assemblée nationale Française. en synthétisant les différentes
+          l&apos;Assemblée nationale Française en synthétisant les différentes
           activités législatives et de contrôle du gouvernement des élus de la
           nation.
         </Typography>
 
         <SearchBar />
       </Box>
-      <div>
+      {/* Desactivé tant que l'on a pas la carte des circos */}
+      {/* <div>
         <Image
           src="/FranceMapIcon.png"
           alt=""
@@ -73,7 +74,7 @@ const HeroSection = () => {
         >
           Ou consultez la carte des circonscriptions
         </Typography>
-      </div>
+      </div> */}
     </Box>
   );
 };

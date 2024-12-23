@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const data = await prisma.dossier.findMany({
     where: { legislature, ...(theme === "" ? {} : { theme }) },
-    orderBy: { numero: "asc" }, // TODO replace by last date when possible
+    orderBy: [{ dateDernierActe: "desc" }, { numero: "desc" }],
     take: pageSize,
     skip: page * pageSize,
   });

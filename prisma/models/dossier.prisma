@@ -2,6 +2,7 @@
 model Dossier {
   /// Identifiant unique.
   uid                    String    @id
+  dateMaj                DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                Int
   /// Chambre parente du document (AN, SN, ou CG)
@@ -44,8 +45,10 @@ model Dossier {
   dossierAbsorbantRefUid String?   @unique
   /// Organe à l'initiative du dossier.
   organeRefUid           String?
-  /// Identifiant de la commission référente
-  commissionRefUid       String?
+  /// Identifiant de la commission référente à l'Assemblée Nationale.
+  commissionANRefUid       String?
+  /// Identifiant de la commission référente au Sénat.
+  commissionSNRefUid       String?
   /// Identifiant unique (uid) de l'acteur.
   acteurPrincipalRefUid  String?
 
@@ -55,7 +58,8 @@ model Dossier {
   dossierAbsorbantRef Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   dossierAbsorbrant   Dossier?                 @relation("DossierAbsorbant")
   organeRef           Organe?                  @relation("OrganeMission", fields: [organeRefUid], references: [uid])
-  commissionRef       Organe?                  @relation("OrganeCommission", fields: [commissionRefUid], references: [uid])
+  commissionANRef     Organe?                  @relation("OrganeANCommission", fields: [commissionANRefUid], references: [uid])
+  commissionSNRef     Organe?                  @relation("OrganeSNCommission", fields: [commissionSNRefUid], references: [uid])
   plf                 EtudePlf[]
   initiateurs         InitiateurDossier[]
   actesLegislatifs    ActeLegislatif[]
@@ -72,16 +76,18 @@ model Dossier {
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([organeRefUid])
-  @@index([commissionRefUid])
   @@index([dossierAbsorbantRefUid])
   @@index([acteurPrincipalRefUid])
   @@index([dateDepot])
   @@index([dateDernierActe])
+  @@index([commissionANRefUid])
+  @@index([commissionSNRefUid])
 }
 
 model ActeLegislatif {
   /// Identifiant unique.
   uid                                 String                     @id
+  dateMaj                             DateTime                   @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                             Int
   /// Chambre parente du document (AN, SN, ou CG)
@@ -176,24 +182,26 @@ model ActeLegislatif {
   /// Signification du code du type de déclaration.
   libelleStatutTypeDeclaration        String?
   dossierRefUid                       String?
+  documentRefUid                      String?
   /// Identifiant unique de l'ordre du jour de la réunion dans l'agenda.
   pointOdjUid                         String?
   agendaRef                           Agenda?                    @relation(fields: [reunionRefUid], references: [uid])
   auteurMotionRef                     Acteur?                    @relation("ActeLegislatif_auteurMotion", fields: [auteurMotionRefUid], references: [uid])
   dossierRef                          Dossier?                   @relation(fields: [dossierRefUid], references: [uid])
+  documentRef                         Document?                  @relation(fields: [documentRefUid], references: [uid])
   pointOdj                            PointOdj?                  @relation(fields: [pointOdjUid], references: [uid])
   auteursRefs                         AuteurMotion[]
   infoJoRect                          InfoJoRect[]
   initiateurActeLegislatif            InitiateurActeLegislatif[]
   rapporteurs                         Rapporteur[]
   scrutins                            Scrutin[]
-  textesAssocies                      TexteAssocie[]
   voteRefs                            VoteActeLegislatif[]
 
   @@index([dataset])
   @@index([reunionRefUid])
   @@index([auteurMotionRefUid])
   @@index([dossierRefUid])
+  @@index([documentRefUid])
   @@index([pointOdjUid])
 }
 
@@ -201,6 +209,7 @@ model ActeLegislatif {
 model InitiateurDossier {
   /// Identifiant unique.
   id            Int      @id @default(autoincrement())
+  dateMaj       DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset       Int
   /// Dossier référent.
@@ -223,6 +232,7 @@ model InitiateurDossier {
 model AuteurMotion {
   /// Identifiant unique.
   id                   Int             @id @default(autoincrement())
+  dateMaj              DateTime        @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
   /// Identifiant unique (uid) de l'acteur auteur de la motion.
@@ -240,6 +250,7 @@ model AuteurMotion {
 model InfoJoRect {
   /// Identifiant unique.
   id                   Int             @id @default(autoincrement())
+  dateMaj              DateTime        @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
   /// Date de publication d'une lettre rectificative au journal officiel.
@@ -261,6 +272,7 @@ model InfoJoRect {
 model InitiateurActeLegislatif {
   /// Identifiant unique.
   id                   Int             @id @default(autoincrement())
+  dateMaj              DateTime        @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
   /// Identifiant unique (uid) de l'acteur.
@@ -281,6 +293,7 @@ model InitiateurActeLegislatif {
 model Rapporteur {
   /// Identifiant unique.
   id                   Int             @id @default(autoincrement())
+  dateMaj              DateTime        @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
   /// Identifiant unique (uid) du rapporteur.
@@ -303,6 +316,7 @@ model Rapporteur {
 model EtudePlf {
   /// Identifiant unique.
   uid                 String       @id
+  dateMaj             DateTime     @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset             Int
   /// Nom de la mission de l'état à laquelle se rapporte l'étude.
@@ -334,6 +348,7 @@ model EtudePlf {
 model VoteActeLegislatif {
   /// Identifiant unique.
   id                   Int             @id @default(autoincrement())
+  dateMaj              DateTime        @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset              Int
   voteRefUid           String?
@@ -346,26 +361,9 @@ model VoteActeLegislatif {
   @@index([voteRefUid])
 }
 
-model TexteAssocie {
-  /// Identifiant unique.
-  id                   Int             @id @default(autoincrement())
-  /// Jeu de données de provenance (numéro de législature)
-  dataset              Int
-  /// Identifiant unique du texte adopté.
-  texteAssocieRefUid   String?
-  /// BTA pour Bibard du Texte Adopté ou TAP pour Texte Adopté Provisoire.
-  typeTexte            String?
-  acteLegislatifRefUid String?
-  acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
-  texteAssocieRef      Document?       @relation(fields: [texteAssocieRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-
-  @@index([dataset])
-  @@index([acteLegislatifRefUid])
-  @@index([texteAssocieRefUid])
-}
-
 model DossierThemes {
   uid             String   @id
+  dateMaj         DateTime @default(now()) @updatedAt
   dossierRefUid   String
   dossierRef      Dossier  @relation(fields: [dossierRefUid], references: [uid])
   labels          String[]

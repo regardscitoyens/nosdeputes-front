@@ -54,27 +54,27 @@ export default function FloatingIcons() {
         limit="md"
       />
       <Icon
-        radius={14}
+        radius={20}
         sx={{ top: 497, left: `${100 * (362 / MAX_WIDTH)}%` }}
-        emoji="🚍"
+        emoji="👮‍♂️"
         limit="xs"
       />
       <Icon
         radius={21}
         sx={{ top: 182, left: `${100 * (250 / MAX_WIDTH)}%` }}
-        emoji="🌱"
+        emoji="🏛️"
         limit="md"
       />
       <Icon
         radius={27}
         sx={{ top: 335, left: `${100 * (132 / MAX_WIDTH)}%` }}
-        emoji="🇫🇷"
+        emoji="👨‍🏫"
         limit="md"
       />
       <Icon
         radius={26}
         sx={{ top: 538, left: `${100 * (721 / MAX_WIDTH)}%` }}
-        emoji="💰"
+        emoji="⚖️"
         limit="xs"
       />
       <Icon
@@ -92,7 +92,7 @@ export default function FloatingIcons() {
       <Icon
         radius={32}
         sx={{ top: 145, left: `${100 * (989 / MAX_WIDTH)}%` }}
-        emoji="🇫🇷"
+        emoji="🏥"
         limit="md"
       />
     </React.Fragment>

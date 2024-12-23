@@ -11,20 +11,21 @@ import Link from "next/link";
 import StatusChip from "@/components/StatusChip";
 
 type DossierCardProps = {
-  titre: string;
-  status: string; //TODO: use an enum when the type of status will be clear
+  href: string;
+  titre: null | string;
+  status: null | string; //TODO: use an enum when the type of status will be clear
   thematique: string; // TODO: use an enum latter
   interventions: number;
   amendements: number;
 };
 const DossierCard = (props: DossierCardProps) => {
-  const { titre, status, thematique, interventions, amendements } = props;
+  const { titre, status, href, thematique, interventions, amendements } = props;
 
   return (
     <Card variant="outlined" sx={{ borderRadius: 1.25 }}>
       <CardActionArea
         component={Link}
-        href="/dossiers/dossier"
+        href={href}
         sx={{
           p: 3,
           display: "flex",
@@ -61,8 +62,8 @@ const DossierCard = (props: DossierCardProps) => {
         </Box>
 
         <Stack direction="row" spacing={2}>
-          <StatusChip size="small" status="review" label={status} />
-          <LabelChip size="small" label={thematique} />
+          {status && <StatusChip size="small" status="review" label={status} />}
+          {thematique && <LabelChip size="small" label={thematique} />}
         </Stack>
       </CardActionArea>
     </Card>
