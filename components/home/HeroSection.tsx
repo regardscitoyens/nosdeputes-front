@@ -51,7 +51,7 @@ const HeroSection = () => {
           component="p"
         >
           NosDéputés met en valeur l&apos;activité parlementaire des députés de
-          l&apos;Assemblée nationale Française. en synthétisant les différentes
+          l&apos;Assemblée nationale Française en synthétisant les différentes
           activités législatives et de contrôle du gouvernement des élus de la
           nation.
         </Typography>
