@@ -58,7 +58,8 @@ const HeroSection = () => {
 
         <SearchBar />
       </Box>
-      <div>
+      {/* Desactivé tant que l'on a pas la carte des circos */}
+      {/* <div>
         <Image
           src="/FranceMapIcon.png"
           alt=""
@@ -73,7 +74,7 @@ const HeroSection = () => {
         >
           Ou consultez la carte des circonscriptions
         </Typography>
-      </div>
+      </div> */}
     </Box>
   );
 };
