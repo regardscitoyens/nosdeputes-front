@@ -152,6 +152,16 @@
           "default": 0,
           "description": "Nombre de questions pour cet acteur."
         },
+        "nombreMandats": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de mandats pour cet acteur."
+        },
+        "nombreDocumentsPublies": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de documents publiés pour cet acteur."
+        },
         "groupeParlementaire": {
           "anyOf": [
             {
@@ -722,6 +732,14 @@
           ],
           "default": 0,
           "description": "Nombre de participants à la réunion"
+        },
+        "nombrePresents": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0,
+          "description": "Nombre de participants présents à la réunion"
         },
         "contientAudition": {
           "type": "boolean",
@@ -2397,12 +2415,19 @@
           ],
           "description": "Le contenu de ce champ n'est pas défini."
         },
-        "exposeMotifs": {
+        "exposeMotifsHtml": {
           "type": [
             "string",
             "null"
           ],
-          "description": "L'exposé des motifs du document (si présent)"
+          "description": "L'exposé des motifs du document au format HTML (si présent)."
+        },
+        "exposeMotifsTexte": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document au format texte (si présent)."
         },
         "pdfUrl": {
           "type": [
@@ -3082,6 +3107,20 @@
           "items": {
             "$ref": "#/definitions/DossierThemes"
           }
+        },
+        "exposeMotifsHtml": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document au format HTML (si présent)."
+        },
+        "exposeMotifsTexte": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document au format texte (si présent)."
         },
         "scrutins": {
           "type": "array",
@@ -4651,13 +4690,23 @@
           "enum": [
             "QE",
             "QG",
-            "QOSD"
+            "QOSD",
+            "QOAD",
+            "QOAE",
+            "QC"
           ]
         },
         "codeCloture": {
           "type": [
             "string",
             "null"
+          ],
+          "enum": [
+            "DE",
+            "REP_PUB",
+            "AU",
+            "FM",
+            "ID"
           ]
         },
         "libelleCloture": {
@@ -4688,6 +4737,13 @@
           ],
           "format": "date-time"
         },
+        "titre": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Titre de la question"
+        },
         "texteQuestion": {
           "type": [
             "string",
@@ -4714,13 +4770,6 @@
             "null"
           ]
         },
-        "titre": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Titre de la question"
-        },
         "acteurRef": {
           "$ref": "#/definitions/Acteur"
         },
@@ -4728,7 +4777,14 @@
           "$ref": "#/definitions/Organe"
         },
         "mandatRef": {
-          "$ref": "#/definitions/Mandat"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Mandat"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "minIntRef": {
           "anyOf": [
@@ -5414,12 +5470,9 @@
         "type": {
           "type": "string",
           "enum": [
-            "acteurs",
-            "amendements",
-            "interventions",
-            "organes",
-            "questions",
-            "textes"
+            "ACTEUR",
+            "COMPER",
+            "GPE"
           ],
           "description": "L'activité mesurée"
         }

@@ -55,8 +55,8 @@ model SommaireDebat {
 }
 
 model Paragraphe {
-  id                Int                      @id @default(autoincrement())
-  dateMaj           DateTime                 @default(now()) @updatedAt
+  id                Int                          @id @default(autoincrement())
+  dateMaj           DateTime                     @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   /// Chambre de provenance (AN, SN ou CG)
@@ -92,13 +92,14 @@ model Paragraphe {
   dossierRefUid     String?
   texteRefUid       String?
   pointOdjRefUid    String?
-  vecteurRecherche  Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
-  acteurRef         Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
-  mandatRef         Mandat?                  @relation(fields: [mandatRefUid], references: [uid])
-  debatRef          Debat                    @relation(fields: [debatRefUid], references: [uid])
-  dossierRef        Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
-  texteRef          Document?                @relation(fields: [texteRefUid], references: [uid])
-  pointOdjRef       PointOdj?                @relation(fields: [pointOdjRefUid], references: [uid])
+  vecteurRecherche  Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(texte, ''::text))::character varying))"))
+  embedding         Unsupported("vector(1536)")?
+  acteurRef         Acteur?                      @relation(fields: [acteurRefUid], references: [uid])
+  mandatRef         Mandat?                      @relation(fields: [mandatRefUid], references: [uid])
+  debatRef          Debat                        @relation(fields: [debatRefUid], references: [uid])
+  dossierRef        Dossier?                     @relation(fields: [dossierRefUid], references: [uid])
+  texteRef          Document?                    @relation(fields: [texteRefUid], references: [uid])
+  pointOdjRef       PointOdj?                    @relation(fields: [pointOdjRefUid], references: [uid])
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)

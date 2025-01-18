@@ -1,5 +1,5 @@
 model Document {
-  dateMaj                  DateTime                 @default(now()) @updatedAt
+  dateMaj                  DateTime                     @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
   /// Chambre parente du document (AN, SN, ou CG)
@@ -11,7 +11,7 @@ model Document {
   /// Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu.
   titrePrincipalCourt      String
   /// Identifiant unique du document.
-  uid                      String                   @id
+  uid                      String                       @id
   /// Code unique pour traitement automatisé.
   classeCode               String
   /// Signification du code.
@@ -62,24 +62,27 @@ model Document {
   numNotice                String?
   /// Le contenu de ce champ n'est pas défini.
   provenance               String?
-  /// L'exposé des motifs du document (si présent)
-  exposeMotifs             String?
+  /// L'exposé des motifs du document au format HTML (si présent).
+  exposeMotifsHtml         String?
+  /// L'exposé des motifs du document au format texte (si présent).
+  exposeMotifsTexte        String?
   /// URL of the PDF of this document.
   pdfUrl                   String?
   xsiType                  String
   /// Identifiant de l'auteur principal du document
   auteurPrincipalUid       String?
-  documentParentRefUid     String?                  @unique
+  documentParentRefUid     String?                      @unique
   /// Identifiant du dossier législatif lié
   dossierRefUid            String?
   /// Identifiant de l'organe référent ou de l'organe auteur
   organeRefUid             String?
-  vecteurRecherche         Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"titrePrincipalCourt\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"numNotice\", ''::text))::character varying)))"))
-  auteurPrincipal          Acteur?                  @relation(fields: [auteurPrincipalUid], references: [uid])
-  dossierRef               Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
-  organeRef                Organe?                  @relation(fields: [organeRefUid], references: [uid])
-  documentParentRef        Document?                @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-  sousDocuments            Document?                @relation("DocumentParentRef")
+  vecteurRecherche         Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"titrePrincipalCourt\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"numNotice\", ''::text))::character varying)))"))
+  embedding                Unsupported("vector(1536)")?
+  auteurPrincipal          Acteur?                      @relation(fields: [auteurPrincipalUid], references: [uid])
+  dossierRef               Dossier?                     @relation(fields: [dossierRefUid], references: [uid])
+  organeRef                Organe?                      @relation(fields: [organeRefUid], references: [uid])
+  documentParentRef        Document?                    @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  sousDocuments            Document?                    @relation("DocumentParentRef")
   scrutins                 Scrutin[]
   amendements              Amendement[]
   amendementsCommission    AmendementCommission[]
@@ -178,37 +181,37 @@ model AmendementCommission {
 
 model Subdivision {
   /// Identifiant unique.
-  hash           String    @id
+  hash              String    @id
   /// Jeu de données de provenance (numéro de législature)
-  dataset        Int
+  dataset           Int
   /// Identifiant unique (uid) du document.
-  documentRefUid String?
-  documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
+  documentRefUid    String?
+  documentRef       Document? @relation(fields: [documentRefUid], references: [uid])
   /// Type de division.
-  type           String?
+  type              String?
   /// Identifiant de la division.
-  identifiant    String?
+  identifiant       String?
   /// Titre de la division.
-  titre          String?
+  titre             String?
   /// Sous-titre de la division.
-  sousTitre      String?
+  sousTitre         String?
   /// Titre de la division en format HTML.
-  titreHtml      String?
+  titreHtml         String?
   /// Sous-titre de la division en format HTML.
-  sousTitreHtml  String?
+  sousTitreHtml     String?
   /// Identifiant de la division parente.
-  parent         String?
+  parent            String?
   /// Niveau de la subdivision
-  niveau         Int?
+  niveau            Int?
   /// Ordre de la division dans le document.
-  sequence       Int?
-
+  sequence          Int?
   /// Le nombre d'amendements liés à cette subdivision.
-  nombreAmendements Int @default(0)
+  nombreAmendements Int       @default(0)
 
-  alineas  Alinea[]
-  scrutins Scrutin[]
+  embedding Unsupported("vector(1536)")?
 
+  alineas     Alinea[]
+  scrutins    Scrutin[]
   /// Amendements liés à cette subdivision.
   amendements Amendement[]
 

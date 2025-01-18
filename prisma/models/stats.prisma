@@ -50,20 +50,11 @@ model Stats {
 
 enum StatsType {
   /// Stats pour les acteurs.
-  acteurs
+  ACTEUR
 
-  /// Stats pour les amendements.
-  amendements
+  /// Stats pour les commissions.
+  COMPER
 
-  /// Stats pour les interventions.
-  interventions
-
-  /// Stats pour les organes.
-  organes
-
-  /// Stats pour les questions.
-  questions
-
-  /// Stats pour les textes.
-  textes
+  /// Stats pour les groupes politiques.
+  GPE
 }
