@@ -7,9 +7,9 @@ model Acteur {
   /// Jeu de données de provenance (numéro de législature)
   dataset                      Int
   /// Prénom.
-  prenom                       String
+  prenom                       String                       @db.Citext
   /// Nom.
-  nom                          String
+  nom                          String                       @db.Citext
   /// Civilité.                   
   civ                          String
   /// Date de naissance.
@@ -54,6 +54,10 @@ model Acteur {
   nombreInterventions          Int                          @default(0)
   /// Nombre de questions pour cet acteur.
   nombreQuestions              Int                          @default(0)
+  /// Nombre de mandats pour cet acteur.
+  nombreMandats                Int                          @default(0)
+  /// Nombre de documents publiés pour cet acteur.
+  nombreDocumentsPublies       Int                          @default(0)
   groupeParlementaire          Organe?                      @relation("Acteur_GroupeParlementaire", fields: [groupeParlementaireUid], references: [uid])
   mandatPrincipal              Mandat?                      @relation("Acteur_MandatPrincipal", fields: [mandatPrincipalUid], references: [uid])
   circonscription              Organe?                      @relation("Acteur_Circonscription", fields: [circonscriptionUid], references: [uid])
@@ -86,7 +90,7 @@ model Acteur {
   interventions                Paragraphe[]
   /// Les dossiers de cet acteur.
   dossiers                     Dossier[]
-  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
+  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('simple'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
 
   /// Statistiques d'activité agrégé par semaine.
   statistiquesHebdomadaire StatistiqueHebdomadaire[]

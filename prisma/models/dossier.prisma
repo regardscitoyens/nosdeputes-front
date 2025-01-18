@@ -46,20 +46,21 @@ model Dossier {
   /// Organe à l'initiative du dossier.
   organeRefUid           String?
   /// Identifiant de la commission référente à l'Assemblée Nationale.
-  commissionANRefUid       String?
+  commissionANRefUid     String?
   /// Identifiant de la commission référente au Sénat.
-  commissionSNRefUid       String?
+  commissionSNRefUid     String?
   /// Identifiant unique (uid) de l'acteur.
   acteurPrincipalRefUid  String?
 
-  vecteurRecherche    Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
+  vecteurRecherche    Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
+  embedding           Unsupported("vector(1536)")?
   /// Référence vers l'acteur principal.
-  acteurPrincipalRef  Acteur?                  @relation(fields: [acteurPrincipalRefUid], references: [uid])
-  dossierAbsorbantRef Dossier?                 @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-  dossierAbsorbrant   Dossier?                 @relation("DossierAbsorbant")
-  organeRef           Organe?                  @relation("OrganeMission", fields: [organeRefUid], references: [uid])
-  commissionANRef     Organe?                  @relation("OrganeANCommission", fields: [commissionANRefUid], references: [uid])
-  commissionSNRef     Organe?                  @relation("OrganeSNCommission", fields: [commissionSNRefUid], references: [uid])
+  acteurPrincipalRef  Acteur?                      @relation(fields: [acteurPrincipalRefUid], references: [uid])
+  dossierAbsorbantRef Dossier?                     @relation("DossierAbsorbant", fields: [dossierAbsorbantRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  dossierAbsorbrant   Dossier?                     @relation("DossierAbsorbant")
+  organeRef           Organe?                      @relation("OrganeMission", fields: [organeRefUid], references: [uid])
+  commissionANRef     Organe?                      @relation("OrganeANCommission", fields: [commissionANRefUid], references: [uid])
+  commissionSNRef     Organe?                      @relation("OrganeSNCommission", fields: [commissionSNRefUid], references: [uid])
   plf                 EtudePlf[]
   initiateurs         InitiateurDossier[]
   actesLegislatifs    ActeLegislatif[]
@@ -69,6 +70,11 @@ model Dossier {
   paragraphes         Paragraphe[]
   // themes
   themes              DossierThemes[]
+
+  /// L'exposé des motifs du document au format HTML (si présent).
+  exposeMotifsHtml  String?
+  /// L'exposé des motifs du document au format texte (si présent).
+  exposeMotifsTexte String?
 
   /// Tous les scrutins d'un Dossier.
   scrutins Scrutin[]
