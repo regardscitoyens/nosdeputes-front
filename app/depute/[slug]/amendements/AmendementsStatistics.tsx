@@ -1,5 +1,6 @@
 import React from "react";
 import { prisma } from "@/prisma";
+import Box from "@mui/material/Box";
 
 async function getDeputeAmendementStatsUnCached(uid: string) {
   try {
@@ -81,23 +82,30 @@ export async function AmendementsStatistics({
     {}
   );
   return (
-    <table>
+    <Box
+      component="table"
+      sx={{
+        "td:nth-of-type(1)": { textAlign: "right" },
+        "td:nth-of-type(2)": { textAlign: "center" },
+        "td:nth-of-type(3)": { textAlign: "left" },
+      }}
+    >
       <thead>
         <tr>
-          <td>Etat</td>
           <td>proposés</td>
+          <td />
           <td>signés</td>
         </tr>
       </thead>
       <tbody>
         {[...sorts, ...etats].map((state) => (
           <tr key={state}>
-            <td>{state}</td>
             <td>{nbPropose[state] ?? 0}</td>
+            <td>{state}</td>
             <td>{nbCoSigne[state] ?? 0}</td>
           </tr>
         ))}
       </tbody>
-    </table>
+    </Box>
   );
 }
