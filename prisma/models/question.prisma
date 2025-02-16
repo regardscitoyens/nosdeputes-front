@@ -1,45 +1,51 @@
 /// Questions écrites ou question au gouvernement posées par les députés.
 model Question {
   /// Identifiant unique.
-  uid              String                   @id
-  dateMaj          DateTime                 @default(now()) @updatedAt
+  uid                  String                       @id
+  dateMaj              DateTime                     @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
-  dataset          Int
-  legislature      String
+  dataset              Int
+  legislature          String
   /// Chambre de provenance (AN, SN ou CG)
-  chambre          String?
-  numero           String
-  regime           String
-  rubrique         String?
-  type             QuestionType
+  chambre              String?
+  regime               String
+  /// Numéro de la question
+  numero               String
+  /// Rubrique de la question
+  rubrique             String?
+  type                 QuestionType
   /// Identifiant unique de l'auteur de la question.
-  acteurRefUid     String
+  acteurRefUid         String
   /// Identifiant unique du mandat de l'auteur.
-  mandatRefUid     String
+  mandatRefUid         String?
   /// Identifiant unique du groupe politique de l'auteur
-  groupeRefUid     String
-
+  groupeRefUid         String
   /// Identifiant unique du ministère interrogé.
-  minIntRefUid     String?
-  codeCloture      String?
-  libelleCloture   String?
+  minIntRefUid         String?
+  codeCloture          ClotureCode?
+  libelleCloture       String?
   /// Date de dépôt de la question
-  dateDepot        DateTime?
-  dateCloture      DateTime?
-  dateDepotSignal  DateTime?
-  /// Contenu texte de la question.
-  texteQuestion    String?
-  /// Contenu texte de la réponse à la question
-  texteReponse     String?
-  erratumQuestion  String?
-  erratumReponse   String?
-  vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
+  dateDepot            DateTime?
+  dateCloture          DateTime?
+  dateDepotSignal      DateTime?
   /// Titre de la question
-  titre            String?
-  acteurRef        Acteur                   @relation(fields: [acteurRefUid], references: [uid])
-  groupeRef        Organe                   @relation("Question_Groupe", fields: [groupeRefUid], references: [uid])
-  mandatRef        Mandat                   @relation(fields: [mandatRefUid], references: [uid])
-  minIntRef        Organe?                  @relation("Question_MinInt", fields: [minIntRefUid], references: [uid])
+  titre                String?
+  /// Contenu texte de la question.
+  texteQuestion        String?
+  /// Contenu texte de la réponse à la question
+  texteReponse         String?
+  /// Contenu nettoyé de la question (sans balises HTML).
+  texteQuestionNettoye String?
+  /// Contenu nettoyé de la réponse (sans balises HTML).
+  texteReponseNettoye  String?
+  erratumQuestion      String?
+  erratumReponse       String?
+  vecteurRecherche     Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
+  embedding            Unsupported("vector(1536)")?
+  acteurRef            Acteur                       @relation(fields: [acteurRefUid], references: [uid])
+  groupeRef            Organe                       @relation("Question_Groupe", fields: [groupeRefUid], references: [uid])
+  mandatRef            Mandat?                      @relation(fields: [mandatRefUid], references: [uid])
+  minIntRef            Organe?                      @relation("Question_MinInt", fields: [minIntRefUid], references: [uid])
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
@@ -48,15 +54,33 @@ model Question {
   @@index([mandatRefUid])
   @@index([minIntRefUid])
   @@index([dateDepot])
+  @@index([embedding])
 }
 
 enum QuestionType {
   /// Question écrite
   QE
-
   /// Question au Gouvernement
   QG
-
   /// Question orale sans débat
   QOSD
+  /// Question orale avec débat
+  QOAD
+  /// Question orale européennes
+  QOAE
+  /// Question crible
+  QC
+}
+
+enum ClotureCode {
+  /// Déposée
+  DE
+  /// Réponse reçue
+  REP_PUB
+  /// Retirée
+  AU
+  /// Caduque
+  FM
+  /// Transformée
+  ID
 }

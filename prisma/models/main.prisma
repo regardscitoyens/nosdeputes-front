@@ -12,6 +12,6 @@ generator jsonSchema {
 datasource db {
   provider     = "postgresql"
   url          = env("TRICOTEUSES_ASSEMBLEE_API_DB_URL")
-  extensions   = [unaccent]
+  extensions   = [citext, unaccent, vector]
   relationMode = "prisma"
 }

@@ -111,35 +111,38 @@ model Amendement {
   dispositifHtml                   String?
   /// Nombre de co-signataires
   nombreCoSignataires              Int       @default(0)
+  /// Identifiant de l'organe qui examine l'amendement
+  organeRefUid                     String?
   /// Identifiant du dossier de loi lié à l'amendement
   dossierRefUid                    String?
   /// Identifiant unique du texte législatif (document) visé par l'amendement.
   texteLegislatifRefUid            String?
   /// Identifiant du scrutin lié à l'amendement
   scrutinRefUid                    String?   @unique
-
   /// Identifiant (string) de référence de l'article modifié par cet amendement.
-  subdivisionRefHash String?
+  subdivisionRefHash               String?
 
-  vecteurRecherche Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
-
-  texteLegislatifRef        Document?                @relation(fields: [texteLegislatifRefUid], references: [uid])
-  dossierRef                Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
-  acteurRef                 Acteur?                  @relation(fields: [acteurRefUid], references: [uid])
-  scrutinRef                Scrutin?                 @relation(fields: [scrutinRefUid], references: [uid])
-  amendementParentRef       Amendement?              @relation("amendementParentRef", fields: [amendementParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
-  sousAmendements           Amendement[]             @relation("amendementParentRef")
-  auteurRapporteurOrganeRef Organe?                  @relation("Amendement_Organe", fields: [auteurRapporteurOrganeRefUid], references: [uid])
-  gouvernementOrganeRef     Organe?                  @relation("Amendement_Gouvernement", fields: [gouvernementOrganeRefUid], references: [uid])
-  groupePolitiqueRef        Organe?                  @relation("Amendement_GroupePolitique", fields: [groupePolitiqueRefUid], references: [uid])
-  seanceRef                 Agenda?                  @relation(fields: [seanceRefUid], references: [uid])
+  vecteurRecherche          Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
+  embedding                 Unsupported("vector(1536)")?
+  organeRef                 Organe?                      @relation("Amendement_Organe", fields: [organeRefUid], references: [uid])
+  texteLegislatifRef        Document?                    @relation(fields: [texteLegislatifRefUid], references: [uid])
+  dossierRef                Dossier?                     @relation(fields: [dossierRefUid], references: [uid])
+  acteurRef                 Acteur?                      @relation(fields: [acteurRefUid], references: [uid])
+  scrutinRef                Scrutin?                     @relation(fields: [scrutinRefUid], references: [uid])
+  amendementParentRef       Amendement?                  @relation("amendementParentRef", fields: [amendementParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
+  sousAmendements           Amendement[]                 @relation("amendementParentRef")
+  auteurRapporteurOrganeRef Organe?                      @relation("Amendement_Organe_Rapporteur", fields: [auteurRapporteurOrganeRefUid], references: [uid])
+  gouvernementOrganeRef     Organe?                      @relation("Amendement_Gouvernement", fields: [gouvernementOrganeRefUid], references: [uid])
+  groupePolitiqueRef        Organe?                      @relation("Amendement_GroupePolitique", fields: [groupePolitiqueRefUid], references: [uid])
+  seanceRef                 Agenda?                      @relation(fields: [seanceRefUid], references: [uid])
   coSignataires             CoSignataireAmendement[]
-  subdivisionRef            Subdivision?             @relation(fields: [subdivisionRefHash], references: [hash])
+  subdivisionRef            Subdivision?                 @relation(fields: [subdivisionRefHash], references: [hash])
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
   @@index([acteurRefUid])
   @@index([seanceRefUid])
+  @@index([organeRefUid])
   @@index([scrutinRefUid])
   @@index([dossierRefUid])
   @@index([texteLegislatifRefUid])
@@ -149,6 +152,7 @@ model Amendement {
   @@index([groupePolitiqueRefUid])
   @@index([dateDepot])
   @@index([subdivisionRefHash])
+  @@index([embedding])
 }
 
 model CoSignataireAmendement {

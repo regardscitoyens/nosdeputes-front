@@ -60,6 +60,8 @@ model Agenda {
   resumeOdj                   String[]
   /// Nombre de participants à la réunion
   nombreParticipants          Int?      @default(0)
+  /// Nombre de participants présents à la réunion
+  nombrePresents              Int?      @default(0)
   organeReunionRefUid         String?
   /// Organes à l'initiative de la réunion.
   organeDemandeurRefUid       String?
@@ -67,6 +69,7 @@ model Agenda {
   contientAudition            Boolean   @default(false)
 
   vecteurRecherche      Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
+  embedding             Unsupported("vector(1536)")?
   compteRenduRef        Debat?                       @relation(fields: [compteRenduRefUid], references: [uid])
   organeDemandeurRef    Organe?                      @relation("OrganeDemandeur", fields: [organeDemandeurRefUid], references: [uid])
   organeReunionRef      Organe?                      @relation("OrganeReunion", fields: [organeReunionRefUid], references: [uid])
@@ -84,6 +87,7 @@ model Agenda {
   @@index([organeReunionRefUid])
   @@index([compteRenduRefUid])
   @@index([dateSeance])
+  @@index([embedding])
 }
 
 /// Point de l'ordre du jour.

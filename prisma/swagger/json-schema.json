@@ -108,7 +108,7 @@
             "null"
           ],
           "default": false,
-          "description": "Deputé en poste actuellement."
+          "description": "Acteur en poste actuellement."
         },
         "placeHemicycle": {
           "type": [
@@ -129,7 +129,7 @@
             "string",
             "null"
           ],
-          "description": "Chambre du parlementaire (assemblée ou sénat)"
+          "description": "Chambre du parlementaire (Assemblée ou Sénat)"
         },
         "compteTwitter": {
           "type": [
@@ -151,6 +151,16 @@
           "type": "integer",
           "default": 0,
           "description": "Nombre de questions pour cet acteur."
+        },
+        "nombreMandats": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de mandats pour cet acteur."
+        },
+        "nombreDocumentsPublies": {
+          "type": "integer",
+          "default": 0,
+          "description": "Nombre de documents publiés pour cet acteur."
         },
         "groupeParlementaire": {
           "anyOf": [
@@ -238,7 +248,7 @@
         "auteurs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Auteur"
+            "$ref": "#/definitions/AuteurDocument"
           }
         },
         "auteursMotion": {
@@ -722,6 +732,14 @@
           ],
           "default": 0,
           "description": "Nombre de participants à la réunion"
+        },
+        "nombrePresents": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0,
+          "description": "Nombre de participants présents à la réunion"
         },
         "contientAudition": {
           "type": "boolean",
@@ -1555,6 +1573,16 @@
           "default": 0,
           "description": "Nombre de co-signataires"
         },
+        "organeRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Organe"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "texteLegislatifRef": {
           "anyOf": [
             {
@@ -1844,7 +1872,8 @@
             "string",
             "null"
           ],
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Date du débat"
         },
         "dateSeanceJour": {
           "type": "string"
@@ -2076,6 +2105,9 @@
             "null"
           ]
         },
+        "estPresident": {
+          "type": "boolean"
+        },
         "sommaire": {
           "type": [
             "string",
@@ -2182,6 +2214,10 @@
     "Document": {
       "type": "object",
       "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Identifiant unique du document."
+        },
         "dateMaj": {
           "type": "string",
           "format": "date-time"
@@ -2211,10 +2247,6 @@
         "titrePrincipalCourt": {
           "type": "string",
           "description": "Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu."
-        },
-        "uid": {
-          "type": "string",
-          "description": "Identifiant unique du document."
         },
         "classeCode": {
           "type": "string",
@@ -2397,12 +2429,19 @@
           ],
           "description": "Le contenu de ce champ n'est pas défini."
         },
-        "exposeMotifs": {
+        "exposeMotifsHtml": {
           "type": [
             "string",
             "null"
           ],
-          "description": "L'exposé des motifs du document (si présent)"
+          "description": "L'exposé des motifs du document au format HTML (si présent)."
+        },
+        "exposeMotifsTexte": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document au format texte (si présent)."
         },
         "pdfUrl": {
           "type": [
@@ -2474,13 +2513,15 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Amendement"
-          }
+          },
+          "description": "Amendements liés au document"
         },
-        "amendementsCommission": {
+        "organesAmendements": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AmendementCommission"
-          }
+            "$ref": "#/definitions/OrganeDocumentAmendement"
+          },
+          "description": "Organes qui peuvent amender le document"
         },
         "actesLegislatifs": {
           "type": "array",
@@ -2491,7 +2532,7 @@
         "auteurs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Auteur"
+            "$ref": "#/definitions/AuteurDocument"
           }
         },
         "coSignataires": {
@@ -2526,7 +2567,7 @@
         }
       }
     },
-    "Auteur": {
+    "AuteurDocument": {
       "type": "object",
       "properties": {
         "id": {
@@ -2654,7 +2695,7 @@
         }
       }
     },
-    "AmendementCommission": {
+    "OrganeDocumentAmendement": {
       "type": "object",
       "properties": {
         "id": {
@@ -2708,16 +2749,6 @@
         "dataset": {
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
-        },
-        "documentRef": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Document"
-            },
-            {
-              "type": "null"
-            }
-          ]
         },
         "type": {
           "type": [
@@ -2786,6 +2817,16 @@
           "type": "integer",
           "default": 0,
           "description": "Le nombre d'amendements liés à cette subdivision."
+        },
+        "documentRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "alineas": {
           "type": "array",
@@ -2975,6 +3016,20 @@
           ],
           "description": "Le dossier parlementaire est lié à un autre. Si la cause est un 'Examen commun', les deux dossiers continuent d'évoluer indépendament. Par exemple une mission d'information peut être liée au dossier parlementaire qui représente le rapport produit par cette mission. Si la cause est 'Dossier absorbé', il devient obsolete et le dossier absorbant prend la suite. Par exemple, lorsqu'une loi ordinaire devient une loi organique, un nouveau dossier parlementaire est constitué, l'intégralité du dossier absorbé est copié dans le nouveau dossier."
         },
+        "exposeMotifsHtml": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document déposé au format HTML (si présent)."
+        },
+        "exposeMotifsTexte": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "L'exposé des motifs du document déposé au format texte (si présent)."
+        },
         "acteurPrincipalRef": {
           "anyOf": [
             {
@@ -3088,7 +3143,7 @@
           "items": {
             "$ref": "#/definitions/Scrutin"
           },
-          "description": "Tous les scrutins d'un Dossier."
+          "description": "Scrutins liés au dossier."
         }
       }
     },
@@ -3113,6 +3168,13 @@
             "null"
           ],
           "description": "Chambre parente du document (AN, SN, ou CG)"
+        },
+        "legislature": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Numéro de la législature."
         },
         "parentUid": {
           "type": [
@@ -3949,21 +4011,38 @@
         },
         "dateDebut": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Date de début du mandat"
         },
         "datePublication": {
           "type": [
             "string",
             "null"
           ],
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Date de publication du mandat"
         },
         "dateFin": {
           "type": [
             "string",
             "null"
           ],
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Date de fin du mandat"
+        },
+        "causeMandat": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cause de début du mandat"
+        },
+        "causeFin": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cause de fin du mandat"
         },
         "preseance": {
           "type": [
@@ -3972,7 +4051,8 @@
           ]
         },
         "nominPrincipale": {
-          "type": "string"
+          "type": "boolean",
+          "description": "Vrai si le mandat est la nomination principale (parce exemple, président d'un groupe)"
         },
         "codeQualite": {
           "type": [
@@ -3990,12 +4070,6 @@
           ]
         },
         "libelle": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "causeMandat": {
           "type": [
             "string",
             "null"
@@ -4045,12 +4119,6 @@
           "format": "date-time"
         },
         "premiereElection": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "causeFin": {
           "type": [
             "string",
             "null"
@@ -4477,7 +4545,14 @@
             "$ref": "#/definitions/Agenda"
           }
         },
-        "amendementsOrgane": {
+        "amendements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amendement"
+          },
+          "description": "Amendements examninés par l'organe"
+        },
+        "amendementsRapporteurOrgane": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Amendement"
@@ -4493,13 +4568,15 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Amendement"
-          }
+          },
+          "description": "Amendements liés à l'organe s'il s'agit d'un groupe politique"
         },
-        "amendementsCommission": {
+        "documentsAmendables": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AmendementCommission"
-          }
+            "$ref": "#/definitions/OrganeDocumentAmendement"
+          },
+          "description": "Documents qui peuvent être amendés par l'organe"
         },
         "mandats": {
           "type": "array",
@@ -4510,7 +4587,7 @@
         "auteurs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Auteur"
+            "$ref": "#/definitions/AuteurDocument"
           }
         },
         "coSignataires": {
@@ -4634,30 +4711,42 @@
           ],
           "description": "Chambre de provenance (AN, SN ou CG)"
         },
-        "numero": {
-          "type": "string"
-        },
         "regime": {
           "type": "string"
+        },
+        "numero": {
+          "type": "string",
+          "description": "Numéro de la question"
         },
         "rubrique": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Rubrique de la question"
         },
         "type": {
           "type": "string",
           "enum": [
             "QE",
             "QG",
-            "QOSD"
+            "QOSD",
+            "QOAD",
+            "QOAE",
+            "QC"
           ]
         },
         "codeCloture": {
           "type": [
             "string",
             "null"
+          ],
+          "enum": [
+            "DE",
+            "REP_PUB",
+            "AU",
+            "FM",
+            "ID"
           ]
         },
         "libelleCloture": {
@@ -4688,6 +4777,13 @@
           ],
           "format": "date-time"
         },
+        "titre": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Titre de la question"
+        },
         "texteQuestion": {
           "type": [
             "string",
@@ -4702,6 +4798,20 @@
           ],
           "description": "Contenu texte de la réponse à la question"
         },
+        "texteQuestionNettoye": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Contenu nettoyé de la question (sans balises HTML)."
+        },
+        "texteReponseNettoye": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Contenu nettoyé de la réponse (sans balises HTML)."
+        },
         "erratumQuestion": {
           "type": [
             "string",
@@ -4714,13 +4824,6 @@
             "null"
           ]
         },
-        "titre": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Titre de la question"
-        },
         "acteurRef": {
           "$ref": "#/definitions/Acteur"
         },
@@ -4728,7 +4831,14 @@
           "$ref": "#/definitions/Organe"
         },
         "mandatRef": {
-          "$ref": "#/definitions/Mandat"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Mandat"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "minIntRef": {
           "anyOf": [
@@ -5339,9 +5449,33 @@
     "Stats": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifiant unique"
+        },
         "chambre": {
           "type": "string",
           "description": "Chambre du parlementaire (e.g.: AN = assemblée, SN = sénat)"
+        },
+        "legislature": {
+          "type": "string",
+          "description": "Législature de ces statistiques."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ACTEUR",
+            "COMPER",
+            "GPE"
+          ],
+          "description": "Objet de l'activité mesurée"
+        },
+        "mesure": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Mesure de l'activité"
         },
         "ecartMinMax": {
           "type": "integer",
@@ -5363,28 +5497,20 @@
           "default": 0,
           "description": "L'écart entre la moyenne minimum et la moyenne maximum."
         },
-        "id": {
-          "type": "string",
-          "description": "Id de ces statistiques."
-        },
-        "legislature": {
-          "type": "string",
-          "description": "La législature de ces statistiques."
-        },
         "maximum": {
           "type": "integer",
           "default": 0,
-          "description": "La valeur maximum."
+          "description": "La valeur maximum"
         },
         "minimum": {
           "type": "integer",
           "default": 0,
-          "description": "La valeur minimum."
+          "description": "La valeur minimum"
         },
         "moyenne": {
           "type": "integer",
           "default": 0,
-          "description": "La moyenne des valeurs de ces statistiques."
+          "description": "La moyenne des valeurs de ces statistiques"
         },
         "q20": {
           "type": "integer",
@@ -5410,18 +5536,6 @@
           "type": "integer",
           "default": 0,
           "description": "Le quantile a 100% (max)"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "acteurs",
-            "amendements",
-            "interventions",
-            "organes",
-            "questions",
-            "textes"
-          ],
-          "description": "L'activité mesurée"
         }
       }
     }
@@ -5479,14 +5593,14 @@
     "document": {
       "$ref": "#/definitions/Document"
     },
-    "auteur": {
-      "$ref": "#/definitions/Auteur"
+    "auteurDocument": {
+      "$ref": "#/definitions/AuteurDocument"
     },
     "coSignataireDocument": {
       "$ref": "#/definitions/CoSignataireDocument"
     },
-    "amendementCommission": {
-      "$ref": "#/definitions/AmendementCommission"
+    "organeDocumentAmendement": {
+      "$ref": "#/definitions/OrganeDocumentAmendement"
     },
     "subdivision": {
       "$ref": "#/definitions/Subdivision"

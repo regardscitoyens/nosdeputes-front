@@ -14,16 +14,23 @@ model Mandat {
   typeOrgane               String
   /// Vrai si le mandat est en cours
   actif                    Boolean?
+  /// Date de début du mandat
   dateDebut                DateTime
+  /// Date de publication du mandat
   datePublication          DateTime?
+  /// Date de fin du mandat
   dateFin                  DateTime?
+  /// Cause de début du mandat
+  causeMandat              String?
+  /// Cause de fin du mandat
+  causeFin                 String?
   preseance                String?
-  nominPrincipale          String
+  /// Vrai si le mandat est la nomination principale (parce exemple, président d'un groupe)
+  nominPrincipale          Boolean
   codeQualite              String?
   libQualite               String
   libQualiteSex            String?
   libelle                  String?
-  causeMandat              String?
   refCirconscription       String?
   region                   String?
   regionType               String?
@@ -32,7 +39,6 @@ model Mandat {
   numCirco                 String?
   datePriseFonction        DateTime?
   premiereElection         String?
-  causeFin                 String?
   placeHemicycle           String?
   xsiType                  String?
   mandatRemplaceRefUid     String?                    @unique
