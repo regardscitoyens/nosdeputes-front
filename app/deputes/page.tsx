@@ -6,6 +6,9 @@ import Stack from "@mui/material/Stack";
 import { groupDeputes } from "./groupDeputes";
 import DeputesView from "./DeputesView";
 import { getDeputes } from "./getDeputes";
+import { FilterContainer } from "@/components/FilterContainer";
+import { Filter } from "./Filter";
+import DeputesFilter from "./DeputesFilter";
 
 export default async function DeputesList() {
   const deputes = await getDeputes("17");
@@ -25,20 +28,13 @@ export default async function DeputesList() {
         gap: 5,
       }}
     >
-      {/* <Stack spacing={3} useFlexGap flex={2}>
-        <FilterContainer>
-          //<Filter theme={searchParams.theme ?? ""} />
-        </FilterContainer>
-      </Stack> */}
-      <Stack spacing={3} flex={5}>
-        <DeputesView
-          deputes={deputes}
-          indexesPerNom={indexesPerNom}
-          indexesPerGroup={indexesPerGroup}
-          indexesPerCirco={indexesPerCirco}
-          groups={groups}
-        />
-      </Stack>
+      <DeputesFilter
+        deputes={deputes}
+        indexesPerNom={indexesPerNom}
+        indexesPerGroup={indexesPerGroup}
+        indexesPerCirco={indexesPerCirco}
+        groups={groups}
+      />
     </Container>
   );
 }

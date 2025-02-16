@@ -144,9 +144,11 @@ export default function DeputesView({
   indexesPerGroup,
   indexesPerNom,
   groups,
-}: { deputes: Awaited<ReturnType<typeof getDeputes>> } & ReturnType<
-  typeof groupDeputes
->) {
+  numeroDepartement,
+}: {
+  deputes: Awaited<ReturnType<typeof getDeputes>>;
+  numeroDepartement: string | null;
+} & ReturnType<typeof groupDeputes>) {
   const [grouping, setGrouping] = React.useState<
     "groupPolitique" | "alphabetique"
   >("groupPolitique");
@@ -167,6 +169,7 @@ export default function DeputesView({
       !depute.mandatPrincipal || depute.mandatPrincipal.dateFin !== null
   ).length;
 
+  const filterIsActive = !!search || numeroDepartement !== null;
   return (
     <Stack direction="column">
       <Typography variant="h3" component="h1" fontWeight="bold">
@@ -205,12 +208,19 @@ export default function DeputesView({
             .map((i) => deputes[i])
             .filter(({ nom, prenom, mandatPrincipal }) => {
               return (
-                !search ||
-                `${nom} ${prenom} ${mandatPrincipal?.departement ?? ""}`
-                  .toLowerCase()
-                  .includes(search.toLowerCase())
+                (!search ||
+                  `${nom} ${prenom} ${mandatPrincipal?.departement ?? ""}`
+                    .toLowerCase()
+                    .includes(search.toLowerCase())) &&
+                (numeroDepartement === null ||
+                  mandatPrincipal?.numDepartement === numeroDepartement)
               );
             });
+
+          if (filteredDeputes.length === 0) {
+            return null;
+          }
+
           return (
             <Accordion key={key} disableGutters elevation={0}>
               <AccordionHeader
