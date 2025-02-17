@@ -87,6 +87,7 @@ model Agenda {
   @@index([organeReunionRefUid])
   @@index([compteRenduRefUid])
   @@index([dateSeance])
+  @@index([embedding])
 }
 
 /// Point de l'ordre du jour.

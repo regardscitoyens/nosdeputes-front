@@ -31,11 +31,11 @@ model Acteur {
   slug                         String
   /// URL de la déclaration d'intérêt de l'acteur sur le site de la Haute Autorité pour la Transparence dans la Vie Publique.
   uriHatvp                     String?
-  /// Deputé en poste actuellement.
+  /// Acteur en poste actuellement.
   actif                        Boolean?                     @default(false)
-  /// Groupe parlementaire du député.
+  /// Groupe parlementaire de l'acteur, si présent.
   groupeParlementaireUid       String?
-  /// Mandat principal du député, c'est à dire s'il est actif ou non.
+  /// Mandat principal de l'acteur.
   mandatPrincipalUid           String?                      @unique
   /// Organe de circonscription
   circonscriptionUid           String?
@@ -45,7 +45,7 @@ model Acteur {
   commissionPermanenteRefUid   String?
   /// URL de l'image de l'acteur
   urlImage                     String?
-  /// Chambre du parlementaire (assemblée ou sénat)
+  /// Chambre du parlementaire (Assemblée ou Sénat)
   chambre                      String?
   compteTwitter                String?
   /// Nombre d'amendements pour cet acteur.
@@ -71,7 +71,7 @@ model Acteur {
   adressesPostales             AdressePostale[]
   amendements                  Amendement[]
   coSignataireAmendement       CoSignataireAmendement[]
-  auteurs                      Auteur[]
+  auteurs                      AuteurDocument[]
   auteursMotion                AuteurMotion[]
   coSignataireDocument         CoSignataireDocument[]
   documents                    Document[]
@@ -90,10 +90,9 @@ model Acteur {
   interventions                Paragraphe[]
   /// Les dossiers de cet acteur.
   dossiers                     Dossier[]
-  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('simple'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
-
   /// Statistiques d'activité agrégé par semaine.
-  statistiquesHebdomadaire StatistiqueHebdomadaire[]
+  statistiquesHebdomadaire     StatistiqueHebdomadaire[]
+  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('simple'::regconfig, ((immutable_unaccent((COALESCE((prenom)::text, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE((nom)::text, ''::text))::character varying)))"))
 
   @@unique([prenom, nom, dateNais])
   @@index([dataset])

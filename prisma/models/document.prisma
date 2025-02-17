@@ -1,4 +1,6 @@
 model Document {
+  /// Identifiant unique du document.
+  uid                      String                       @id
   dateMaj                  DateTime                     @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset                  Int
@@ -10,8 +12,6 @@ model Document {
   titrePrincipal           String
   /// Version abrégée du titre du document. Dans le cas d'un projet ou d'une proposition de loi il peut être ambigu.
   titrePrincipalCourt      String
-  /// Identifiant unique du document.
-  uid                      String                       @id
   /// Code unique pour traitement automatisé.
   classeCode               String
   /// Signification du code.
@@ -35,13 +35,13 @@ model Document {
   niveauCorrection         String?
   typeCorrection           String?
   /// Date de création du document.
-  dateCreation             DateTime?
+  dateCreation             DateTime?                    @db.Date
   /// Toujours identique à la date de création.
-  dateDepot                DateTime?
+  dateDepot                DateTime?                    @db.Date
   /// Le contenu de ce champ n'est pas défini.
-  datePublication          DateTime?
+  datePublication          DateTime?                    @db.Date
   /// Date de première publication sur http://assemblee-nationale.fr.
-  datePublicationWeb       DateTime?
+  datePublicationWeb       DateTime?                    @db.Date
   /// Le contenu de ce champ n'est pas défini.
   denominationStructurelle String
   /// Détermine si le texte est susceptible d'être amendé lors d'une séance publique. Vaut true si le texte peut être amendé, false sinon.
@@ -84,10 +84,12 @@ model Document {
   documentParentRef        Document?                    @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousDocuments            Document?                    @relation("DocumentParentRef")
   scrutins                 Scrutin[]
+  /// Amendements liés au document
   amendements              Amendement[]
-  amendementsCommission    AmendementCommission[]
+  /// Organes qui peuvent amender le document
+  organesAmendements       OrganeDocumentAmendement[]
   actesLegislatifs         ActeLegislatif[]
-  auteurs                  Auteur[]
+  auteurs                  AuteurDocument[]
   coSignataires            CoSignataireDocument[]
   etudesPlf                EtudePlf[]
   interventions            Paragraphe[]
@@ -101,9 +103,10 @@ model Document {
   @@index([organeRefUid])
   @@index([documentParentRefUid])
   @@index([dateCreation])
+  @@index([embedding])
 }
 
-model Auteur {
+model AuteurDocument {
   /// Identifiant unique.
   id             Int      @id @default(autoincrement())
   dateMaj        DateTime @default(now()) @updatedAt
@@ -159,16 +162,17 @@ model CoSignataireDocument {
   @@index([documentRefUid])
 }
 
-model AmendementCommission {
+/// Un organe qui peut amender un document
+model OrganeDocumentAmendement {
   /// Identifiant unique.
   id             Int       @id @default(autoincrement())
   dateMaj        DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset        Int
-  /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
-  organeRefUid   String?
   /// Toujours égal à true.
   amendable      Boolean?
+  /// Identifiant unique (uid) de l'organe
+  organeRefUid   String?
   /// Identifiant unique (uid) du document.
   documentRefUid String?
   documentRef    Document? @relation(fields: [documentRefUid], references: [uid])
@@ -181,12 +185,11 @@ model AmendementCommission {
 
 model Subdivision {
   /// Identifiant unique.
-  hash              String    @id
+  hash              String  @id
   /// Jeu de données de provenance (numéro de législature)
   dataset           Int
   /// Identifiant unique (uid) du document.
   documentRefUid    String?
-  documentRef       Document? @relation(fields: [documentRefUid], references: [uid])
   /// Type de division.
   type              String?
   /// Identifiant de la division.
@@ -206,10 +209,10 @@ model Subdivision {
   /// Ordre de la division dans le document.
   sequence          Int?
   /// Le nombre d'amendements liés à cette subdivision.
-  nombreAmendements Int       @default(0)
+  nombreAmendements Int     @default(0)
 
-  embedding Unsupported("vector(1536)")?
-
+  embedding   Unsupported("vector(1536)")?
+  documentRef Document?                    @relation(fields: [documentRefUid], references: [uid])
   alineas     Alinea[]
   scrutins    Scrutin[]
   /// Amendements liés à cette subdivision.
@@ -217,6 +220,22 @@ model Subdivision {
 
   @@index([dataset])
   @@index([documentRefUid])
+  @@index([embedding])
+}
+
+enum SubdivisionType {
+  Tome
+  Partie
+  Livre
+  Titre
+  SousTitre
+  Chapitre
+  Section
+  SousSection
+  Paragraphe
+  Article
+  ExposeMotifs
+  Annexe
 }
 
 /// Alinéa d'un texte de loi.

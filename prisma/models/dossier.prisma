@@ -51,6 +51,10 @@ model Dossier {
   commissionSNRefUid     String?
   /// Identifiant unique (uid) de l'acteur.
   acteurPrincipalRefUid  String?
+  /// L'exposé des motifs du document déposé au format HTML (si présent).
+  exposeMotifsHtml       String?
+  /// L'exposé des motifs du document déposé au format texte (si présent).
+  exposeMotifsTexte      String?
 
   vecteurRecherche    Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
   embedding           Unsupported("vector(1536)")?
@@ -70,14 +74,8 @@ model Dossier {
   paragraphes         Paragraphe[]
   // themes
   themes              DossierThemes[]
-
-  /// L'exposé des motifs du document au format HTML (si présent).
-  exposeMotifsHtml  String?
-  /// L'exposé des motifs du document au format texte (si présent).
-  exposeMotifsTexte String?
-
-  /// Tous les scrutins d'un Dossier.
-  scrutins Scrutin[]
+  /// Scrutins liés au dossier.
+  scrutins            Scrutin[]
 
   @@index([dataset])
   @@index([vecteurRecherche], type: Gin)
@@ -88,6 +86,7 @@ model Dossier {
   @@index([dateDernierActe])
   @@index([commissionANRefUid])
   @@index([commissionSNRefUid])
+  @@index([embedding])
 }
 
 model ActeLegislatif {
@@ -98,6 +97,8 @@ model ActeLegislatif {
   dataset                             Int
   /// Chambre parente du document (AN, SN, ou CG)
   chambre                             String?
+  /// Numéro de la législature.
+  legislature                         String?
   /// Identifiant de l'acte législatif parent.
   parentUid                           String?
   /// Code de l'acte législatif dont la valeur dépend de sa place dans la hiérarchie.

@@ -21,8 +21,7 @@ async function getDocumentsUnCached(ids: string[]) {
       where: { uid: { in: ids } },
       include: {
         _count: {
-          // TODO: Check with HEnry if the naming `amendements` make sens for amendements
-          select: { amendementsCommission: true, amendements: true },
+          select: { amendements: true },
         },
         coSignataires: {
           include: { acteurRef: { include: { groupeParlementaire: true } } },
@@ -45,8 +44,7 @@ export const AdditionalInfoCard = async (props: {
   const data = await getDocuments(props.documentIds);
 
   const documentsWithAmendements = data.filter(
-    (document) =>
-      document._count.amendements + document._count.amendementsCommission > 0
+    (document) => document._count.amendements
   );
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
@@ -67,22 +65,23 @@ export const AdditionalInfoCard = async (props: {
                 <InfoIcon sx={{ fontSize: "14px" }} />
               </Stack>
               <Stack direction="column" spacing={1}>
-                {documentsWithAmendements.map(({ uid, titrePrincipalCourt, _count }) => (
-                  <div key={uid}>
-                    <Typography variant="body2" fontWeight="bold">
-                      {_count.amendementsCommission + _count.amendements}{" "}
-                      amendements
-                    </Typography>
-                    <MuiLink
-                      variant="body2"
-                      fontWeight="light"
-                      component={Link}
-                      href={`/${props.legislature}/dossier/${props.dossierUid}/amendement?document=${uid}`}
-                    >
-                      {titrePrincipalCourt}
-                    </MuiLink>
-                  </div>
-                ))}
+                {documentsWithAmendements.map(
+                  ({ uid, titrePrincipalCourt, _count }) => (
+                    <div key={uid}>
+                      <Typography variant="body2" fontWeight="bold">
+                        {_count.amendements} amendements
+                      </Typography>
+                      <MuiLink
+                        variant="body2"
+                        fontWeight="light"
+                        component={Link}
+                        href={`/${props.legislature}/dossier/${props.dossierUid}/amendement?document=${uid}`}
+                      >
+                        {titrePrincipalCourt}
+                      </MuiLink>
+                    </div>
+                  )
+                )}
               </Stack>
             </React.Fragment>
           )}

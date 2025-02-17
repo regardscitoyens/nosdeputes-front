@@ -36,7 +36,7 @@ export default async function Amendements({
 
   return (
     <Stack>
-      <p>Amendements</p>
+      <h2>Amendements</h2>
 
       <AmendementsStatistics deputeUid={uid} />
 
