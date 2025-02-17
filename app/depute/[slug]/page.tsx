@@ -16,6 +16,7 @@ async function getDeputeStatsUnCached(slug: string) {
         nombreAmendements: true,
         nombreInterventions: true,
         nombreQuestions: true,
+        nombreDocumentsPublies: true,
         statistiquesHebdomadaire: true,
       },
     });
@@ -68,17 +69,22 @@ const getStatsOnWeeklyActivity = React.cache(getStatsOnWeeklyActivityUnCached);
 
 const baselineTypeToDeputeKey: Record<
   string,
-  "nombreAmendements" | "nombreInterventions" | "nombreQuestions"
+  | "nombreAmendements"
+  | "nombreInterventions"
+  | "nombreQuestions"
+  | "nombreDocumentsPublies"
 > = {
-  questions: "nombreQuestions",
-  interventions: "nombreInterventions",
-  amendements: "nombreAmendements",
+  "ACTEUR-QUESTIONS": "nombreQuestions",
+  "ACTEUR-INTERVENTIONS": "nombreInterventions",
+  "ACTEUR-AMENDEMENTS": "nombreAmendements",
+  "ACTEUR-DOCUMENTS": "nombreDocumentsPublies",
 };
 
 const baselineTypeToTitle: Record<string, string> = {
-  questions: "Nombre de questions",
-  interventions: "Nombre d'interventions",
-  amendements: "Nombre d'amendements",
+  nombreQuestions: "Nombre de questions",
+  nombreInterventions: "Nombre d'interventions",
+  nombreAmendements: "Nombre d'amendements",
+  nombreDocumentsPublies: "Nombre de documents publié",
 };
 
 const quantilesSentences = [
@@ -107,16 +113,18 @@ export default async function Page({ params }: { params: { slug: string } }) {
       />
 
       {baselineStats.map(({ q20, q40, q60, q80, maximum, type, id }) => {
-        if (!baselineTypeToDeputeKey[type as string] || !deputeStats) {
+        if (type !== "ACTEUR" || !id.startsWith("17-AN-ACTEUR-")) {
+          // Stats pour les commission ou groupe parlementaire
+          // Ou pour le senat ou une autre legislature
+          return null;
+        }
+        const deputeKey = baselineTypeToDeputeKey[id.slice("17-AN-".length)];
+
+        if (!deputeKey || !deputeStats) {
           return null;
         }
 
-        if (!id.includes("-AN-")) {
-          // Enleve les stats liées au senat
-          return null;
-        }
-
-        const value = deputeStats[baselineTypeToDeputeKey[type]];
+        const value = deputeStats[deputeKey];
 
         const quantiles = [q20, q40, q60, q80, maximum];
 
@@ -132,7 +140,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 {value}
               </Typography>
               <Typography variant="body1" sx={{ textAlign: "right" }}>
-                {baselineTypeToTitle[type]}
+                {baselineTypeToTitle[deputeKey]}
               </Typography>
               <Box
                 sx={{

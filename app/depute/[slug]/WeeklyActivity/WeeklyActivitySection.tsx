@@ -33,7 +33,7 @@ export default function WeeklyActivitySection(props: {
           <MenuItem value="commission">Commissions</MenuItem>
         </Select>
       </Stack>
-      <WeeklyActivityChart {...props} activityType={activityType} />;
+      <WeeklyActivityChart {...props} activityType={activityType} />
     </div>
   );
 }
