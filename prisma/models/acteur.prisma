@@ -91,8 +91,8 @@ model Acteur {
   /// Les dossiers de cet acteur.
   dossiers                     Dossier[]
   /// Statistiques d'activité agrégé par semaine.
-  statistiquesHebdomadaire StatistiqueHebdomadaire[]
-  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('simple'::regconfig, ((immutable_unaccent((COALESCE(prenom, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(nom, ''::text))::character varying)))"))
+  statistiquesHebdomadaire     StatistiqueHebdomadaire[]
+  vecteurRecherche             Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('simple'::regconfig, ((immutable_unaccent((COALESCE((prenom)::text, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE((nom)::text, ''::text))::character varying)))"))
 
   @@unique([prenom, nom, dateNais])
   @@index([dataset])
