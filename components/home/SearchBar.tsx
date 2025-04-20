@@ -8,6 +8,8 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import Link from "next/link";
+import {useState} from "react";
 
 type DeputeType = {
   prenom: string;
@@ -53,7 +55,11 @@ const options: (DossierType | DeputeType)[] = [
   },
 ];
 
+
 export default function SearchBar() {
+
+  const [input, setInput] = useState("");
+
   return (
     <Box sx={{ maxWidth: 709, width: "100%" }}>
       <TextField
@@ -68,18 +74,19 @@ export default function SearchBar() {
         }}
         fullWidth
         placeholder="Entrez un code postal ou un nom de député"
+        onChange={(e) => setInput(e.target.value)}
         slotProps={{
           input: {
             endAdornment: (
-              <Button
-                variant="contained"
-                size="large"
-                color="primary"
-                sx={{ height: 52, borderRadius: 26 }}
-                onClick={() => {}}
-              >
-                CHERCHER
-              </Button>
+              <Link href={{ pathname: '/search', query: { input: input} }}>
+                <Button variant="contained"
+                        size="large"
+                        color="primary"
+                        sx={{ height: 52, borderRadius: 26 }}
+                >
+                  CHERCHER
+                </Button>
+              </Link>
             ),
           },
         }}
