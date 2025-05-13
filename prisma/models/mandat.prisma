@@ -15,11 +15,11 @@ model Mandat {
   /// Vrai si le mandat est en cours
   actif                    Boolean?
   /// Date de début du mandat
-  dateDebut                DateTime
+  dateDebut                DateTime                   @db.Date
   /// Date de publication du mandat
   datePublication          DateTime?
   /// Date de fin du mandat
-  dateFin                  DateTime?
+  dateFin                  DateTime?                  @db.Date
   /// Cause de début du mandat
   causeMandat              String?
   /// Cause de fin du mandat
@@ -37,7 +37,7 @@ model Mandat {
   departement              String?
   numDepartement           String?
   numCirco                 String?
-  datePriseFonction        DateTime?
+  datePriseFonction        DateTime?                  @db.Date
   premiereElection         String?
   placeHemicycle           String?
   xsiType                  String?

@@ -54,6 +54,8 @@ model Agenda {
   debutSession                DateTime?
   /// Date de la fin de la session parlementaire.
   finSession                  DateTime?
+  /// Objet de la réunion
+  objet                       String?
   /// Texte décrivant l'objet de la réunion.
   convocationOdj              String[]
   /// Texte court décrivant l'objet de la réunion.
@@ -70,7 +72,7 @@ model Agenda {
 
   vecteurRecherche      Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(immutable_array_to_string(\"convocationOdj\", ' '::text), ''::text) || ' '::text) || immutable_unaccent((COALESCE(immutable_array_to_string(\"resumeOdj\", ' '::text), ''::text))::character varying)))::character varying))"))
   embedding             Unsupported("vector(1536)")?
-  compteRenduRef        Debat?                       @relation(fields: [compteRenduRefUid], references: [uid])
+  compteRenduRef        Debat?
   organeDemandeurRef    Organe?                      @relation("OrganeDemandeur", fields: [organeDemandeurRefUid], references: [uid])
   organeReunionRef      Organe?                      @relation("OrganeReunion", fields: [organeReunionRefUid], references: [uid])
   actesLegislatif       ActeLegislatif[]
@@ -151,20 +153,26 @@ model ActeurDemandeur {
   @@index([agendaRefUid])
 }
 
+enum Presence {
+  absent
+  excusé
+  présent
+}
+
 model ParticipantReunion {
   /// Clé primaire.
-  id           Int      @id @default(autoincrement())
-  dateMaj      DateTime @default(now()) @updatedAt
+  id           Int       @id @default(autoincrement())
+  dateMaj      DateTime  @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
   dataset      Int
   /// La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon.
-  presence     String?
+  presence     Presence?
   /// Acteur référent.
   acteurRefUid String?
   /// Agenda référent.
   agendaRefUid String
-  acteurRef    Acteur?  @relation(fields: [acteurRefUid], references: [uid])
-  agendaRef    Agenda   @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
+  acteurRef    Acteur?   @relation(fields: [acteurRefUid], references: [uid])
+  agendaRef    Agenda    @relation(fields: [agendaRefUid], references: [uid], onDelete: Cascade)
 
   @@index([dataset])
   @@index([acteurRefUid])

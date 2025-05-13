@@ -14,11 +14,13 @@ model Dossier {
   /// Numéro de la législature.
   legislature            String
   /// Date de dépôt du texte
-  dateDepot              DateTime?
+  dateDepot              DateTime? @db.Date
   /// Date du dernier acte législatif lié au texte
   dateDernierActe        DateTime?
   /// Code du dernier acte législatif
   codeDernierActe        String?
+  /// Identifiant du dernier acte législatif
+  uidDernierActe         String?
   /// URL du dossier législatif sur le site du Sénat.
   senatChemin            String?
   /// Titre du dossier législatif.
@@ -31,8 +33,10 @@ model Dossier {
   codeProcedure          String
   /// Signification du code.
   libelleProcedure       String
-  /// Dernier statut de ce dossier parlementaire (e.g. Texte déposé à l’Assemblée nationale).
-  statut                 String?
+  /// Étape en cours du dossier (1ère lecture, 2ème lecture, CMP etc.)
+  etape                  String?
+  /// Sous-étape en cours du dossier (Examen en commission, Débat en séance publique etc.)
+  sousEtape              String?
   /// Initiative du dossier législatif
   /// (e.g. Proposition de loi, Mission d'information, Motion de censure).
   typeInitiative         String    @default("")
@@ -45,16 +49,14 @@ model Dossier {
   dossierAbsorbantRefUid String?   @unique
   /// Organe à l'initiative du dossier.
   organeRefUid           String?
+  /// Identifiant du document initial déposé
+  documentDeposeRefUid   String?
   /// Identifiant de la commission référente à l'Assemblée Nationale.
   commissionANRefUid     String?
   /// Identifiant de la commission référente au Sénat.
   commissionSNRefUid     String?
   /// Identifiant unique (uid) de l'acteur.
   acteurPrincipalRefUid  String?
-  /// L'exposé des motifs du document déposé au format HTML (si présent).
-  exposeMotifsHtml       String?
-  /// L'exposé des motifs du document déposé au format texte (si présent).
-  exposeMotifsTexte      String?
 
   vecteurRecherche    Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(numero, ''::text))::character varying)))"))
   embedding           Unsupported("vector(1536)")?
@@ -65,6 +67,8 @@ model Dossier {
   organeRef           Organe?                      @relation("OrganeMission", fields: [organeRefUid], references: [uid])
   commissionANRef     Organe?                      @relation("OrganeANCommission", fields: [commissionANRefUid], references: [uid])
   commissionSNRef     Organe?                      @relation("OrganeSNCommission", fields: [commissionSNRefUid], references: [uid])
+  documentDeposeRef   Document?                    @relation("DocumentDepose", fields: [documentDeposeRefUid], references: [uid])
+  rapporteurs         Rapporteur[]
   plf                 EtudePlf[]
   initiateurs         InitiateurDossier[]
   actesLegislatifs    ActeLegislatif[]
@@ -72,6 +76,7 @@ model Dossier {
   documents           Document[]
   pointsOdj           PointOdj[]
   paragraphes         Paragraphe[]
+  alineas             Alinea[]
   // themes
   themes              DossierThemes[]
   /// Scrutins liés au dossier.
@@ -81,6 +86,7 @@ model Dossier {
   @@index([vecteurRecherche], type: Gin)
   @@index([organeRefUid])
   @@index([dossierAbsorbantRefUid])
+  @@index([documentDeposeRefUid])
   @@index([acteurPrincipalRefUid])
   @@index([dateDepot])
   @@index([dateDernierActe])
@@ -309,8 +315,12 @@ model Rapporteur {
   etudePlfRefUid       String?
   /// Un 'rapporteur spécial' produit un rapport (texteAssocie débute par RAPP) ou une étude (texteAssocie débute par ETDR) alors qu'un 'rapporteur pour avis' produit un avis (texteAssocie débute par AVIS).
   typeRapporteur       String
+  /// Acte législatif lié au rapporteur
   acteLegislatifRefUid String?
+  /// Dossier lié au rapporteur
+  dossierRefUid        String?
   acteLegislatifRef    ActeLegislatif? @relation(fields: [acteLegislatifRefUid], references: [uid])
+  dossierRef           Dossier?        @relation(fields: [dossierRefUid], references: [uid])
   acteurRef            Acteur?         @relation(fields: [acteurRefUid], references: [uid])
   etudePlfRef          EtudePlf?       @relation(fields: [etudePlfRefUid], references: [uid])
 
@@ -318,6 +328,7 @@ model Rapporteur {
   @@index([acteLegislatifRefUid])
   @@index([acteurRefUid])
   @@index([etudePlfRefUid])
+  @@index([dossierRefUid])
 }
 
 model EtudePlf {

@@ -79,7 +79,7 @@ model Document {
   vecteurRecherche         Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((immutable_unaccent((COALESCE(\"titrePrincipalCourt\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"numNotice\", ''::text))::character varying)))"))
   embedding                Unsupported("vector(1536)")?
   auteurPrincipal          Acteur?                      @relation(fields: [auteurPrincipalUid], references: [uid])
-  dossierRef               Dossier?                     @relation(fields: [dossierRefUid], references: [uid])
+  dossierRef               Dossier?                     @relation(fields: [dossierRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   organeRef                Organe?                      @relation(fields: [organeRefUid], references: [uid])
   documentParentRef        Document?                    @relation("DocumentParentRef", fields: [documentParentRefUid], references: [uid], onDelete: Restrict, onUpdate: Restrict)
   sousDocuments            Document?                    @relation("DocumentParentRef")
@@ -87,6 +87,7 @@ model Document {
   /// Amendements liés au document
   amendements              Amendement[]
   /// Organes qui peuvent amender le document
+  dossierDepotRef          Dossier[]                    @relation("DocumentDepose")
   organesAmendements       OrganeDocumentAmendement[]
   actesLegislatifs         ActeLegislatif[]
   auteurs                  AuteurDocument[]
@@ -241,24 +242,34 @@ enum SubdivisionType {
 /// Alinéa d'un texte de loi.
 model Alinea {
   /// Id unique d'un alinéa.
-  id             Int         @id @default(autoincrement())
+  id                   Int                      @id @default(autoincrement())
   /// Numéro de l'alinéa.
-  numero         Int
+  numero               Int
   /// Jeu de données de provenance (numéro de législature)
-  dataset        Int
+  dataset              Int
+  /// Titre de la subdivision associée
+  titreSubdivision     String?
+  /// Sous-titre de la subdivision associée
+  sousTitreSubdivision String?
   /// Texte de l'alinéa.
-  texte          String?
+  texte                String?
   /// Html de l'alinéa.
-  html           String?
+  html                 String?
   /// Identifiant (string) de référence de l'article parent.
-  articleRefHash String
+  articleRefHash       String
   /// Référence de l'article parent.
-  articleRef     Subdivision @relation(fields: [articleRefHash], references: [hash])
+  articleRef           Subdivision              @relation(fields: [articleRefHash], references: [hash])
   /// Identifiant unique (uid) du document.
-  documentRefUid String?
-  documentRef    Document?   @relation(fields: [documentRefUid], references: [uid])
+  documentRefUid       String?
+  /// Identifiant unique du dossier lié au document s'il s'agit du document initial
+  dossierRefUid        String?
+  documentRef          Document?                @relation(fields: [documentRefUid], references: [uid])
+  dossierRef           Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
+  vecteurRecherche     Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(\"titreSubdivision\", ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"sousTitreSubdivision\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(texte, ''::text))::character varying)))"))
 
   @@index([dataset])
   @@index([articleRefHash])
   @@index([documentRefUid])
+  @@index([dossierRefUid])
+  @@index([vecteurRecherche], type: Gin)
 }

@@ -40,7 +40,7 @@ model Question {
   texteReponseNettoye  String?
   erratumQuestion      String?
   erratumReponse       String?
-  vecteurRecherche     Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
+  vecteurRecherche     Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((((((immutable_unaccent((COALESCE(titre, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(rubrique, ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteQuestion\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"texteReponse\", ''::text))::character varying)))"))
   embedding            Unsupported("vector(1536)")?
   acteurRef            Acteur                       @relation(fields: [acteurRefUid], references: [uid])
   groupeRef            Organe                       @relation("Question_Groupe", fields: [groupeRefUid], references: [uid])

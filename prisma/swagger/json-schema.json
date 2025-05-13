@@ -446,6 +446,18 @@
             "null"
           ]
         },
+        "adresseDeRattachement": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "valElec": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "numeroRue": {
           "type": [
             "string",
@@ -506,7 +518,8 @@
           "type": "string",
           "enum": [
             "presenceDetectee",
-            "presenceCommision"
+            "presenceCommision",
+            "amendementDepose"
           ],
           "description": "Type d'occurence compté."
         },
@@ -602,6 +615,13 @@
             "boolean",
             "null"
           ]
+        },
+        "compteRenduRefUid": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant unique du compte rendu d'une séance publique. Uniquement si xsiType égal à 'seance_type'."
         },
         "compteRenduDisponible": {
           "type": [
@@ -710,6 +730,13 @@
           ],
           "format": "date-time",
           "description": "Date de la fin de la session parlementaire."
+        },
+        "objet": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Objet de la réunion"
         },
         "convocationOdj": {
           "type": "array",
@@ -995,6 +1022,11 @@
           "type": [
             "string",
             "null"
+          ],
+          "enum": [
+            "absent",
+            "excusé",
+            "présent"
           ],
           "description": "La valeur est 'absent' ou 'excusé' si la personne n'a pas participé à la réunion, 'présent' sinon."
         },
@@ -1583,7 +1615,7 @@
             }
           ]
         },
-        "texteLegislatifRef": {
+        "documentRef": {
           "anyOf": [
             {
               "$ref": "#/definitions/Document"
@@ -1858,12 +1890,6 @@
         "legislature": {
           "type": "string"
         },
-        "reunionRefUid": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "sessionRef": {
           "type": "string"
         },
@@ -1921,11 +1947,15 @@
             "null"
           ]
         },
-        "reunions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Agenda"
-          }
+        "reunion": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Agenda"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "paragraphes": {
           "type": "array",
@@ -2516,12 +2546,18 @@
           },
           "description": "Amendements liés au document"
         },
+        "dossierDepotRef": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Dossier"
+          },
+          "description": "Organes qui peuvent amender le document"
+        },
         "organesAmendements": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/OrganeDocumentAmendement"
-          },
-          "description": "Organes qui peuvent amender le document"
+          }
         },
         "actesLegislatifs": {
           "type": "array",
@@ -2864,6 +2900,20 @@
           "type": "integer",
           "description": "Jeu de données de provenance (numéro de législature)"
         },
+        "titreSubdivision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Titre de la subdivision associée"
+        },
+        "sousTitreSubdivision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sous-titre de la subdivision associée"
+        },
         "texte": {
           "type": [
             "string",
@@ -2885,6 +2935,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossierRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
             },
             {
               "type": "null"
@@ -2956,6 +3016,13 @@
           ],
           "description": "Code du dernier acte législatif"
         },
+        "uidDernierActe": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Identifiant du dernier acte législatif"
+        },
         "senatChemin": {
           "type": [
             "string",
@@ -2992,12 +3059,19 @@
           "type": "string",
           "description": "Signification du code."
         },
-        "statut": {
+        "etape": {
           "type": [
             "string",
             "null"
           ],
-          "description": "Dernier statut de ce dossier parlementaire (e.g. Texte déposé à l’Assemblée nationale)."
+          "description": "Étape en cours du dossier (1ère lecture, 2ème lecture, CMP etc.)"
+        },
+        "sousEtape": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sous-étape en cours du dossier (Examen en commission, Débat en séance publique etc.)"
         },
         "typeInitiative": {
           "type": "string",
@@ -3015,20 +3089,6 @@
             "null"
           ],
           "description": "Le dossier parlementaire est lié à un autre. Si la cause est un 'Examen commun', les deux dossiers continuent d'évoluer indépendament. Par exemple une mission d'information peut être liée au dossier parlementaire qui représente le rapport produit par cette mission. Si la cause est 'Dossier absorbé', il devient obsolete et le dossier absorbant prend la suite. Par exemple, lorsqu'une loi ordinaire devient une loi organique, un nouveau dossier parlementaire est constitué, l'intégralité du dossier absorbé est copié dans le nouveau dossier."
-        },
-        "exposeMotifsHtml": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "L'exposé des motifs du document déposé au format HTML (si présent)."
-        },
-        "exposeMotifsTexte": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "L'exposé des motifs du document déposé au format texte (si présent)."
         },
         "acteurPrincipalRef": {
           "anyOf": [
@@ -3090,6 +3150,22 @@
             }
           ]
         },
+        "documentDeposeRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rapporteurs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rapporteur"
+          }
+        },
         "plf": {
           "type": "array",
           "items": {
@@ -3130,6 +3206,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Paragraphe"
+          }
+        },
+        "alineas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alinea"
           }
         },
         "themes": {
@@ -3774,6 +3856,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/ActeLegislatif"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossierRef": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Dossier"
             },
             {
               "type": "null"
@@ -4943,59 +5035,43 @@
           "description": "Annonce du résultat du vote (adopté ou non)."
         },
         "abstentions": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total d'abstentions."
         },
         "contre": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total de votes contre."
         },
         "nonVotants": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total de non votants"
         },
         "nonVotantsVolontaires": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total de non votants volontaires."
         },
         "pour": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total de votes pour."
         },
         "nbrSuffragesRequis": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre de suffrages requis."
         },
         "nombreVotants": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre de votants, c'est à dire de sièges occupés dans l'hémicycle."
         },
         "suffragesExprimes": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre de suffrages exprimés."
         },
         "titre": {
@@ -5190,45 +5266,33 @@
           "description": "Hachage de l'objet"
         },
         "nombreMembresGroupe": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Le nombre total de membres du groupe politique et non pas le nombre de membres présents au moment du vote."
         },
         "abstentions": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Liste des acteurs s'étant abstenus."
         },
         "contre": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Liste des acteurs ayant voté contre."
         },
         "nonVotants": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Liste des acteurs ne pouvant participer à ce vote en raison de leur position (Président de séance etc.)."
         },
         "nonVotantsVolontaires": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Nombre total de non votants volontaires."
         },
         "pour": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "integer",
+          "default": 0,
           "description": "Liste des acteurs ayant voté pour."
         },
         "positionMajoritaire": {
@@ -5469,6 +5533,16 @@
             "GPE"
           ],
           "description": "Objet de l'activité mesurée"
+        },
+        "periode": {
+          "type": "string",
+          "default": "LEGISLATURE",
+          "enum": [
+            "LAST_SIX_MONTHS",
+            "LAST_YEAR",
+            "LEGISLATURE"
+          ],
+          "description": "periode de mesure de l'activité"
         },
         "mesure": {
           "type": [

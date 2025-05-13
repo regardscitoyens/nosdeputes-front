@@ -126,22 +126,24 @@ model AdresseElectronique {
 
 model AdressePostale {
   /// Identifiant unique.
-  uid               String   @id
-  dateMaj           DateTime @default(now()) @updatedAt
+  uid                   String   @id
+  dateMaj               DateTime @default(now()) @updatedAt
   /// Jeu de données de provenance (numéro de législature)
-  dataset           Int
-  type              String
-  typeLibelle       String
-  poids             String?
-  intitule          String?
-  numeroRue         String?
-  nomRue            String?
-  complementAdresse String?
-  codePostal        String?
-  ville             String?
-  xsiType           String?
-  acteurRefUid      String
-  acteurRef         Acteur   @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
+  dataset               Int
+  type                  String
+  typeLibelle           String
+  poids                 String?
+  intitule              String?
+  adresseDeRattachement String?
+  valElec               String?  
+  numeroRue             String?
+  nomRue                String?
+  complementAdresse     String?
+  codePostal            String?
+  ville                 String?
+  xsiType               String?
+  acteurRefUid          String
+  acteurRef             Acteur   @relation(fields: [acteurRefUid], references: [uid], onDelete: Cascade)
 
   @@index([dataset])
   @@index([acteurRefUid])
@@ -171,4 +173,7 @@ enum StateHebdoType {
 
   /// Présence notée en commission.
   presenceCommision
+
+  /// Amendements déposé.
+  amendementDepose
 }

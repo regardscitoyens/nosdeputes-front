@@ -8,7 +8,7 @@ model Scrutin {
   /// Chambre parente du document (Assemblée ou Sénat)
   chambre                 String
   /// Date à laquelle le vote a eu lieu.
-  dateScrutin             DateTime?
+  dateScrutin             DateTime?         @db.Date
   /// L'acteur ou l'organe qui demande le vote.
   demandeur               String?
   /// Numéro de la législature.
@@ -32,21 +32,21 @@ model Scrutin {
   /// Annonce du résultat du vote (adopté ou non).
   annonce                 String?
   /// Nombre total d'abstentions.
-  abstentions             String?
+  abstentions             Int               @default(0)
   /// Nombre total de votes contre.
-  contre                  String?
+  contre                  Int               @default(0)
   /// Nombre total de non votants
-  nonVotants              String?
+  nonVotants              Int               @default(0)
   /// Nombre total de non votants volontaires.
-  nonVotantsVolontaires   String?
+  nonVotantsVolontaires   Int               @default(0)
   /// Nombre total de votes pour.
-  pour                    String?
+  pour                    Int               @default(0)
   /// Nombre de suffrages requis.
-  nbrSuffragesRequis      String?
+  nbrSuffragesRequis      Int               @default(0)
   /// Nombre de votants, c'est à dire de sièges occupés dans l'hémicycle.
-  nombreVotants           String?
+  nombreVotants           Int               @default(0)
   /// Nombre de suffrages exprimés.
-  suffragesExprimes       String?
+  suffragesExprimes       Int               @default(0)
   /// Objet du vote.
   titre                   String?
   /// Type de vote: MOC pour motion de censure, SAT pour scrutin à la tribune, SPO pour scrutin public ordinaire et SPS pour scrutin public solennel.
@@ -64,7 +64,7 @@ model Scrutin {
   /// Identifiant unique du dossier législatif dont ce scrutin appartient.
   dossierRefUid           String?
   /// Identifiant unique du point d'ordre du jour associé.
-  pointOdjRefUid           String?
+  pointOdjRefUid          String?
   /// Identifiant unique d'un amendement lié à ce scrutin.
   amendementRefUid        String?
   /// Identifiant de l'article associé
@@ -72,15 +72,16 @@ model Scrutin {
   /// Identifiant du document associé au scrutin
   documentRefUid          String?
 
+  vecteurRecherche      Unsupported("tsvector")? @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((COALESCE(titre, ''::text))::character varying))"))
   /// Dossier législatif lié au scrutin.
-  dossierRef            Dossier?             @relation(fields: [dossierRefUid], references: [uid])
-  documentRef           Document?            @relation(fields: [documentRefUid], references: [uid])
-  pointOdjRef           PointOdj?            @relation(fields: [pointOdjRefUid], references: [uid])
+  dossierRef            Dossier?                 @relation(fields: [dossierRefUid], references: [uid])
+  documentRef           Document?                @relation(fields: [documentRefUid], references: [uid])
+  pointOdjRef           PointOdj?                @relation(fields: [pointOdjRefUid], references: [uid])
   amendementRef         Amendement?
-  articleRef            Subdivision?         @relation(fields: [articleRefUid], references: [hash])
-  acteLegislatifRef     ActeLegislatif?      @relation(fields: [acteLegislatifRefUid], references: [uid])
-  agendaRef             Agenda?              @relation(fields: [seanceRefUid], references: [uid])
-  organeRef             Organe?              @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
+  articleRef            Subdivision?             @relation(fields: [articleRefUid], references: [hash])
+  acteLegislatifRef     ActeLegislatif?          @relation(fields: [acteLegislatifRefUid], references: [uid])
+  agendaRef             Agenda?                  @relation(fields: [seanceRefUid], references: [uid])
+  organeRef             Organe?                  @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
   dysfonctionnements    Dysfonctionnement[]
   groupesVotants        GroupeVotant[]
   misesAuPoint          MiseAuPoint[]
@@ -129,22 +130,22 @@ model GroupeVotant {
   /// Hachage de l'objet
   hash                  String        @unique
   /// Le nombre total de membres du groupe politique et non pas le nombre de membres présents au moment du vote.
-  nombreMembresGroupe   String?
-  /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
-  organeRefUid          String?
+  nombreMembresGroupe   Int           @default(0)
   /// Liste des acteurs s'étant abstenus.
-  abstentions           String?
+  abstentions           Int           @default(0)
   /// Liste des acteurs ayant voté contre.
-  contre                String?
+  contre                Int           @default(0)
   /// Liste des acteurs ne pouvant participer à ce vote en raison de leur position (Président de séance etc.).
-  nonVotants            String?
+  nonVotants            Int           @default(0)
   /// Nombre total de non votants volontaires.
-  nonVotantsVolontaires String?
+  nonVotantsVolontaires Int           @default(0)
   /// Liste des acteurs ayant voté pour.
-  pour                  String?
+  pour                  Int           @default(0)
   /// La position majoritaire du groupe politique est celle pour laquelle le plus grand nombre de membres ont voté. Si le nombre de pour est égale au nombre de contre, c'est le pour qui l'emporte. A moins que le nombre d'abstentions soit supérieur ou égal au nombre de pour, dans ce cas c'est l'abstention qui l'emporte.
   positionMajoritaire   PositionVote?
 
+  /// Identifiant unique (uid) de l'organe correspondant au groupe politique.
+  organeRefUid  String?
   scrutinRefUid String?
   organeRef     Organe?  @relation(fields: [organeRefUid], references: [uid], onDelete: Cascade)
   scrutinRef    Scrutin? @relation(fields: [scrutinRefUid], references: [uid])

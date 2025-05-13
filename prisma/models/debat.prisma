@@ -9,7 +9,7 @@ model Debat {
   chambre           String?
   typeAssemblee     String
   legislature       String
-  reunionRefUid     String?
+  reunionRefUid     String?   @unique
   sessionRef        String
   /// Date du débat
   dateSeance        DateTime?
@@ -28,7 +28,7 @@ model Debat {
   quantiemesSession String
   presidentSeance   String?
 
-  reunions    Agenda[]
+  reunion     Agenda?          @relation(fields: [reunionRefUid], references: [uid])
   paragraphes Paragraphe[]
   sommaires   SommaireDebat[]
 

@@ -115,8 +115,8 @@ model Amendement {
   organeRefUid                     String?
   /// Identifiant du dossier de loi lié à l'amendement
   dossierRefUid                    String?
-  /// Identifiant unique du texte législatif (document) visé par l'amendement.
-  texteLegislatifRefUid            String?
+  /// Identifiant unique du document visé par l'amendement.
+  documentRefUid                   String?
   /// Identifiant du scrutin lié à l'amendement
   scrutinRefUid                    String?   @unique
   /// Identifiant (string) de référence de l'article modifié par cet amendement.
@@ -125,7 +125,7 @@ model Amendement {
   vecteurRecherche          Unsupported("tsvector")?     @default(dbgenerated("to_tsvector('french'::regconfig, ((((immutable_unaccent((COALESCE(dispositif, ''::text))::character varying) || ' '::text) || immutable_unaccent((COALESCE(\"exposeSommaire\", ''::text))::character varying)) || ' '::text) || immutable_unaccent((COALESCE(\"divisionArticleDesignationCourte\", ''::text))::character varying)))"))
   embedding                 Unsupported("vector(1536)")?
   organeRef                 Organe?                      @relation("Amendement_Organe", fields: [organeRefUid], references: [uid])
-  texteLegislatifRef        Document?                    @relation(fields: [texteLegislatifRefUid], references: [uid])
+  documentRef               Document?                    @relation(fields: [documentRefUid], references: [uid])
   dossierRef                Dossier?                     @relation(fields: [dossierRefUid], references: [uid])
   acteurRef                 Acteur?                      @relation(fields: [acteurRefUid], references: [uid])
   scrutinRef                Scrutin?                     @relation(fields: [scrutinRefUid], references: [uid])
@@ -145,7 +145,7 @@ model Amendement {
   @@index([organeRefUid])
   @@index([scrutinRefUid])
   @@index([dossierRefUid])
-  @@index([texteLegislatifRefUid])
+  @@index([documentRefUid])
   @@index([amendementParentRefUid])
   @@index([auteurRapporteurOrganeRefUid])
   @@index([gouvernementOrganeRefUid])
