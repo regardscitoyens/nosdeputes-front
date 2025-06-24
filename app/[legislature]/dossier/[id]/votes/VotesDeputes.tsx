@@ -7,23 +7,24 @@ import Box from "@mui/material/Box";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import { Vote } from "@prisma/client";
 import { Divider, Typography } from "@mui/material";
-import DeputeCard from "../../../../../components/folders/DeputeCard";
 import CircleDiv from "@/icons/CircleDiv";
 import { VoteWithActeur } from "./votes.type";
+import { ActeurCard } from "@/components/folders/ActeurCard";
+// import VoteEndAdornment from "@/components/folders/VoteEndAdornment";
 
 export function VotesDeputes({ votes }: { votes: VoteWithActeur[] }) {
   const votesPour = React.useMemo(
-    () => votes.filter((vote) => vote.positionVote === "pour"),
+    () => votes.filter((vote) => vote.positionVote === "pour").slice(0, 3),
     [votes]
   );
   const votesContre = React.useMemo(
-    () => votes.filter((vote) => vote.positionVote === "contre"),
+    () => votes.filter((vote) => vote.positionVote === "contre").slice(0, 3),
     [votes]
   );
   const votesabstention = React.useMemo(
-    () => votes.filter((vote) => vote.positionVote === "abstention"),
+    () =>
+      votes.filter((vote) => vote.positionVote === "abstention").slice(0, 3),
     [votes]
   );
 
@@ -80,24 +81,7 @@ export function VotesDeputes({ votes }: { votes: VoteWithActeur[] }) {
                 {innerVotes.map((vote) => {
                   const { acteurRef, id, positionVote, groupeVotantRef } = vote;
                   return (
-                    <DeputeCard
-                      key={id}
-                      slug={acteurRef?.slug ?? ""}
-                      prenom={acteurRef?.prenom ?? ""}
-                      nom={acteurRef?.nom ?? ""}
-                      group={
-                        groupeVotantRef?.organeRef && {
-                          color: groupeVotantRef?.organeRef.couleurAssociee,
-                          fullName: groupeVotantRef?.organeRef.libelle,
-                          shortName: groupeVotantRef?.organeRef.libelleAbrev,
-                        }
-                      }
-                      vote={positionVote}
-                      // Not available in Vote model for now
-                      groupPosition={
-                        groupeVotantRef?.positionMajoritaire ?? undefined
-                      }
-                    />
+                    acteurRef && <ActeurCard key={id} id={acteurRef.uid} />
                   );
                 })}
               </Box>

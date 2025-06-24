@@ -3,7 +3,8 @@ import * as React from "react";
 import { List, ListItem, Box, Paper, Stack, Typography } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { Mandat, Organe } from "@prisma/client";
-import { getDepute } from "./layout";
+import { getActeurMandats } from "@/data/getActeurMandats";
+
 // Mandat de depute, et mandat d'appartenance au group parlementaire
 const ignoredTypeOrgane = ["ASSEMBLEE", "GP", "PARPOL"];
 
@@ -22,11 +23,9 @@ type MandatsPerType = Record<
     Pick<Mandat, "libQualiteSex" | "organeRefUid" | "dateFin">)[]
 >;
 
-export default function Mandats({
-  mandats,
-}: {
-  mandats: (Mandat & { organeRef: null | Organe })[];
-}) {
+export default async function Mandats({ acteurUid }: { acteurUid: string }) {
+  const mandats = await getActeurMandats(acteurUid);
+
   const mandatsPerType = mandats
     .filter((m) => !ignoredTypeOrgane.includes(m.typeOrgane))
     .reduce((acc, mandat) => {

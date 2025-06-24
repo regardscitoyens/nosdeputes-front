@@ -17,9 +17,9 @@ export function useFilterState() {
   function handleSearch(term: string) {
     const params = new URLSearchParams(window.location.search);
     if (term) {
-      params.set("q", term);
+      params.set("search", term);
     } else {
-      params.delete("q");
+      params.delete("search");
     }
 
     startTransition(() => {

@@ -7,29 +7,18 @@ import { LegislativeDocumentsCard } from "@/app/[legislature]/dossier/[id]/Legis
 import { TextStructureCard } from "@/components/folders/TextStructureCard";
 import { TimelineCard } from "@/components/folders/TimelineCard";
 
-import {
-  getCommissionNomination,
-  getCommissionUids,
-  getDossier,
-} from "@/app/[legislature]/dossier/[id]/dataFunctions";
+import { getCommissionUids } from "@/app/[legislature]/dossier/[id]/dataFunctions";
+import { getDossier } from "@/data/getDossier";
 
 type PreviewTabProps = {
   dossier?: Awaited<ReturnType<typeof getDossier>>;
 };
 
 export const PreviewTab = ({ dossier }: PreviewTabProps) => {
-  const { actesLegislatifs } = dossier!;
+  const { actesLegislatifs, rapporteurs } = dossier!;
 
   const commissionFondIds = getCommissionUids(actesLegislatifs, "FOND");
   const commissionAvisIds = getCommissionUids(actesLegislatifs, "AVIS");
-  const commissionFondNomination = getCommissionNomination(
-    actesLegislatifs,
-    "FOND"
-  );
-  const commissionAvisNomination = getCommissionNomination(
-    actesLegislatifs,
-    "AVIS"
-  );
 
   const documentIds = Array.from(
     new Set(
@@ -51,10 +40,9 @@ export const PreviewTab = ({ dossier }: PreviewTabProps) => {
         }}
       >
         <CommissionsCard
-          fondIds={commissionFondIds}
-          avisIds={commissionAvisIds}
-          fondNomination={commissionFondNomination}
-          avisNomination={commissionAvisNomination}
+          commissionFondIds={commissionFondIds}
+          commissionAvisIds={commissionAvisIds}
+          rapporteurs={rapporteurs}
         />
         <AdditionalInfoCard
           documentIds={documentIds}

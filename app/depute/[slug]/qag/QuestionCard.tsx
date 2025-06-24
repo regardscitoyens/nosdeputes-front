@@ -13,7 +13,7 @@ import { Organe, Question } from "@prisma/client";
 import StatusChip from "@/components/StatusChip";
 
 type QuestionCardProps = {
-  question: Question & { minIntRef: Organe | null };
+  question: Question & { ministerInteroge: Organe | null };
 };
 
 export default function QuestionCard(props: QuestionCardProps) {
@@ -30,7 +30,7 @@ export default function QuestionCard(props: QuestionCardProps) {
       erratumQuestion,
       texteReponse,
       erratumReponse,
-      minIntRef,
+      ministerInteroge,
     },
   } = props;
 
@@ -119,7 +119,7 @@ export default function QuestionCard(props: QuestionCardProps) {
             <Typography fontWeight="light" variant="body2">
               Envoyé à:&nbsp;
               <Typography component="span" variant="body2">
-                {minIntRef?.libelleAbrege}
+                {ministerInteroge?.libelleAbrege}
               </Typography>
             </Typography>
 

@@ -29,40 +29,39 @@ export const Filter = (props: FilterProps) => {
     handleNumero,
     selectedDocument,
     setSelectedDocument,
-    dossier,
+    documents,
     depute,
     handleDepute,
     status,
     handleStatus,
   } = props;
 
-  const deputes = React.useMemo(() => {
-    const seenIds = new Set();
-    return dossier.documents
-      ?.flatMap((document) => document.amendements)
-      .filter((amendement) => amendement != null)
-      .filter(({ acteurRef }) => {
-        if (!acteurRef) {
-          return false;
-        }
+  // const deputes = React.useMemo(() => {
+  //   const seenIds = new Set();
+  //   return documents
+  //     .filter((amendement) => amendement != null)
+  //     .filter(({ acteurRef }) => {
+  //       if (!acteurRef) {
+  //         return false;
+  //       }
 
-        const seen = seenIds.has(acteurRef.uid);
-        if (!seen) {
-          seenIds.add(acteurRef.uid);
-        }
+  //       const seen = seenIds.has(acteurRef.uid);
+  //       if (!seen) {
+  //         seenIds.add(acteurRef.uid);
+  //       }
 
-        return !seen;
-      })
+  //       return !seen;
+  //     })
 
-      .map(({ acteurRef }) => {
-        const { uid, prenom, nom } = acteurRef!;
-        return { uid, prenom, nom };
-      });
-  }, [dossier]);
+  //     .map(({ acteurRef }) => {
+  //       const { uid, prenom, nom } = acteurRef!;
+  //       return { uid, prenom, nom };
+  //     });
+  // }, [dossier]);
 
   return (
     <React.Fragment>
-      <TextField
+      {/* <TextField
         size="small"
         label="Numero"
         variant="outlined"
@@ -71,7 +70,7 @@ export const Filter = (props: FilterProps) => {
         onChange={(event) => {
           handleNumero(event.target.value);
         }}
-      />
+      /> */}
       <TextField
         select
         size="small"
@@ -82,16 +81,16 @@ export const Filter = (props: FilterProps) => {
           setSelectedDocument(event.target.value);
         }}
       >
-        <MenuItem value="">Tout document</MenuItem>
-        {dossier.documents
-          ?.filter((document) => document.amendements?.length)
+        {/* <MenuItem value="">Tout document</MenuItem> */}
+        {documents
+          .filter((document) => document !== null)
           .map((document) => (
             <MenuItem key={document.uid} value={document.uid}>
-              {document.depotLibelle} ({document.amendements?.length})
+              {document.depotLibelle} ({document._count.amendements})
             </MenuItem>
           ))}
       </TextField>
-      <TextField
+      {/* <TextField
         select
         size="small"
         variant="outlined"
@@ -107,8 +106,8 @@ export const Filter = (props: FilterProps) => {
             {prenom} {nom}
           </MenuItem>
         ))}
-      </TextField>
-      <TextField
+      </TextField> */}
+      {/* <TextField
         select
         size="small"
         variant="outlined"
@@ -124,7 +123,7 @@ export const Filter = (props: FilterProps) => {
             {state}
           </MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
     </React.Fragment>
   );
 };

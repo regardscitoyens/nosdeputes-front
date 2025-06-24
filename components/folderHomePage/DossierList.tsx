@@ -5,29 +5,10 @@ import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import LabelChip from "../LabelChip";
-import { prisma } from "@/prisma";
 import { Dossier } from "@prisma/client";
 import { LoadingButton } from "@mui/lab";
+import { searchDossier } from "@/data/searchDossier";
 
-async function getDossiersUnCached(legislature: string) {
-  return prisma.dossier.findMany({
-    where: { legislature },
-    orderBy: { numero: "asc" },
-    take: 10,
-  });
-}
-const getDossiers = React.cache(getDossiersUnCached);
-
-// The API return string for Dates
-function formatDossier(dossier: Dossier): Dossier {
-  return {
-    ...dossier,
-    dateDernierActe: dossier.dateDernierActe
-      ? new Date(dossier.dateDernierActe)
-      : null,
-    dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
-  };
-}
 type DossierListProps = {
   theme: string;
   search: string;
@@ -40,23 +21,17 @@ export default function DossierList(props: DossierListProps) {
 
   const [dossiers, setDossiers] = React.useState<Dossier[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   const fetchMoreDossiers = async () => {
     setIsLoading(true);
-    let res = await fetch(
-      "/dossiers/api?" +
-        new URLSearchParams({
-          legislature: "17",
-          page: currentPage.toString(),
-          theme: theme,
-          pageSize: PAGE_SIZE.toString(),
-        }).toString()
-    );
-    const { data } = await res.json();
+    const data = await searchDossier({
+      page: currentPage,
+      search: search ?? "",
+    });
 
     setIsLoading(false);
-    setDossiers((prev) => [...prev, ...data.map(formatDossier)]);
+    setDossiers((prev) => [...prev, ...(data ?? [])]);
     setCurrentPage((prev) => prev + 1);
   };
 
@@ -64,24 +39,19 @@ export default function DossierList(props: DossierListProps) {
     let isValid = true;
 
     setIsLoading(true);
-    setCurrentPage(0);
+    setCurrentPage(1);
     setDossiers([]);
 
     async function fetchInitialDossier() {
-      let res = await fetch(
-        "/dossiers/api?" +
-          new URLSearchParams({
-            legislature: "17",
-            page: "0",
-            theme: theme,
-            pageSize: PAGE_SIZE.toString(),
-          }).toString()
-      );
-      const { data } = await res.json();
+      const data = await searchDossier({
+        page: 1,
+        search: search ?? "",
+      });
+
       if (isValid) {
         setIsLoading(false);
-        setDossiers(data.map(formatDossier));
-        setCurrentPage((prev) => prev + 1);
+        setDossiers(data ?? []);
+        setCurrentPage(2);
       }
     }
     fetchInitialDossier();
@@ -89,7 +59,7 @@ export default function DossierList(props: DossierListProps) {
     return () => {
       isValid = false;
     };
-  }, [theme]);
+  }, [search, theme]);
 
   return (
     <div>
@@ -140,7 +110,7 @@ export default function DossierList(props: DossierListProps) {
         loading={isLoading}
         onClick={() => fetchMoreDossiers()}
         disabled={
-          isLoading || dossiers.length !== currentPage * PAGE_SIZE // The last fetch did not returned a full page
+          isLoading || dossiers.length !== (currentPage - 1) * PAGE_SIZE // The last fetch did not returned a full page
         }
       >
         Dossiers suivant

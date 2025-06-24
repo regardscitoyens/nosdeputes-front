@@ -1,23 +1,6 @@
 import * as React from "react";
-import { prisma } from "@/prisma";
-import { ActeLegislatif } from "@prisma/client";
+import { ActeLegislatif, Dossier, Rapporteur } from "@prisma/client";
 import { Status } from "@/components/StatusChip";
-
-async function getDossierUnCached(uid: string) {
-  try {
-    return prisma.dossier.findFirst({
-      where: { uid },
-      include: {
-        actesLegislatifs: true,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching depute:", error);
-    throw error;
-  }
-}
-
-export const getDossier = React.cache(getDossierUnCached);
 
 const statusOrder = ["AN1", "SN1", "AN2", "SN2", "AN3", "SN3", "CMP", "PROM"];
 
@@ -43,6 +26,12 @@ export function getCurrentStatus(acts: ActeLegislatif[]) {
   }
 }
 
+/**
+ * Extrait les commissions saisies sur le dossier.
+ * @param acts
+ * @param type Le type de saisie (FOND ou AVIS)
+ * @returns la liste des uid des commissions
+ */
 export function getCommissionUids(
   acts: ActeLegislatif[],
   type: "FOND" | "AVIS"
@@ -52,20 +41,6 @@ export function getCommissionUids(
       acts
         .filter((act) => act.codeActe.endsWith(`COM-${type}`))
         .map((act) => act.organeRefUid)
-        .filter((id) => id !== null)
-    )
-  );
-}
-
-export function getCommissionNomination(
-  acts: ActeLegislatif[],
-  type: "FOND" | "AVIS"
-) {
-  return Array.from(
-    new Set(
-      acts
-        .filter((act) => act.codeActe.endsWith(`COM-${type}-NOMIN`))
-        .map((act) => act.uid)
         .filter((id) => id !== null)
     )
   );

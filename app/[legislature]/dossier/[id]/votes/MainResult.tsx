@@ -9,7 +9,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { VotesDeputes } from "./VotesDeputes";
 import { VotesGroups } from "./VotesGroups";
 import { VoteWithActeur } from "./votes.type";
 
@@ -17,6 +16,7 @@ export function MainResult(props: {
   scrutin: Scrutin & { votes: VoteWithActeur[] };
   setZoom: (zoome: "" | "depute" | "group") => void;
   zoom: string;
+  vote: React.ReactNode;
 }) {
   const { scrutin, setZoom, zoom } = props;
   return (
@@ -94,7 +94,7 @@ export function MainResult(props: {
         </Typography>
       </Box>
 
-      <Dialog
+      {/* <Dialog
         onClose={() => setZoom("")}
         open={zoom !== ""}
         maxWidth="lg"
@@ -128,7 +128,11 @@ export function MainResult(props: {
             id={`tabpanel-depute`}
             aria-labelledby={`tabpanel-depute`}
           >
-            {zoom === "depute" && <VotesDeputes votes={scrutin.votes} />}
+            {zoom === "depute" && (
+              <React.Suspense fallback={<div>test</div>}>
+                <VotesDeputes votes={scrutin.votes} />
+              </React.Suspense>
+            )}
           </div>
           <div
             role="tabpanel"
@@ -139,7 +143,11 @@ export function MainResult(props: {
             {zoom === "group" && <VotesGroups votes={scrutin.votes} />}
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
+      {props.vote}
+      {/* <React.Suspense fallback={<div />}>
+        <VotesDeputes votes={scrutin.votes} />
+      </React.Suspense> */}
     </React.Fragment>
   );
 }

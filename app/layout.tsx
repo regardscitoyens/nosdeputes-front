@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { NavBar, NavigationItem } from "@/components/NavBar";
 import theme from "./theme";
 import { ThemeProvider } from "@mui/material/styles";

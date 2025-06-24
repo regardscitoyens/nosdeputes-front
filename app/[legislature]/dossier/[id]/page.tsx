@@ -1,14 +1,16 @@
 import React from "react";
 
 import { PreviewTab } from "@/app/[legislature]/dossier/[id]/PreviewTab";
-import { getDossier } from "./dataFunctions";
+import { getDossier } from "@/data/getDossier";
 
 export default async function Page({
   params,
 }: {
-  params: { legislature: string; id: string };
+  params: Promise<{ legislature: string; id: string }>;
 }) {
-  const dossier = await getDossier(params.id);
+  const { id } = await params;
+
+  const dossier = await getDossier(id);
 
   if (dossier === null) {
     return <p>Dossier Not Found</p>;

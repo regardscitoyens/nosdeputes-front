@@ -5,16 +5,21 @@ import Stack from "@mui/material/Stack";
 
 import { groupDeputes } from "./groupDeputes";
 import DeputesView from "./DeputesView";
-import { getDeputes } from "./getDeputes";
+
 import { FilterContainer } from "@/components/FilterContainer";
 import { Filter } from "./Filter";
 import DeputesFilter from "./DeputesFilter";
+import { getDeputes } from "@/data/getDeputes";
 
 export default async function DeputesList() {
-  const deputes = await getDeputes("17");
+  const data = await getDeputes(17);
 
-  const { indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
-    groupDeputes(deputes);
+  if (data === null) {
+    return null;
+  }
+
+  const { acteurs, groups } = data;
+  const { uidPerNom, uidPerGroup, uidPerCirco } = groupDeputes(acteurs);
 
   return (
     <Container
@@ -29,10 +34,10 @@ export default async function DeputesList() {
       }}
     >
       <DeputesFilter
-        deputes={deputes}
-        indexesPerNom={indexesPerNom}
-        indexesPerGroup={indexesPerGroup}
-        indexesPerCirco={indexesPerCirco}
+        deputes={acteurs}
+        uidPerNom={uidPerNom}
+        uidPerGroup={uidPerGroup}
+        uidPerCirco={uidPerCirco}
         groups={groups}
       />
     </Container>

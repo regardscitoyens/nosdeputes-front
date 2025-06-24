@@ -3,15 +3,16 @@ import React from "react";
 import { HeroSection } from "@/components/folders/HeroSection";
 import Tabs from "./Tabs";
 
-import { getCurrentStatus, getDossier } from "./dataFunctions";
+import { getCurrentStatus } from "./dataFunctions";
+import { getDossier } from "@/data/getDossier";
 
 export default async function Dossier({
   children,
   params,
 }: React.PropsWithChildren<{
-  params: { legislature: string; id: string };
+  params: Promise<{ legislature: string; id: string }>;
 }>) {
-  const { legislature, id } = params;
+  const { legislature, id } = await params;
   const dossier = await getDossier(id);
 
   if (dossier === null) {

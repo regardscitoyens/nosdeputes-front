@@ -19,8 +19,8 @@ import { groupDeputes } from "./groupDeputes";
 import CircleDiv from "@/icons/CircleDiv";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { Acteur } from "@prisma/client";
-import { getDeputes } from "./getDeputes";
+import { Acteur, Mandat, Organe } from "@prisma/client";
+import { DeputeFilterProps } from "./DeputesFilter";
 
 function GroupPolitiqueHeader({
   itemKey,
@@ -29,11 +29,7 @@ function GroupPolitiqueHeader({
 }: {
   itemKey: string;
   nbDeputes: number;
-  group: {
-    color: string;
-    libelle: string;
-    libelle_short: string;
-  };
+  group: Organe;
 }) {
   return (
     <AccordionSummary
@@ -42,9 +38,9 @@ function GroupPolitiqueHeader({
       id={`${itemKey}-header`}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
-        <CircleDiv color={group.color} />
+        <CircleDiv color={group.couleurAssociee ?? "gray"} />
         <Typography>
-          {group.libelle} ({group.libelle_short}) - {nbDeputes}{" "}
+          {group.libelle} ({group.libelleAbrev}) - {nbDeputes}{" "}
           {nbDeputes > 1 ? "deputés" : "deputé"}
         </Typography>
       </Stack>
@@ -74,9 +70,11 @@ function NameHeader({
 
 function Deputes({
   deputes,
+  groups,
   grouping,
 }: {
-  deputes: Awaited<ReturnType<typeof getDeputes>>;
+  deputes: (Acteur & { mandatPrincipal?: Mandat })[];
+  groups: Record<string, Organe>;
   grouping: "groupPolitique" | "alphabetique";
 }) {
   return (
@@ -96,18 +94,23 @@ function Deputes({
         .map((depute) => {
           const {
             uid,
+            urlImage,
             nom,
             prenom,
             slug,
-            groupeParlementaire,
+            groupeParlementaireUid,
             mandatPrincipal,
           } = depute;
+
+          const groupeParlementaire =
+            groupeParlementaireUid && groups[groupeParlementaireUid];
           return (
             <DeputeCard
               key={uid}
               slug={slug}
               prenom={prenom}
               nom={nom}
+              urlImage={urlImage}
               secondaryText={
                 grouping === "groupPolitique"
                   ? `${mandatPrincipal?.numCirco}e Circ ${mandatPrincipal?.departement}`
@@ -139,32 +142,32 @@ function Deputes({
   );
 }
 
+interface DeputesViewProps extends DeputeFilterProps {
+  numeroDepartement: string | null;
+}
+
 export default function DeputesView({
   deputes,
-  indexesPerGroup,
-  indexesPerNom,
+  uidPerGroup,
+  uidPerNom,
   groups,
   numeroDepartement,
-}: {
-  deputes: Awaited<ReturnType<typeof getDeputes>>;
-  numeroDepartement: string | null;
-} & ReturnType<typeof groupDeputes>) {
+}: DeputesViewProps) {
   const [grouping, setGrouping] = React.useState<
     "groupPolitique" | "alphabetique"
   >("groupPolitique");
   const [search, setSearch] = React.useState("");
 
-  const indexGroup =
-    grouping === "groupPolitique" ? indexesPerGroup : indexesPerNom;
+  const uidGroup = grouping === "groupPolitique" ? uidPerGroup : uidPerNom;
 
   const AccordionHeader =
     grouping === "groupPolitique" ? GroupPolitiqueHeader : NameHeader;
 
-  const deputesActifs = deputes.filter(
+  const deputesActifs = Object.values(deputes).filter(
     (depute) =>
       depute.mandatPrincipal && depute.mandatPrincipal.dateFin === null
   ).length;
-  const deputesMandatFinit = deputes.filter(
+  const deputesMandatFinit = Object.values(deputes).filter(
     (depute) =>
       !depute.mandatPrincipal || depute.mandatPrincipal.dateFin !== null
   ).length;
@@ -200,12 +203,12 @@ export default function DeputesView({
             : "Par ordre alphabetique"}
         </Button>
       </Stack>
-      {Object.keys(indexGroup)
+      {Object.keys(uidGroup)
         .sort()
         .map((key) => {
-          const deputesIndex = indexGroup[key];
-          const filteredDeputes = deputesIndex
-            .map((i) => deputes[i])
+          const deputesUids = uidGroup[key];
+          const filteredDeputes = deputesUids
+            .map((uid) => deputes[uid])
             .filter(({ nom, prenom, mandatPrincipal }) => {
               return (
                 (!search ||
@@ -222,7 +225,12 @@ export default function DeputesView({
           }
 
           return (
-            <Accordion key={key} disableGutters elevation={0}>
+            <Accordion
+              key={key}
+              disableGutters
+              elevation={0}
+              slotProps={{ transition: { unmountOnExit: true } }}
+            >
               <AccordionHeader
                 key={key}
                 itemKey={key}
@@ -230,7 +238,11 @@ export default function DeputesView({
                 nbDeputes={filteredDeputes.length}
               />
               <AccordionDetails>
-                <Deputes deputes={filteredDeputes} grouping={grouping} />
+                <Deputes
+                  deputes={filteredDeputes}
+                  groups={groups}
+                  grouping={grouping}
+                />
               </AccordionDetails>
             </Accordion>
           );

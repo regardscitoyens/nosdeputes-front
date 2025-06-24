@@ -1,44 +1,25 @@
 import React from "react";
 
-import { prisma } from "@/prisma";
 import { AmendementTab } from "./AmendementTab";
-
-async function getAmendementsUnCached(uid: string) {
-  try {
-    return prisma.dossier.findFirst({
-      where: {
-        uid,
-      },
-      include: {
-        documents: {
-          include: {
-            amendements: {
-              include: {
-                acteurRef: { include: { groupeParlementaire: true } },
-              },
-            },
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching amendements:", error);
-    throw error;
-  }
-}
-
-const getAmendements = React.cache(getAmendementsUnCached);
+import { getDocumentsUid, getDossier } from "@/data/getDossier";
+import { getDocument } from "@/data/getDocument";
 
 export default async function Page({
   params,
 }: {
-  params: { legislature: string; id: string };
+  params: Promise<{ legislature: string; id: string }>;
 }) {
-  const dossierWithAmendement = await getAmendements(params.id);
+  return <p>Page en construction 🚧</p>;
+  // const { id } = await params;
+  // const dossier = await getDossier(id);
 
-  if (dossierWithAmendement === null) {
-    return <p>Le dossier n&apos;a pas été trouvé</p>;
-  }
+  // const documents = await Promise.all(
+  //   getDocumentsUid(dossier).map((documentUid) => getDocument(documentUid))
+  // );
 
-  return <AmendementTab dossier={dossierWithAmendement} />;
+  // if (dossier === null) {
+  //   return <p>Le dossier n&apos;a pas été trouvé</p>;
+  // }
+
+  // return <AmendementTab dossier={dossier} documents={documents} />;
 }

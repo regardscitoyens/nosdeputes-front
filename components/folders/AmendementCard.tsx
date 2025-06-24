@@ -12,6 +12,7 @@ import StatusChip from "@/components/StatusChip";
 
 import { Acteur, Amendement, Organe } from "@prisma/client";
 import DeputeCard from "@/components/folders/DeputeCard";
+import ActeurCard from "./ActeurCard";
 
 function getStatus(label: string | null) {
   switch (label) {
@@ -31,12 +32,12 @@ function getStatus(label: string | null) {
 }
 type AmendementCardProps = {
   amendement: Amendement;
-  depute: null | (Acteur & { groupeParlementaire: Organe | null });
+  acteurUid: null | string;
   titre?: string;
 };
 
 export default function AmendementCard(props: AmendementCardProps) {
-  const { amendement, depute, titre } = props;
+  const { amendement, acteurUid, titre } = props;
 
   // TODO: utiliser la base cosignataires amendement pour avoir le nombre et les noms
   const nbSignataires = amendement.signatairesLibelle
@@ -66,21 +67,8 @@ export default function AmendementCard(props: AmendementCardProps) {
           spacing={1}
           sx={{ width: "100%", mr: 2 }}
         >
-          {depute && (
-            <DeputeCard
-              slug={depute.slug ?? ""}
-              prenom={depute.prenom ?? ""}
-              nom={depute.nom ?? ""}
-              group={
-                depute.groupeParlementaire && {
-                  fullName: depute.groupeParlementaire.libelle,
-                  shortName: "",
-                  color: depute.groupeParlementaire.couleurAssociee,
-                }
-              }
-              smallGroupColor
-              sx={{ flexGrow: 1 }}
-            />
+          {acteurUid && (
+            <ActeurCard id={acteurUid} smallGroupColor sx={{ flexGrow: 1 }} />
           )}
           {titre && <Typography>{titre}</Typography>}
 

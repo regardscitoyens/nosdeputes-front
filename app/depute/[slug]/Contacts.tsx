@@ -1,4 +1,3 @@
-"use client";
 import * as React from "react";
 
 import {
@@ -15,7 +14,10 @@ import XIcon from "@mui/icons-material/X";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { AdresseElectronique, AdressePostale } from "@prisma/client";
+import {
+  getActeurAdressesElectroniques,
+  getActeurAdressesPostales,
+} from "@/data/getActeurContacts";
 
 /**
  * Types d'adresses existantes mais non affichées:
@@ -41,13 +43,12 @@ const getHref = {
   Linkedin: (val: string) => `https://linkedin.com/${val}`,
 };
 
-export default function Contacts({
-  adressesElectroniques,
-  adressesPostales,
-}: {
-  adressesElectroniques: AdresseElectronique[];
-  adressesPostales: AdressePostale[];
-}) {
+export default async function Contacts({ acteurUid }: { acteurUid: string }) {
+  const [adressesElectroniques, adressesPostales] = await Promise.all([
+    getActeurAdressesElectroniques(acteurUid),
+    getActeurAdressesPostales(acteurUid),
+  ]);
+
   const phoneAdresses = adressesElectroniques.filter(
     ({ typeLibelle }) => typeLibelle === "Téléphone"
   );
@@ -67,7 +68,7 @@ export default function Contacts({
         {/* Adresses physique */}
         <Box>
           <Typography variant="body2" fontWeight="light">
-            Courrier
+            Courier
           </Typography>
           <List>
             {postalAdresses.map(

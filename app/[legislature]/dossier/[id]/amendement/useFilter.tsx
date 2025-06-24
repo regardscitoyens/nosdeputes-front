@@ -9,7 +9,8 @@ export type AmendementsFilterState = {
 };
 
 export function useFilterSearch(
-  queryName: string
+  queryName: string,
+  defaultValue?: string
 ): [string, (val: string) => void, boolean] {
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -18,7 +19,7 @@ export function useFilterSearch(
   const [isPending, startTransition] = useTransition();
 
   const [value, setValue] = React.useState<string>(
-    searchParams.get(queryName) ?? ""
+    searchParams.get(queryName) ?? defaultValue ?? ""
   );
 
   function handleUpdate(term: string) {

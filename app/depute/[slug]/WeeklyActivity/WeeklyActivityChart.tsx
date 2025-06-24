@@ -13,12 +13,12 @@ import {
   useAxisTooltip,
   ChartsTooltipContainer,
 } from "@mui/x-charts";
-import {
-  DeputeWeeklyActivity,
-  StatsOnWeeklyActivity,
-} from "./WeeklyActivity.type";
 import { useAgregateWeeklyStats } from "./useAgregateWeeklyStats";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { StatistiqueHebdomadaire } from "@prisma/client";
 
 const seriesConfig: Record<
   "commission" | "hemicicle",
@@ -65,8 +65,12 @@ const seriesConfig: Record<
 };
 
 export default function WeeklyActivityChart(props: {
-  deputeWeeklyActivity: DeputeWeeklyActivity[];
-  statsOnWeeklyActivity: StatsOnWeeklyActivity[];
+  presenceDetectee: StatistiqueHebdomadaire[];
+  presenceCommision: StatistiqueHebdomadaire[];
+  presenceDetecteeMax: StatistiqueHebdomadaire[];
+  presenceDetecteeMediane: StatistiqueHebdomadaire[];
+  presenceCommisionMax: StatistiqueHebdomadaire[];
+  presenceCommisionMediane: StatistiqueHebdomadaire[];
   activityType: "commission" | "hemicicle";
 }) {
   const { presenceDetecteeDataset, vacances } = useAgregateWeeklyStats(props);

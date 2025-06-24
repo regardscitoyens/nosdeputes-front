@@ -1,20 +1,18 @@
 "use client";
-
 import * as React from "react";
+
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import InfoIcon from "@/icons/InfoIcon";
-import DeputeCard from "./DeputeCard";
-
-import { Acteur, Organe } from "@prisma/client";
+import { ActeurCard } from "./ActeurCard";
 
 export default function Signataires(props: {
   limite?: number;
-  signataires: (Acteur & { groupeParlementaire: null | Organe })[];
+  signataireUids: string[];
 }) {
-  const { signataires, limite = 3 } = props;
+  const { signataireUids, limite = 3 } = props;
   const [fullSignataires, setFullSignataires] = React.useState(false);
 
   return (
@@ -26,36 +24,21 @@ export default function Signataires(props: {
           </Typography>
           <InfoIcon sx={{ fontSize: "14px" }} />
         </Stack>
-        {signataires
-          ?.slice(0, fullSignataires ? signataires.length : limite)
-          ?.map((acteur) => {
-            const { prenom, nom, slug, groupeParlementaire, uid } = acteur;
 
-            return (
-              <DeputeCard
-                key={uid}
-                prenom={prenom}
-                nom={nom}
-                slug={slug}
-                group={
-                  groupeParlementaire && {
-                    fullName: "",
-                    shortName: groupeParlementaire.libelleAbrev,
-                    color: groupeParlementaire.couleurAssociee,
-                  }
-                }
-              />
-            );
+        {signataireUids
+          ?.slice(0, fullSignataires ? signataireUids.length : limite)
+          ?.map((acteurUid) => {
+            return <ActeurCard key={acteurUid} id={acteurUid} />;
           })}
-        {!fullSignataires && signataires.length > limite && (
+        {!fullSignataires && signataireUids.length > limite && (
           <Button
             fullWidth
             variant="contained"
             color="secondary"
-            disabled={signataires?.length === 0}
+            disabled={signataireUids?.length === 0}
             onClick={() => setFullSignataires((prev) => !prev)}
           >
-            Tous les signataires ({signataires.length})
+            Tous les signataires ({signataireUids.length})
           </Button>
         )}
       </Stack>
