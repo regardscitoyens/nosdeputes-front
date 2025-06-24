@@ -13,14 +13,15 @@ import StatusChip from "@/components/StatusChip";
 type DossierCardProps = {
   href: string;
   titre: null | string;
-  status: null | string; //TODO: use an enum when the type of status will be clear
+  etape: null | string; //TODO: use an enum when the type of etape will be clear
   thematique: string; // TODO: use an enum latter
-  interventions: number;
-  amendements: number;
+  interventions?: number;
+  amendements?: number;
 };
 const DossierCard = (props: DossierCardProps) => {
-  const { titre, status, href, thematique, interventions, amendements } = props;
+  const { titre, etape, href, thematique, interventions, amendements } = props;
 
+  const withStats = interventions !== undefined && amendements !== undefined;
   return (
     <Card variant="outlined" sx={{ borderRadius: 1.25 }}>
       <CardActionArea
@@ -44,25 +45,31 @@ const DossierCard = (props: DossierCardProps) => {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box
-          sx={{
-            display: "flew",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
-            mb: 2,
-          }}
-        >
-          <Typography variant="body2">
-            <b>{interventions}</b> interventions
-          </Typography>
-          <Typography variant="body2">
-            <b>{amendements}</b> amendements
-          </Typography>
-        </Box>
+        {withStats && (
+          <Box
+            sx={{
+              display: "flew",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+              mb: 2,
+            }}
+          >
+            {interventions !== undefined && (
+              <Typography variant="body2">
+                <b>{interventions}</b> interventions
+              </Typography>
+            )}
+            {amendements !== undefined && (
+              <Typography variant="body2">
+                <b>{amendements}</b> amendements
+              </Typography>
+            )}
+          </Box>
+        )}
 
         <Stack direction="row" spacing={2}>
-          {status && <StatusChip size="small" status="review" label={status} />}
+          {etape && <StatusChip size="small" status="review" label={etape} />}
           {thematique && <LabelChip size="small" label={thematique} />}
         </Stack>
       </CardActionArea>

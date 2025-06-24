@@ -16,34 +16,25 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Agenda } from "@prisma/client";
 import Link from "next/link";
+import { ReturnedPointsOdj } from "@/data/getPointsOdj";
 
 type DebateFilterBarProps = {
-  reunions: Pick<
-    Agenda,
-    | "uid"
-    | "libelleCourtLieu"
-    | "libelleLongLieu"
-    | "timestampDebut"
-    | "timestampFin"
-    | "compteRenduRefUid"
-  >[];
+  pointsOdj: ReturnedPointsOdj[];
   // setDebateRef: (newRef: string) => void;
   // debats: Debat[];
 };
 
 export const DebateFilterBar = (props: DebateFilterBarProps) => {
-  const { reunions } = props;
+  const { pointsOdj } = props;
   const sceanceUid = useSelectedLayoutSegment();
 
-  const reunionIndex = reunions.findIndex(
-    (reunion) => reunion.compteRenduRefUid === sceanceUid
-  );
+  const reunionIndex = pointsOdj.findIndex((odj) => odj.uid === sceanceUid);
   if (!sceanceUid || reunionIndex < 0) {
-    if (reunions.length > 0) {
+    if (pointsOdj.length > 0) {
       if (sceanceUid) {
-        permanentRedirect(`${reunions[0].compteRenduRefUid}`);
+        permanentRedirect(`${pointsOdj[0].uid}`);
       } else {
-        permanentRedirect(`debat/${reunions[0].compteRenduRefUid}`);
+        permanentRedirect(`debat/${pointsOdj[0].uid}`);
       }
     }
   }
@@ -74,44 +65,40 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
           sx={{ width: "100%" }}
         >
           <Select value={sceanceUid} displayEmpty sx={{ flex: 1 }}>
-            {reunions.map(
-              ({
-                compteRenduRefUid,
-                libelleCourtLieu,
-                libelleLongLieu,
-                timestampDebut,
-              }) => {
-                return (
-                  // @ts-ignore
-                  <MenuItem
-                    key={compteRenduRefUid}
-                    value={compteRenduRefUid}
-                    component={Link}
-                    href={compteRenduRefUid}
+            {pointsOdj.map((odj) => {
+              return (
+                // @ts-ignore
+                <MenuItem
+                  key={odj.uid}
+                  value={odj.uid}
+                  component={Link}
+                  href={odj.uid}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      textTransform: {
+                        xs: "uppercase",
+                        md: "none",
+                      },
+                    }}
                   >
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        textTransform: {
-                          xs: "uppercase",
-                          md: "none",
-                        },
-                      }}
-                    >
-                      {libelleCourtLieu ?? libelleLongLieu ?? ""}, le{" "}
-                      {timestampDebut!.toLocaleString("fr-FR", {
-                        month: "long",
-                        day: "numeric",
-                        weekday: "long",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                    </Typography>
-                  </MenuItem>
-                );
-              }
-            )}
+                    {odj.agendaRef?.libelleCourtLieu ??
+                      odj.agendaRef?.libelleLongLieu ??
+                      ""}
+                    , le{" "}
+                    {odj.agendaRef?.timestampDebut?.toLocaleString("fr-FR", {
+                      month: "long",
+                      day: "numeric",
+                      weekday: "long",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </Typography>
+                </MenuItem>
+              );
+            })}
           </Select>
           <Stack
             justifyContent="flex-end"
@@ -128,11 +115,7 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
             <IconButton
               size="small"
               component={Link}
-              href={
-                reunionIndex <= 0
-                  ? ""
-                  : reunions[reunionIndex - 1].compteRenduRefUid!
-              }
+              href={reunionIndex <= 0 ? "" : pointsOdj[reunionIndex - 1].uid!}
               disabled={reunionIndex <= 0}
             >
               <ArrowBackIcon fontSize="small" />
@@ -141,11 +124,11 @@ export const DebateFilterBar = (props: DebateFilterBarProps) => {
               size="small"
               component={Link}
               href={
-                reunionIndex >= reunions.length - 1
+                reunionIndex >= pointsOdj.length - 1
                   ? ""
-                  : reunions[reunionIndex + 1].compteRenduRefUid!
+                  : pointsOdj[reunionIndex + 1].uid!
               }
-              disabled={reunionIndex >= reunions.length - 1}
+              disabled={reunionIndex >= pointsOdj.length - 1}
             >
               <ArrowForwardIcon fontSize="small" />
             </IconButton>

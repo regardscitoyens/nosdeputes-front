@@ -8,15 +8,18 @@ import DeputesView from "./DeputesView";
 import { FilterContainer } from "@/components/FilterContainer";
 import { Filter } from "./Filter";
 import { groupDeputes } from "./groupDeputes";
-import { getDeputes } from "./getDeputes";
+import { Acteur, Mandat, Organe } from "@prisma/client";
 
-interface DeputeFilterProps extends ReturnType<typeof groupDeputes> {
-  deputes: Awaited<ReturnType<typeof getDeputes>>;
+export interface DeputeFilterProps {
+  deputes: Record<string, Acteur & { mandatPrincipal?: Mandat }>;
+  uidPerNom: Record<string, string[]>;
+  uidPerGroup: Record<string, string[]>;
+  uidPerCirco: Record<string, string[]>;
+  groups: Record<string, Organe>;
 }
 
 export default function DeputesFilter(props: DeputeFilterProps) {
-  const { deputes, indexesPerNom, indexesPerGroup, indexesPerCirco, groups } =
-    props;
+  const { deputes, uidPerNom, uidPerGroup, uidPerCirco, groups } = props;
 
   const [numeroDepartement, setNumeroDepartement] = React.useState<
     string | null
@@ -35,9 +38,9 @@ export default function DeputesFilter(props: DeputeFilterProps) {
       <Stack spacing={3} flex={5}>
         <DeputesView
           deputes={deputes}
-          indexesPerNom={indexesPerNom}
-          indexesPerGroup={indexesPerGroup}
-          indexesPerCirco={indexesPerCirco}
+          uidPerNom={uidPerNom}
+          uidPerGroup={uidPerGroup}
+          uidPerCirco={uidPerCirco}
           groups={groups}
           numeroDepartement={numeroDepartement}
         />

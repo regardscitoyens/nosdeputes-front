@@ -127,7 +127,7 @@ const TimelineItemLvl1 = ({
   groupDate,
   children,
 }: React.PropsWithChildren<{ act: ActeLegislatif; groupDate?: Date }>) => {
-  const title = `${act.nomCanonique} (${act.codeActe})` || act.codeActe;
+  const title = act.nomCanonique || act.codeActe;
   const date = act.dateActe ?? groupDate;
   return (
     <TimelineItem key={act.uid}>
@@ -147,10 +147,7 @@ const TimelineItemLvl1 = ({
         <TimelineConnector />
       </TimelineSeparator>
       <TimelineContent>
-        <Typography variant="body1">
-          {title}
-          {/* ({act.uid}) */}
-        </Typography>
+        <Typography variant="body1">{title}</Typography>
         <Typography
           variant="caption"
           component="p"
@@ -168,7 +165,7 @@ const TimelineItemLvl1 = ({
               })
             : "?"}
         </Typography>
-        {children}{" "}
+        {children}
       </TimelineContent>
     </TimelineItem>
   );
@@ -239,8 +236,8 @@ export const TimelineCard = ({
                                         CODE_ACTS_AVEC_DEBAT.includes(
                                           act.codeActe
                                         )
-                                          ? `/${legislature}/dossier/${dossierUid}/debat?compteRenduRef=${act.reunionRefUid}`
-                                          : "";
+                                          ? `/${legislature}/dossier/${dossierUid}/debat/${act.pointOdjUid}`
+                                          : undefined;
                                       const title = `${act.nomCanonique}${
                                         date
                                           ? ` du ${date.toLocaleDateString(
@@ -264,8 +261,6 @@ export const TimelineCard = ({
                                             sx={{ my: 1.5 }}
                                           >
                                             {title}
-                                            {/* ({act.organeRefUid})(
-                                            {act.uid}) */}
                                           </Typography>
                                           {lvl3Group &&
                                             getSortedActGroups(
@@ -311,7 +306,6 @@ export const TimelineCard = ({
                                                     sx={{ my: 0, ml: 4 }}
                                                   >
                                                     {title}
-                                                    {/* ({act.organeRefUid})({act.uid}) */}
                                                   </Typography>
                                                 );
                                               })}

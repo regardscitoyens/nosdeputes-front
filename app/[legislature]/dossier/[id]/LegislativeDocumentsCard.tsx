@@ -1,7 +1,6 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,33 +8,18 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import LinkIcon from "@/icons/LinkIcon";
 
 import Link from "next/link";
-import { getDocumentURL } from "@/domain/dataTransform";
-import { prisma } from "@/prisma";
 
-async function getDocumentsUnCached(ids: string[]) {
-  if (ids.length === 0) {
-    return [];
-  }
+import { getDocument } from "@/data/getDocument";
 
-  try {
-    return prisma.document.findMany({
-      where: { uid: { in: ids } },
-    });
-  } catch (error) {
-    console.error("Error fetching commission:", error);
-    throw error;
-  }
-}
-
-const getDocuments = React.cache(getDocumentsUnCached);
-
-export const LegislativeDocumentsCard = async ({
-  documentIds,
-}: {
+interface LegislativeDocumentsCardProps {
   documentIds: string[];
-}) => {
-  const documents = await getDocuments(documentIds);
-
+}
+export const LegislativeDocumentsCard = async (
+  props: LegislativeDocumentsCardProps
+) => {
+  const documents = await Promise.all(
+    props.documentIds.map((documentUid) => getDocument(documentUid))
+  );
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
@@ -50,7 +34,6 @@ export const LegislativeDocumentsCard = async ({
             if (!document) {
               return null;
             }
-            const url = getDocumentURL(document);
 
             return (
               <Stack
@@ -62,11 +45,11 @@ export const LegislativeDocumentsCard = async ({
                 <Typography
                   variant="body2"
                   fontWeight="bold"
-                  href={url}
-                  component={url ? Link : "p"}
+                  href={document.pdfUrl ?? undefined}
+                  component={document.pdfUrl ? Link : "p"}
                 >
                   {document.titrePrincipalCourt}{" "}
-                  {url && <LinkIcon sx={{ fontSize: "14px" }} />}
+                  {document.pdfUrl && <LinkIcon sx={{ fontSize: "14px" }} />}
                 </Typography>
               </Stack>
             );

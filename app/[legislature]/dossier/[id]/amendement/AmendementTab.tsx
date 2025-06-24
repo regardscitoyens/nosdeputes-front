@@ -10,33 +10,38 @@ import { Filter } from "./Filter";
 import { useFilterSearch } from "./useFilter";
 import AmendementList from "./AmendementList";
 import { Typography } from "@mui/material";
-import { Amendement, Dossier, Document, Acteur, Organe } from "@prisma/client";
+
+import { ReturnedDossier } from "@/data/getDossier";
+import { ReturnedDocument } from "@/data/getDocument";
 
 export type AmendementTabProps = {
-  dossier: Dossier & {
-    documents:
-      | null
-      | (Document & {
-          amendements:
-            | null
-            | (Amendement & {
-                acteurRef:
-                  | null
-                  | (Acteur & { groupeParlementaire: Organe | null });
-              })[];
-        })[];
-  };
+  dossier: ReturnedDossier;
+  documents: (ReturnedDocument | null)[];
 };
 
-export const AmendementTab = ({ dossier }: AmendementTabProps) => {
-  const flattenAmendements = dossier.documents
-    ?.flatMap((document) => document.amendements)
-    .filter((amendement) => amendement !== null);
+export const AmendementTab = ({ dossier, documents }: AmendementTabProps) => {
+  const documentsAvecAmendement = React.useMemo(
+    () =>
+      documents.filter((document): document is ReturnedDocument =>
+        Boolean(document && document._count.amendements)
+      ),
+    [documents]
+  );
 
-  const [numero, handleNumero] = useFilterSearch("numero");
-  const [document, handleDocument] = useFilterSearch("document");
-  const [depute, handleDepute] = useFilterSearch("depute");
-  const [status, handleStatus] = useFilterSearch("status");
+  // const [numero, handleNumero] = useFilterSearch("numero");
+  // const [document, handleDocument] = useFilterSearch(
+  //   "document",
+  //   documentsAvecAmendement[0]?.uid
+  // );
+  // const [depute, handleDepute] = useFilterSearch("depute");
+  // const [status, handleStatus] = useFilterSearch("status");
+
+  const [numero, handleNumero] = React.useState('');
+  const [document, handleDocument] = React.useState(
+    documentsAvecAmendement[0]?.uid
+  );
+  const [depute, handleDepute] = React.useState('');
+  const [status, handleStatus] = React.useState('');
 
   return (
     <Container
@@ -58,6 +63,7 @@ export const AmendementTab = ({ dossier }: AmendementTabProps) => {
             selectedDocument={document}
             setSelectedDocument={handleDocument}
             dossier={dossier}
+            documents={documentsAvecAmendement}
             depute={depute}
             handleDepute={handleDepute}
             status={status}
@@ -66,11 +72,10 @@ export const AmendementTab = ({ dossier }: AmendementTabProps) => {
         </FilterContainer>
       </Stack>
       <Stack spacing={3} useFlexGap flex={8} sx={{ minWidth: 0 }}>
-        <Typography variant="h2" fontWeight="bold" fontFamily="Raleway">
+        {/* <Typography variant="h2" fontWeight="bold" fontFamily="Raleway">
           {flattenAmendements?.length ?? 0} Amendements
-        </Typography>
+        </Typography> */}
         <AmendementList
-          amendements={flattenAmendements ?? []}
           numero={numero}
           selectedDocument={document}
           depute={depute}

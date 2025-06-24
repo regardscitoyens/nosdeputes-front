@@ -2,18 +2,21 @@ import * as React from "react";
 
 import { Paper, Stack, Typography } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { Acteur, Mandat } from "@prisma/client";
+import { Acteur } from "@prisma/client";
+import { getActeurMandats } from "@/data/getActeurMandats";
 
-export default function InfoPersonelles({
-  mandats,
+export default async function InfoPersonelles({
+  acteurUid,
   depute,
 }: {
-  mandats: Mandat[];
+  acteurUid: string;
   depute: Acteur;
 }) {
-  const sortedMandats = mandats
-    // .filter((mandat) => mandat.legislature === "16") Partis politique est `null`
-    .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1));
+  const mandats = await getActeurMandats(acteurUid);
+
+  const sortedMandats = mandats.sort((a, b) =>
+    a.dateDebut < b.dateDebut ? 1 : -1
+  );
 
   const dernierMandatDepute = sortedMandats.filter(
     (mandat) => mandat.typeOrgane === "ASSEMBLEE"
@@ -87,7 +90,7 @@ export default function InfoPersonelles({
           <Typography variant="body2">
             {derniergroupeParlementaire &&
             derniergroupeParlementaire.dateFin === null
-              ? derniergroupeParlementaire.libelle
+              ? derniergroupeParlementaire.organeRef?.libelleAbrege
               : "-"}
           </Typography>
         </div>
@@ -98,7 +101,7 @@ export default function InfoPersonelles({
           </Typography>
           <Typography variant="body2">
             {dernierPartisPolitique && dernierPartisPolitique.dateFin === null
-              ? dernierPartisPolitique.libelle
+              ? dernierPartisPolitique.organeRef?.libelleAbrege
               : "-"}
           </Typography>
         </div>

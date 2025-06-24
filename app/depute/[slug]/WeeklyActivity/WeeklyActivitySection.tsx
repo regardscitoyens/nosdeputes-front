@@ -1,39 +1,52 @@
-"use client";
 import * as React from "react";
-import Typography from "@mui/material/Typography";
-import {
-  DeputeWeeklyActivity,
-  StatsOnWeeklyActivity,
-} from "./WeeklyActivity.type";
-import WeeklyActivityChart from "./WeeklyActivityChart";
-import { MenuItem, Select, Stack } from "@mui/material";
+import WeeklyActivitySectionClient from "./WeeklyActivitySectionClient";
+import { StateHebdoType } from "@prisma/client";
 
-export default function WeeklyActivitySection(props: {
-  deputeWeeklyActivity: DeputeWeeklyActivity[];
-  statsOnWeeklyActivity: StatsOnWeeklyActivity[];
+const types: StateHebdoType[] = [
+  "presenceDetectee",
+  "presenceCommision",
+  "amendementDepose",
+];
+
+const getHebdoStates = async (
+  acteurUid: string,
+  type: StateHebdoType,
+  size: number = 100
+) => {
+  const rep = await fetch(
+    `http://localhost:1789/statistiqueHebdomadaire/?dataset=17&acteurUid=${acteurUid}&type=${type}&sort=semaineIndex.desc&perPage=${size}`
+  );
+
+  const { data = [] } = await rep.json();
+  return data;
+};
+
+export default async function WeeklyActivitySection(props: {
+  acteurUid: string;
 }) {
-  const [activityType, setActivityType] = React.useState<
-    "commission" | "hemicicle"
-  >("hemicicle");
-
+  const [
+    presenceDetectee,
+    presenceCommision,
+    presenceDetecteeMax,
+    presenceDetecteeMediane,
+    presenceCommisionMax,
+    presenceCommisionMediane,
+  ] = await Promise.all([
+    getHebdoStates(props.acteurUid, "presenceDetectee"),
+    getHebdoStates(props.acteurUid, "presenceCommision"),
+    getHebdoStates("max", "presenceDetectee"),
+    getHebdoStates("median", "presenceDetectee"),
+    getHebdoStates("max", "presenceCommision"),
+    getHebdoStates("median", "presenceCommision"),
+  ]);
   return (
-    <div>
-      <Stack direction="row" justifyContent="space-between">
-        <Typography variant="h4" component="h2">
-          Présences et participations
-        </Typography>
-        <Select
-          variant="outlined"
-          value={activityType}
-          onChange={(event) =>
-            setActivityType(event.target.value as "commission" | "hemicicle")
-          }
-        >
-          <MenuItem value="hemicicle">Hémicicle</MenuItem>
-          <MenuItem value="commission">Commissions</MenuItem>
-        </Select>
-      </Stack>
-      <WeeklyActivityChart {...props} activityType={activityType} />
-    </div>
+    <WeeklyActivitySectionClient
+      presenceDetectee={presenceDetectee}
+      presenceCommision={presenceCommision}
+      presenceDetecteeMax={presenceDetecteeMax}
+      presenceDetecteeMediane={presenceDetecteeMediane}
+      presenceCommisionMax={presenceCommisionMax}
+      presenceCommisionMediane={presenceCommisionMediane}
+    />
   );
 }

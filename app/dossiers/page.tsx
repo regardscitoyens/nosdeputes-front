@@ -7,10 +7,10 @@ import { FilterContainer } from "@/components/FilterContainer";
 import { Filter } from "@/components/folderHomePage/Filter";
 import DossierList from "@/components/folderHomePage/DossierList";
 
-export default function Dossiers(props: {
-  searchParams: { theme?: string; search?: string };
+export default async function Dossiers(props: {
+  searchParams: Promise<{ theme?: string; search?: string }>;
 }) {
-  const { searchParams } = props;
+  const { theme, search } = await props.searchParams;
 
   return (
     <Container
@@ -26,11 +26,11 @@ export default function Dossiers(props: {
     >
       <Stack spacing={3} useFlexGap flex={2}>
         <FilterContainer>
-          <Filter theme={searchParams.theme ?? ""} />
+          <Filter theme={theme ?? ""} search={search ?? ""} />
         </FilterContainer>
       </Stack>
       <Stack spacing={3} flex={5} sx={{ minWidth: 0 }}>
-        <DossierList theme={searchParams.theme ?? ""} search="" />
+        <DossierList theme={theme ?? ""} search={search ?? ""} />
       </Stack>
     </Container>
   );

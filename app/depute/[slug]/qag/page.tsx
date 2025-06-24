@@ -1,35 +1,27 @@
 import React from "react";
 
-import { prisma } from "@/prisma";
 import QuestionCard from "./QuestionCard";
+import { getActeurBySlug } from "@/data/getActeurBySlug";
+import { getQuestion } from "@/data/getQuestion";
 
-async function getDeputeQuestionsUnCached(slug: string) {
-  try {
-    return await prisma.acteur.findFirst({
-      where: { slug },
-      include: {
-        questions: {
-          include: {
-            minIntRef: true,
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.error(`Error fetching QAG from depute ${slug}:`, error);
-    throw error;
-  }
-}
+export default async function Votes({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const depute = await getActeurBySlug(slug);
 
-const getDeputeQuestions = React.cache(getDeputeQuestionsUnCached);
-
-export default async function Votes({ params }: { params: { slug: string } }) {
-  const deputeWithQuestions = await getDeputeQuestions(params.slug);
-  
-  if (!deputeWithQuestions) {
+  if (depute === null) {
     return <p>Deputé inconnu</p>;
   }
-  const { questions = [] } = deputeWithQuestions;
+
+  const questions = await getQuestion(depute.uid);
+
+  if (questions.length === 0) {
+    return <p>Aucune question trouvée.</p>;
+  }
+
   return (
     <div>
       {questions?.map((question) => {

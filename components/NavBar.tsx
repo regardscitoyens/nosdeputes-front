@@ -12,7 +12,7 @@ interface NavBarProps {
   navigation: NavigationItem[];
 }
 
-export function NavBar({ navigation }: NavBarProps): JSX.Element {
+export function NavBar({ navigation }: NavBarProps) {
   const pathname = usePathname();
 
   return (

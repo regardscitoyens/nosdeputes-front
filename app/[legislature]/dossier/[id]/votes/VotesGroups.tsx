@@ -26,33 +26,34 @@ type GroupInfo = {
 };
 
 export function VotesGroups({ votes }: { votes: VoteWithActeur[] }) {
-  const votesPerGroup: GroupInfo[] = React.useMemo(() => {
-    const groups: Record<string, Omit<GroupInfo, "groupId">> = {};
+  const votesPerGroup: GroupInfo[] = [];
+  // const votesPerGroup: GroupInfo[] = React.useMemo(() => {
+  //   const groups: Record<string, Omit<GroupInfo, "groupId">> = {};
 
-    votes.forEach((vote) => {
-      if (!groups[vote.groupeVotantRefId ?? ""]) {
-        groups[vote.groupeVotantRefId ?? ""] = {
-          pour: Number.parseInt(vote.groupeVotantRef?.pour ?? "0"),
-          contre: Number.parseInt(vote.groupeVotantRef?.contre ?? "0"),
-          abstentions: Number.parseInt(
-            vote.groupeVotantRef?.abstentions ?? "0"
-          ),
-          nonVotants: Number.parseInt(vote.groupeVotantRef?.nonVotants ?? "0"),
-          nonVotantsVolontaires: Number.parseInt(vote.groupeVotantRef?.nonVotantsVolontaires ?? "0"),
-          fullName: vote.groupeVotantRef?.organeRef?.libelle ?? "",
-          shortName: vote.groupeVotantRef?.organeRef?.libelleAbrev ?? "",
-          color: vote.groupeVotantRef?.organeRef?.couleurAssociee ?? "",
-          votes: [],
-        };
-      }
+  //   votes.forEach((vote) => {
+  //     if (!groups[vote.groupeVotantRefId ?? ""]) {
+  //       groups[vote.groupeVotantRefId ?? ""] = {
+  //         pour: Number.parseInt(vote.groupeVotantRef?.pour ?? "0"),
+  //         contre: Number.parseInt(vote.groupeVotantRef?.contre ?? "0"),
+  //         abstentions: Number.parseInt(
+  //           vote.groupeVotantRef?.abstentions ?? "0"
+  //         ),
+  //         nonVotants: Number.parseInt(vote.groupeVotantRef?.nonVotants ?? "0"),
+  //         nonVotantsVolontaires: Number.parseInt(vote.groupeVotantRef?.nonVotantsVolontaires ?? "0"),
+  //         fullName: vote.groupeVotantRef?.organeRef?.libelle ?? "",
+  //         shortName: vote.groupeVotantRef?.organeRef?.libelleAbrev ?? "",
+  //         color: vote.groupeVotantRef?.organeRef?.couleurAssociee ?? "",
+  //         votes: [],
+  //       };
+  //     }
 
-      groups[vote.groupeVotantRefId ?? ""].votes.push(vote);
-    });
+  //     groups[vote.groupeVotantRefId ?? ""].votes.push(vote);
+  //   });
 
-    return Object.entries(groups)
-      .map(([groupId, group]) => ({ groupId, ...group }))
-      .sort((a, b) => b.votes.length - a.votes.length);
-  }, [votes]);
+  //   return Object.entries(groups)
+  //     .map(([groupId, group]) => ({ groupId, ...group }))
+  //     .sort((a, b) => b.votes.length - a.votes.length);
+  // }, [votes]);
 
   return (
     <div>
@@ -119,6 +120,7 @@ export function VotesGroups({ votes }: { votes: VoteWithActeur[] }) {
                       <DeputeCard
                         key={id}
                         slug={acteurRef?.slug ?? ""}
+                        urlImage={acteurRef?.urlImage ?? ""}
                         prenom={acteurRef?.prenom ?? ""}
                         nom={acteurRef?.nom ?? ""}
                         vote={positionVote}

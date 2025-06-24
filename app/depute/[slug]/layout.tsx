@@ -1,57 +1,27 @@
 import React from "react";
 import { Avatar, Box, Container, Stack, Typography } from "@mui/material";
 import CircleDiv from "@/icons/CircleDiv";
-import { prisma } from "@/prisma";
 import Mandats from "./Mandats";
 import Contacts from "./Contacts";
 import Tabs from "./Tabs";
 import InfoPersonelles from "./InfoPersonelles";
-
-async function getDeputeUnCached(slug: string) {
-  try {
-    return prisma.acteur.findFirst({
-      where: { slug },
-      include: {
-        adressesElectroniques: true,
-        adressesPostales: true,
-        groupeParlementaire: true,
-        mandats: {
-          include: {
-            organeRef: true,
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching depute:", error);
-    throw error;
-  }
-}
-
-export const getDepute = React.cache(getDeputeUnCached);
+import { getActeurBySlug } from "@/data/getActeurBySlug";
 
 export default async function Page({
   children,
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
   children: React.ReactNode;
 }) {
-  const depute = await getDepute(params.slug);
+  const { slug } = await params;
+  const depute = await getActeurBySlug(slug);
 
   if (depute === null) {
     return <p>Deputé Not Found</p>;
   }
 
-  const circonscription = depute.mandats
-    .filter((mandat) => mandat.typeOrgane === "ASSEMBLEE")
-    .sort((a, b) => (a.dateDebut < b.dateDebut ? 1 : -1))[0];
-
-  // A décider: Faut il afficher les mandats passé?
-  // Exemple: la partissipation à des commission d'enquête
-  const mandasEnCours = depute.mandats?.filter(
-    (mandat) => mandat.dateFin === null
-  );
+  const circonscription = depute.mandatPrincipal;
 
   return (
     <Box sx={{ maxWidth: "1024px", mx: "auto", my: 5 }}>
@@ -60,7 +30,7 @@ export default async function Page({
           <Avatar
             sx={{ bgcolor: "grey.200", width: 100, height: 100, mr: 1 }}
             alt={`${depute.prenom} ${depute.nom}`}
-            src={`https://www.nosdeputes.fr/depute/photo/${depute.slug}/${128}`}
+            src={depute.urlImage ?? ""}
           >
             {depute.prenom[0]}
             {depute.nom[0]}
@@ -78,7 +48,9 @@ export default async function Page({
                   <>
                     <br />
                     Fin de mandat le{" "}
-                    {new Date(circonscription.dateFin).toLocaleDateString("fr-FR")}
+                    {new Date(circonscription.dateFin).toLocaleDateString(
+                      "fr-FR"
+                    )}
                   </>
                 )}
               </Typography>
@@ -118,16 +90,13 @@ export default async function Page({
         }}
       >
         <Stack spacing={3} useFlexGap flex={2}>
-          <InfoPersonelles mandats={depute.mandats ?? []} depute={depute} />
-          <Mandats mandats={mandasEnCours ?? []} />
-          <Contacts
-            adressesElectroniques={depute.adressesElectroniques}
-            adressesPostales={depute.adressesPostales}
-          />
+          <InfoPersonelles acteurUid={depute.uid} depute={depute} />
+          <Mandats acteurUid={depute.uid} />
+          <Contacts acteurUid={depute.uid} />
         </Stack>
 
         <Stack spacing={3} flex={5} sx={{ minWidth: 0 }}>
-          <Tabs slug={params.slug} />
+          <Tabs slug={slug} />
           {children}
         </Stack>
       </Container>

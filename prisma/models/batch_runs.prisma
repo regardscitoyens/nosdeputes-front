@@ -1,7 +1,0 @@
-model BatchRuns {
-  id                Int       @id @default(autoincrement())
-  dateDebut         DateTime
-  dateFin           DateTime?
-  nomTable          String
-  nbLignesAffectees Int       @default(0)
-}

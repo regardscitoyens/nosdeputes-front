@@ -2,20 +2,15 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import DossierCard from "./DossierCard";
 
-import { prisma } from "@/prisma";
+import { Dossier } from "@prisma/client";
 
-async function getLastDossiersUnCached() {
+async function getLastDossiersUnCached(): Promise<Dossier[]> {
   try {
-    const data = await prisma.dossier.findMany({
-      where: { legislature: "17" },
-      orderBy: [{ dateDernierActe: "desc" }, { numero: "desc" }],
-      take: 6,
-      include: {
-        _count: {
-          select: { paragraphes: true, amendements: true },
-        },
-      },
-    });
+    const rep = await fetch(
+      `${process.env.NEXT_PUBLIC_TRICOTEUSES_API_URL}/dossiers/?sort=dateDernierActe.asc`
+    );
+
+    const { data } = await rep.json();
 
     return data;
   } catch (error) {
@@ -36,17 +31,27 @@ export default async function Dossiers() {
         gridGap: 16,
       }}
     >
-      {dossiers.map(({ uid, statut, _count, titre }) => (
-        <DossierCard
-          key={uid}
-          titre={titre}
-          href={`/${17}/dossier/${uid}`}
-          status={statut}
-          amendements={_count?.amendements}
-          interventions={_count?.paragraphes}
-          thematique=""
-        />
-      ))}
+      {dossiers.map(
+        ({
+          uid,
+          // etape,
+          // _count,
+          titre,
+          // documents
+        }) => (
+          <DossierCard
+            key={uid}
+            titre={titre}
+            href={`/${17}/dossier/${uid}`}
+            etape={null}
+            // amendements={documents
+            //   .map((document) => document._count.amendements)
+            //   .reduce((acc, v) => acc + v, 0)}
+            // interventions={_count?.paragraphes}
+            thematique=""
+          />
+        )
+      )}
     </Box>
   );
 }

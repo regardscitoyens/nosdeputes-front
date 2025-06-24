@@ -6,31 +6,44 @@ import { THEMES } from "../const";
 import { useFilterState } from "./useFilter";
 
 type FilterProps = {
+  search: string;
   theme: string;
 };
 
 export const Filter = (props: FilterProps) => {
-  const { theme } = props;
+  const { theme, search } = props;
 
-  const { handleThemes } = useFilterState();
+  const { handleThemes, handleSearch } = useFilterState();
 
   return (
-    <TextField
-      select
-      size="small"
-      label="Thème"
-      value={theme}
-      onChange={(event) => {
-        handleThemes(event.target.value);
-      }}
-      variant="outlined"
-    >
-      <MenuItem value="">-</MenuItem>
-      {THEMES.map((theme) => (
-        <MenuItem key={theme} value={theme}>
-          {theme}
-        </MenuItem>
-      ))}
-    </TextField>
+    <>
+      {/* <TextField
+        select
+        size="small"
+        label="Thème"
+        value={theme}
+        onChange={(event) => {
+          handleThemes(event.target.value);
+        }}
+        variant="outlined"
+      >
+        <MenuItem value="">-</MenuItem>
+        {THEMES.map((theme) => (
+          <MenuItem key={theme} value={theme}>
+            {theme}
+          </MenuItem>
+        ))}
+      </TextField> */}
+
+      <TextField
+        size="small"
+        label="Search"
+        value={search}
+        onChange={(event) => {
+          handleSearch(event.target.value);
+        }}
+        variant="outlined"
+      />
+    </>
   );
 };

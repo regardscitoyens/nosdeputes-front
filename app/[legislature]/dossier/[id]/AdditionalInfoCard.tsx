@@ -9,43 +9,22 @@ import MuiLink from "@mui/material/Link";
 import InfoIcon from "@/icons/InfoIcon";
 import Link from "next/link";
 import Signataires from "../../../../components/folders/Signataires";
-import { prisma } from "@/prisma";
-
-async function getDocumentsUnCached(ids: string[]) {
-  if (ids.length === 0) {
-    return [];
-  }
-
-  try {
-    return prisma.document.findMany({
-      where: { uid: { in: ids } },
-      include: {
-        _count: {
-          select: { amendements: true },
-        },
-        coSignataires: {
-          include: { acteurRef: { include: { groupeParlementaire: true } } },
-        },
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching commission:", error);
-    throw error;
-  }
-}
-
-const getDocuments = React.cache(getDocumentsUnCached);
+import { getDocument } from "@/data/getDocument";
+import { unique } from "@/utils/unique";
 
 export const AdditionalInfoCard = async (props: {
   documentIds: string[];
   legislature: string;
   dossierUid: string;
 }) => {
-  const data = await getDocuments(props.documentIds);
-
-  const documentsWithAmendements = data.filter(
-    (document) => document._count.amendements
+  const documents = await Promise.all(
+    props.documentIds.map((documentUid) => getDocument(documentUid))
   );
+
+  const validDocuments = documents
+    .filter((document) => document !== null)
+    .filter((document) => document._count.amendements > 0);
+
   return (
     <Accordion elevation={0} disableGutters defaultExpanded color="secondary">
       <AccordionSummary
@@ -56,7 +35,7 @@ export const AdditionalInfoCard = async (props: {
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={2}>
-          {documentsWithAmendements.length > 0 && (
+          {validDocuments.length > 0 && (
             <React.Fragment>
               <Stack direction="row" spacing={0.5} alignItems="center">
                 <Typography variant="body2" fontWeight="light">
@@ -65,33 +44,38 @@ export const AdditionalInfoCard = async (props: {
                 <InfoIcon sx={{ fontSize: "14px" }} />
               </Stack>
               <Stack direction="column" spacing={1}>
-                {documentsWithAmendements.map(
-                  ({ uid, titrePrincipalCourt, _count }) => (
-                    <div key={uid}>
-                      <Typography variant="body2" fontWeight="bold">
-                        {_count.amendements} amendements
-                      </Typography>
-                      <MuiLink
-                        variant="body2"
-                        fontWeight="light"
-                        component={Link}
-                        href={`/${props.legislature}/dossier/${props.dossierUid}/amendement?document=${uid}`}
-                      >
-                        {titrePrincipalCourt}
-                      </MuiLink>
-                    </div>
-                  )
-                )}
+                {validDocuments.map(({ uid, titrePrincipalCourt, _count }) => (
+                  <div key={uid}>
+                    <Typography variant="body2" fontWeight="bold">
+                      {_count.amendements} amendements
+                    </Typography>
+                    <MuiLink
+                      variant="body2"
+                      fontWeight="light"
+                      component={Link}
+                      href={`/${props.legislature}/dossier/${props.dossierUid}/amendement?document=${uid}`}
+                    >
+                      {titrePrincipalCourt}
+                    </MuiLink>
+                  </div>
+                ))}
               </Stack>
             </React.Fragment>
           )}
 
           <Signataires
-            signataires={data
-              .flatMap((doc) =>
-                doc.coSignataires.map((coSign) => coSign.acteurRef)
-              )
-              .filter((acteur) => acteur !== null)}
+            signataireUids={unique(
+              validDocuments
+                .flatMap((document) => [
+                  // Not sure if document autors should be included.
+                  // ...(document.auteurs?.map((auteur) => auteur.acteurRefUid) ??
+                  //   []),
+                  ...(document.coSignataires?.map(
+                    (coSignataire) => coSignataire.acteurRefUid
+                  ) ?? []),
+                ])
+                .filter((acteur) => acteur !== null)
+            )}
             limite={3}
           />
 

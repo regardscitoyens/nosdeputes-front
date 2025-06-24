@@ -1133,7 +1133,7 @@ export function groupActs(acts: ActeLegislatif[]): {
     const { codeActe, uid } = act;
     let parentPointer: ActsStructure = actsStructure;
 
-    CONTEXT[codeActe as keyof typeof CONTEXT].parents.forEach((code) => {
+    CONTEXT[codeActe as keyof typeof CONTEXT]?.parents?.forEach((code) => {
       if (parentPointer[code] === undefined) {
         parentPointer[code] = { children: {} } as ActsStructure;
       }

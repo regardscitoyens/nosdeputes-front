@@ -1,22 +1,34 @@
 import * as React from "react";
 import { getWeekIndex, getMondayDate } from "../getWeekIndex";
-import {
-  DeputeWeeklyActivity,
-  StatsOnWeeklyActivity,
-  WeekActivity,
-} from "./WeeklyActivity.type";
+import { StateHebdoType, StatistiqueHebdomadaire } from "@prisma/client";
 
-const POINTS_NUMBER = 50;
+export const POINTS_NUMBER = 50;
+
+export type WeekActivity = {
+  [key in StateHebdoType]: {
+    depute?: number;
+    max?: number;
+    median?: number;
+  };
+};
 
 export function useAgregateWeeklyStats(props: {
-  deputeWeeklyActivity: DeputeWeeklyActivity[];
-  statsOnWeeklyActivity: StatsOnWeeklyActivity[];
+  presenceDetectee: StatistiqueHebdomadaire[];
+  presenceCommision: StatistiqueHebdomadaire[];
+  presenceDetecteeMax: StatistiqueHebdomadaire[];
+  presenceDetecteeMediane: StatistiqueHebdomadaire[];
+  presenceCommisionMax: StatistiqueHebdomadaire[];
+  presenceCommisionMediane: StatistiqueHebdomadaire[];
 }) {
   const groupedPerWeek = React.useMemo(() => {
     const value: Record<number, WeekActivity> = {};
     for (const activity of [
-      ...props.deputeWeeklyActivity,
-      ...props.statsOnWeeklyActivity,
+      ...props.presenceDetectee,
+      ...props.presenceCommision,
+      ...props.presenceDetecteeMax,
+      ...props.presenceDetecteeMediane,
+      ...props.presenceCommisionMax,
+      ...props.presenceCommisionMediane,
     ]) {
       if (value[activity.semaineIndex] === undefined) {
         value[activity.semaineIndex] = {} as WeekActivity;
@@ -40,7 +52,14 @@ export function useAgregateWeeklyStats(props: {
     }
 
     return value;
-  }, [props.deputeWeeklyActivity, props.statsOnWeeklyActivity]);
+  }, [
+    props.presenceDetectee,
+    props.presenceCommision,
+    props.presenceDetecteeMax,
+    props.presenceDetecteeMediane,
+    props.presenceCommisionMax,
+    props.presenceCommisionMediane,
+  ]);
 
   const currentWeekIndex = getWeekIndex(17, new Date());
 

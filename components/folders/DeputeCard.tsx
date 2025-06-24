@@ -10,11 +10,12 @@ import MuiLink from "@mui/material/Link";
 import CompareArrowsSharpIcon from "@mui/icons-material/CompareArrowsSharp";
 import CircleDiv from "@/icons/CircleDiv";
 import Link from "next/link";
+import { Acteur } from "@prisma/client";
 
-type DeputeCardProps<RootComponent extends React.ElementType = "div"> = {
-  prenom: string;
-  nom: string;
-  slug: string;
+type DeputeCardProps<RootComponent extends React.ElementType = "div"> = Pick<
+  Acteur,
+  "prenom" | "nom" | "slug" | "urlImage"
+> & {
   secondaryText?: string;
   group?: {
     color: string | null;
@@ -35,6 +36,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
   props: DeputeCardProps<RootComponent>
 ) {
   const {
+    urlImage,
     prenom,
     nom,
     slug,
@@ -76,7 +78,7 @@ export default function DeputeCard<RootComponent extends React.ElementType>(
         <Avatar
           sx={{ height: 40, width: 40 }}
           alt={`${prenom} ${nom}`}
-          src={`https://www.nosdeputes.fr/depute/photo/${slug}/${52}`}
+          src={urlImage ?? ""}
         >
           {prenom[0].toUpperCase()}
           {nom[0].toUpperCase()}
