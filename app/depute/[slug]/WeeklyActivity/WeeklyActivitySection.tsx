@@ -14,7 +14,7 @@ const getHebdoStates = async (
   size: number = 100
 ) => {
   const rep = await fetch(
-    `http://localhost:1789/statistiqueHebdomadaire/?dataset=17&acteurUid=${acteurUid}&type=${type}&sort=semaineIndex.desc&perPage=${size}`
+    `${process.env.NEXT_PUBLIC_TRICOTEUSES_API_URL}/statistiqueHebdomadaire/?dataset=17&acteurUid=${acteurUid}&type=${type}&sort=semaineIndex.desc&perPage=${size}`
   );
 
   const { data = [] } = await rep.json();
