@@ -7,7 +7,7 @@ import { Dossier } from "@prisma/client";
 async function getLastDossiersUnCached(): Promise<Dossier[]> {
   try {
     const rep = await fetch(
-      `${process.env.NEXT_PUBLIC_TRICOTEUSES_API_URL}/dossiers/?sort=dateDernierActe.asc`
+      `${process.env.NEXT_PUBLIC_TRICOTEUSES_API_URL}/dossiers/?dataset=17&sort=dateDernierActe.desc`
     );
 
     const { data } = await rep.json();

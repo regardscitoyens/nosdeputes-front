@@ -1,8 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["knex"],
-  },
-};
+const nextConfig = {};
 
 module.exports = nextConfig;
